@@ -1,7 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
+import React from 'react';
 
-function App() {
+export function App() {
   return (
     <div className="App">
       <header className="App-header">
@@ -22,4 +23,11 @@ function App() {
   );
 }
 
-export default App;
+export const TestComponent = () => {
+  return (
+    <div>
+      <h1> Event Tracker App </h1>
+      <h2> 😬 </h2>
+    </div>
+  );
+}

@@ -1,5 +1,5 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from '../assets/logo.svg';
+import '../styles/App.css';
 import React from 'react';
 
 export function App() {
@@ -25,9 +25,10 @@ export function App() {
 
 export const TestComponent = () => {
   return (
-    <div>
+    <div id="Test" class="">
       <h1> Event Tracker App </h1>
       <h2> 😬 </h2>
+      <p>some filler text</p>
     </div>
   );
 }

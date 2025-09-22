@@ -1,8 +1,9 @@
 import React from "react";
 
 export const AccountPage = () => {
-  return (
-    <div>
-    </div>
-  );
+    return (
+        <div>
+            Account Page
+        </div>
+    );
 }

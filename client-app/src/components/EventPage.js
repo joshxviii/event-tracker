@@ -1,8 +1,9 @@
 import React from "react";
 
 export const EventPage = () => {
-  return (
-    <div>
-    </div>
-  );
+    return (
+        <div>
+            Event Page
+        </div>
+    );
 }

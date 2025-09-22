@@ -5,6 +5,8 @@ import { DataExample } from "./ui/data-example";
 export const LogInPage = () => {
 	return (
 		<div>
+            YOU ARE NOT LOGGED IN
+
 			<TestComponent />
 
 			<DataExample foo="help"/>

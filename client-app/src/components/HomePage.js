@@ -6,19 +6,25 @@ export const HomePage = ( { onEventClick } ) => {
         <div>
             Home Page
 
-            <div className="eventContainer">
-                <EventWidget
-                    eventId={16}
-                    onClick={onEventClick}
-                />
-                <EventWidget
-                    eventId={42}
-                    onClick={onEventClick}
-                />
-                <EventWidget
-                    eventId={3}
-                    onClick={onEventClick}
-                />
+            <div>
+                <div className="mapContainer container">
+                    <div id="map"> MAP HERE </div>
+                </div>
+
+                <div className="eventContainer container">
+                    <EventWidget
+                        eventId={16}
+                        onClick={onEventClick}
+                    />
+                    <EventWidget
+                        eventId={42}
+                        onClick={onEventClick}
+                    />
+                    <EventWidget
+                        eventId={3}
+                        onClick={onEventClick}
+                    />
+                </div>
             </div>
 
         </div>

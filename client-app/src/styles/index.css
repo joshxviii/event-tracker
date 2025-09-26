@@ -22,3 +22,8 @@ code {
   width: 100%;
   align-items: center;
 }
+
+.eventWidget {
+  background-color: lightgray;
+  cursor: pointer;
+}

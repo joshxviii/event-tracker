@@ -24,6 +24,11 @@ export function App() {
     }
     const handlePageChange = (page) => {
         setCurrentPage(page)
+        setSelectedEventId(null)
+    }
+    const handleEventClick = (eventId) => {
+        setCurrentPage('event')
+        setSelectedEventId(eventId)
     }
 
 
@@ -43,7 +48,9 @@ export function App() {
             />
 
             {currentPage === 'home' && (
-                <HomePage />
+                <HomePage 
+                    onEventClick={handleEventClick}
+                />
             )}
 
             {currentPage === 'account' && (
@@ -51,7 +58,10 @@ export function App() {
             )}
 
             {currentPage === 'event' && selectedEventId && (
-                <EventPage />
+                <EventPage 
+                    eventId={selectedEventId}
+                    onBack={() => handlePageChange('home')}
+                />
             )}
         </div>
     );

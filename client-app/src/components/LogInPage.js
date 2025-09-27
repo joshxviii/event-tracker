@@ -1,13 +1,10 @@
 import React from "react";
-import { TestComponent } from "./ui/TestComponent";
-import { DataExample } from "./ui/DataExample";
+import { AccountPage } from "./AccountPage";
 
 export const LogInPage = () => {
   return (
     <div>
-        <TestComponent />
-
-        <DataExample foo="help"/>
+        <AccountPage />
     </div>
   );
 }

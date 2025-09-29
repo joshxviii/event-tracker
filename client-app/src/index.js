@@ -3,12 +3,13 @@ import ReactDOM from 'react-dom/client';
 import './styles/index.css';
 import { LogInPage } from './components/LogInPage'
 import reportWebVitals from './reportWebVitals';
+import MapView from './components/ui/MapView';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
 
-    <LogInPage />
+    <MapView />
 
   </React.StrictMode>
 );

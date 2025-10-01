@@ -37,6 +37,10 @@ code {
   float: left;
 }
 
+.eventContainer {
+  width: 24em;
+}
+
 .eventWidget {
   background-color: lightgray;
   cursor: pointer;

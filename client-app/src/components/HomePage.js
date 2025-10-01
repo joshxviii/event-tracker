@@ -8,7 +8,7 @@ export const HomePage = ( { onEventClick } ) => {
 
             <div>
                 <div className="mapContainer container">
-                    <div id="map"> MAP HERE </div>
+                    <div id="map">MAP HERE</div>
                 </div>
 
                 <div className="eventContainer container">

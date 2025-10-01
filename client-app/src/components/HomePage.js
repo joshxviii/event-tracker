@@ -1,5 +1,6 @@
 import React from "react";
 import { EventWidget } from "./ui/event-widget";
+import MapWidget from "./ui/map-widget";
 
 export const HomePage = ( { onEventClick } ) => {
     return (
@@ -8,7 +9,10 @@ export const HomePage = ( { onEventClick } ) => {
 
             <div>
                 <div className="mapContainer container">
-                    <div id="map">MAP HERE</div>
+                    <div id="map">
+                        <MapWidget />
+                        MAP HERE
+                    </div>
                 </div>
 
                 <div className="eventContainer container">

@@ -1,7 +1,8 @@
 import React, {useEffect, useState, useRef, useCallback} from 'react';
 import {APIProvider, Map, useMap, AdvancedMarker, Pin} from '@vis.gl/react-google-maps';
 import {MarkerClusterer} from '@googlemaps/markerclusterer';
-import Circle from './Circle';
+import { Circle } from './circles';
+
 
 // Example POIs
 const locations = [
@@ -82,7 +83,7 @@ function PoiMarkers({pois}) {
     );
 }
 
-export default function MapView() {
+export default function MapWidget() {
     return (
         <div style={{ width: '100%', height: '100vh' }}>
             <APIProvider

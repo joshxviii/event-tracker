@@ -1,7 +1,7 @@
 import {useEffect, useRef} from 'react';
 import {useMap} from '@vis.gl/react-google-maps';
 
-export default function Circle({
+export function Circle({
                                    center,
                                    radius = 800,
                                    strokeColor = '#0c4cb3',

@@ -66,7 +66,6 @@ export const HomePage = ( { onEventClick } ) => {
                         <MapWidget 
                             events = {!loading ? events : null}
                         />
-                        MAP HERE
                     </div>
                 </div>
 
@@ -79,6 +78,7 @@ export const HomePage = ( { onEventClick } ) => {
                                 key={e.id ?? i}
                                 eventId={e.id}
                                 eventName={e.name}
+                                eventDsc={e.description}
                                 onClick={onEventClick}
                             />
                         ))

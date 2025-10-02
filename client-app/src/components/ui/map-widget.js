@@ -1,8 +1,6 @@
-import React, {useEffect, useState, useRef, useCallback} from 'react';
-import {APIProvider, Map, useMap, AdvancedMarker, Pin} from '@vis.gl/react-google-maps';
-import {MarkerClusterer} from '@googlemaps/markerclusterer';
-import { Circle } from './circle';
-
+import React from 'react';
+import {APIProvider, Map} from '@vis.gl/react-google-maps';
+import { PoiMarkers } from './poi-marker';
 
 // Example POIs
 const locations = [
@@ -22,66 +20,6 @@ const locations = [
     {key: 'darlingHarbour', location: {lat: -33.87488, lng: 151.1987113}},
     {key: 'barangaroo', location: {lat: -33.8605523, lng: 151.1972205}},
 ];
-
-function PoiMarkers({pois}) {
-    const map = useMap();
-    const [markers, setMarkers] = useState({});
-    const clusterer = useRef(null);
-    const [circleCenter, setCircleCenter] = useState(null);
-
-    const handleClick = useCallback(
-        (ev) => {
-            if (!map || !ev.latLng) return;
-            map.panTo(ev.latLng);
-            setCircleCenter(ev.latLng);
-        },
-        [map]
-    );
-
-    useEffect(() => {
-        if (!map) return;
-        if (!clusterer.current) {
-            clusterer.current = new MarkerClusterer({map});
-        }
-    }, [map]);
-
-    useEffect(() => {
-        clusterer.current?.clearMarkers();
-        clusterer.current?.addMarkers(Object.values(markers));
-    }, [markers]);
-
-    const setMarkerRef = (marker, key) => {
-        if (marker && markers[key]) return;
-        if (!marker && !markers[key]) return;
-
-        setMarkers((prev) => {
-            if (marker) {
-                return {...prev, [key]: marker};
-            } else {
-                const copy = {...prev};
-                delete copy[key];
-                return copy;
-            }
-        });
-    };
-
-    return (
-        <>
-            <Circle center={circleCenter} />
-            {pois.map((poi) => (
-                <AdvancedMarker
-                    key={poi.key}
-                    position={poi.location}
-                    ref={(marker) => setMarkerRef(marker, poi.key)}
-                    clickable
-                    onClick={handleClick}
-                >
-                    <Pin background={'#FBBC04'} glyphColor={'#000'} borderColor={'#000'} />
-                </AdvancedMarker>
-            ))}
-        </>
-    );
-}
 
 export default function MapWidget( { events } ) {
     // Data from csv list
@@ -108,12 +46,13 @@ export default function MapWidget( { events } ) {
                     style={{ width: '100%', height: '100%' }}
                     defaultZoom={11}
                     defaultCenter={{ lat: 40.789142, lng: -73.13496 }}
+                    
                     mapId="da37f3254c6a6d1c"
-                    onCameraChanged={(ev) =>
-                        console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
-                    }
+                    // onCameraChanged={(ev) =>
+                    //     console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
+                    // }
                 >
-                    <PoiMarkers pois={myLocations} />
+                    <PoiMarkers pois={ myLocations } />
                 </Map>
             </APIProvider>
         </div>

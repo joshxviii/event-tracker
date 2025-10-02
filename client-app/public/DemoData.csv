@@ -1,4 +1,4 @@
-id,name,DESCRIPTION,lat,lng
-1,Event 1,,40.75437842,-73.42642112
+id,name,description,lat,lng
+1,FSC,This is a test demo.,40.75437842,-73.42642112
 22,My event,,40.71924643,-73.37083035
-33,Event 3,,40.67678702,-73.94609229
+33,Brooklyn,,40.67678702,-73.94609229

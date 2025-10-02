@@ -12,7 +12,7 @@ export const HomePage = ( { onEventClick } ) => {
         let mounted = true;
         (async () => {
             try {
-                const parsed = await getEvents('/DemoData.csv');
+                const parsed = await getEvents();
                 if (!mounted) return;
                 setEvents(parsed);
             } catch (e) {

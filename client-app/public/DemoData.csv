@@ -1,4 +1,5 @@
 id,name,description,lat,lng
 1,FSC,This is a test demo.,40.75437842,-73.42642112
-22,My event,,40.71924643,-73.37083035
-33,Brooklyn,,40.67678702,-73.94609229
+22,My event,This is a test demo.,40.71924643,-73.37083035
+33,Brooklyn,This is a test demo.,40.67678702,-73.94609229
+

@@ -36,7 +36,7 @@ export function LoginPage({ onLogin }) {
 						type="email"
 						value={email}
 						onChange={(e) => setEmail(e.target.value)}
-						placeholder="you@example.com"
+						placeholder="you@farmingdale.edu"
 						style={{ width: "100%", padding: 8, fontSize: 14 }}
 					/>
 				</div>

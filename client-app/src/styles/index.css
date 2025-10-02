@@ -51,6 +51,15 @@ code {
 }
 
 .eventWidget {
-  background-color: #e9e9e9;
+  border-radius: 12px;
+  padding: 1px 8px;
+  margin: 8px;
+  background-color: #ffffff;
   cursor: pointer;
+  box-shadow: 2px 2px 3px #00000057;
+}
+
+.mainContent {
+  display: flex;
+  flex-direction: row;
 }

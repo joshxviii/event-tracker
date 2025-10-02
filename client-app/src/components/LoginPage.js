@@ -17,7 +17,7 @@ export function LoginPage({ onLogin }) {
 	};
 
 	const fillDemo = () => {
-		setEmail("demo@example.com");
+		setEmail("demo@farmingdale.edu");
 		setPassword("password");
 		setError(null);
 	};
@@ -71,12 +71,6 @@ export function LoginPage({ onLogin }) {
 					</button>
 				</div>
 			</form>
-
-			<div style={{ marginTop: 16, color: "#555", fontSize: 13 }}>
-				<p>
-					This is a basic, client-side login form. It calls the <code>onLogin</code> prop when submitted.
-				</p>
-			</div>
 		</div>
 	);
 }

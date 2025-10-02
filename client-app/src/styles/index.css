@@ -19,7 +19,7 @@ body {
 }
 
 h1 {
-  color: red;
+  color: #000000;
 }
 
 code {
@@ -35,15 +35,14 @@ code {
 }
 
 #map {
-  background-color: blue;
   width: 50em;
 }
 
 .container {
-  color: white;
+  color: #4d4d4d;
   margin: 10px;
-  text-align: center;
-  background-color: aqua;
+  text-align: justify;
+  background-color: #00ffff00;
   float: left;
 }
 
@@ -52,6 +51,6 @@ code {
 }
 
 .eventWidget {
-  background-color: lightgray;
+  background-color: #e9e9e9;
   cursor: pointer;
 }

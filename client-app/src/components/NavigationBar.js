@@ -8,8 +8,8 @@ import {ReactComponent as LogOutIcon} from '../assets/log-out.svg';
 export function NavigationBar( { currentPage, onPageChange, onLogout } ) {
     return (
         <nav id='nav-bar'>
-            <p>Event Tracker</p>
-            <div>
+            <h3 id="navTitle"> Event Tracker </h3>
+            <div class="buttonGroup">
                 <button
                     onClick={ () => onPageChange('home') }
                 >
@@ -25,6 +25,7 @@ export function NavigationBar( { currentPage, onPageChange, onLogout } ) {
                 </button>
             </div>
             <button
+                style={{marginLeft: 'auto', marginRight: '16px'}}
                 onClick={ onLogout }
             >
                 <LogOutIcon />

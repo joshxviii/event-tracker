@@ -16,6 +16,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #f9fafb;
 }
 
 h1 {
@@ -27,8 +28,34 @@ code {
     monospace;
 }
 
+button {
+  padding: 6px 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  border: none;
+  background-color: #155dfc;
+  border-radius: 4px;
+  color: white;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 8px;
+}
+
+#navTitle {
+  margin-left: 16px;
+  font-weight: bold;
+  color: #155dfc;
+}
+
 #nav-bar {
-  background-color: #e1e1e1;
+  gap: 16px;
+  border-bottom: 1px #e5e7eb solid;
+  background-color: #ffffff;
   display: inline-flex;
   width: 100%;
   align-items: center;

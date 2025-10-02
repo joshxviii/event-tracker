@@ -37,13 +37,13 @@ export default function MapWidget( { events } ) {
         : [];
 
     return (
-        <div style={{ width: '100%', height: '100vh' }}>
+        <div style={{ width: '100%', height: '100%' }}>
             <APIProvider
                 apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
                 onLoad={() => console.log('Maps API loaded')}
             >
                 <Map
-                    style={{ width: '100%', height: '100%' }}
+                    style={{ width: '50em', height: '40em' }}
                     defaultZoom={11}
                     defaultCenter={{ lat: 40.789142, lng: -73.13496 }}
                     

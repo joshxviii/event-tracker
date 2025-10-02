@@ -61,16 +61,19 @@ button {
   align-items: center;
 }
 
-#map {
-  width: 50em;
+.mainContent {
+  display: flex;
+  flex-direction: row;
 }
 
-.container {
-  color: #4d4d4d;
+.mapContainer {
+  width: 50em;
+  min-height: 2em;
+  padding: 20px;
   margin: 10px;
-  text-align: justify;
-  background-color: #00ffff00;
   float: left;
+  border-radius: 12px;
+  box-shadow: 2px 2px 3px #00000057;
 }
 
 .eventContainer {
@@ -78,17 +81,12 @@ button {
 }
 
 .eventWidget {
-  border-radius: 12px;
   padding: 1px 8px;
   margin: 8px;
   background-color: #ffffff;
   cursor: pointer;
+  border-radius: 12px;
   box-shadow: 2px 2px 3px #00000057;
-}
-
-.mainContent {
-  display: flex;
-  flex-direction: row;
 }
 
 .reviewPanel {

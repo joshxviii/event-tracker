@@ -37,15 +37,16 @@ export const HomePage = ( { onEventClick } ) => {
             <div class="mainContent">
                 {loading && <div>Loading demo events...</div>}
                 
-                <div className="mapContainer container">
-                    <div id="map">
-                        <MapWidget 
-                            events = {!loading ? events : null}
-                        />
+                <div class="mapContainer container">
+                    <div>
+                    <MapWidget
+                        events = {!loading ? events : null}
+                    />
                     </div>
+                    <h3> [Selected Event Info Here] </h3>
                 </div>
 
-                <div className="eventContainer container">
+                <div class="eventContainer container">
                     {!loading && error && <div className="error">Could not load demo data: {error}</div>}
 
                     {!loading && events.length > 0 ? (

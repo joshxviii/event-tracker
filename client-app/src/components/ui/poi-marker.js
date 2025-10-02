@@ -60,7 +60,7 @@ export function PoiMarkers( { pois } ) {
                     clickable
                     onClick={handleClick(poi.key)}
                 >
-                    <Pin background={'#FBBC04'} glyphColor={'#000'} borderColor={'#000'} />
+                    <Pin background={'#1447e2'} glyphColor={'#ffffffff'} borderColor={'#000000ff'} />
                 </AdvancedMarker>
             ))}
         </>

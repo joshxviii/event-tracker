@@ -1,5 +1,7 @@
 import React from "react";
 import { findEventById } from "../utils/events";
+import ReviewsPanel from "./ui/ReviewPanels";
+
 
 export function EventPage( {eventId, onBack } ) {
 
@@ -16,6 +18,11 @@ export function EventPage( {eventId, onBack } ) {
             </button>
             <p> event Id: {event.id} </p>
             <p> event description: {event.description} </p>
+
+        <div class="reviewContainer container">
+            <ReviewsPanel />
+        </div>
+
         </div>
     );
 }

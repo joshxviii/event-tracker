@@ -1,7 +1,7 @@
 import React from "react";
 
 // Simple, view-only account page for displaying account information
-export const AccountPage = ({ user = { name: 'Demo User', email: 'demo@example.com' } }) => {
+export const AccountPage = ({ user = { name: 'Demo User', email: 'demo@farmingdale.edu' } }) => {
     return (
         <div style={{ maxWidth: 720, margin: '24px auto', padding: 16 }}>
             <h2>Account</h2>

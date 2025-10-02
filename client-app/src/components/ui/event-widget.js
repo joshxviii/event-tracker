@@ -1,11 +1,11 @@
 import React from "react"
 
-export function EventWidget( {eventId, onClick} ) {
+export function EventWidget( {eventId, eventName, onClick} ) {
   return (
     <div class="eventWidget"
         onClick={ () => onClick(eventId) }
     >
-        <h1> EventID: { eventId } </h1>
+        <h1> { eventName } </h1>
     </div>
   );
 }

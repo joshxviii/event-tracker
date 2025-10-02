@@ -6,7 +6,7 @@ import { Circle } from './circle';
 
 // Example POIs
 const locations = [
-    {key: 'operaHouse', location: {lat: -33.8567844, lng: 151.213108}},
+    {key: 'operaHouse', location: {lat: 40.7543784172742, lng: -73.4264211220474}},
     {key: 'tarongaZoo', location: {lat: -33.8472767, lng: 151.2188164}},
     {key: 'manlyBeach', location: {lat: -33.8209738, lng: 151.2563253}},
     {key: 'hyderPark', location: {lat: -33.8690081, lng: 151.2052393}},
@@ -83,7 +83,21 @@ function PoiMarkers({pois}) {
     );
 }
 
-export default function MapWidget() {
+export default function MapWidget( { events } ) {
+    // Data from csv list
+    const myLocations = Array.isArray(events)
+        ? events
+              .map((e, idx) => {
+                  const lat = Number(e.lat);
+                  const lng = Number(e.lng);
+                  return {
+                      key: String(e.name),
+                      location: { lat, lng },
+                  };
+              })
+              .filter(Boolean)
+        : [];
+
     return (
         <div style={{ width: '100%', height: '100vh' }}>
             <APIProvider
@@ -99,7 +113,7 @@ export default function MapWidget() {
                         console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
                     }
                 >
-                    <PoiMarkers pois={locations} />
+                    <PoiMarkers pois={myLocations} />
                 </Map>
             </APIProvider>
         </div>

@@ -10,7 +10,7 @@ export function App() {
     the 'states' for the app.
     depending on the combination of these states the app will show different pages.
     */
-    const [isLoggedIn, setLoggedIn] = useState(true)
+    const [isLoggedIn, setLoggedIn] = useState(false)
     const [currentPage, setCurrentPage] = useState('home') // 'home', 'account', 'event'
     const [selectedEventId, setSelectedEventId] = useState(0)
     

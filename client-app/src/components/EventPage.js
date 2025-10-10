@@ -13,17 +13,17 @@ export function EventPage( {eventId, onBack } ) {
 
     return (
         <div>
-            <h2>{event.name}</h2>
+            <h2 class="indent2">{event.name}</h2>
             <br/>
-            <button
+            <button  class="indent2"
                 onClick={onBack}
             >
                 Back Home
             </button>
-            <p> Event Description: {event.description} </p>
+            <p class="indent2"> Event Description: {event.description} </p>
 
             <div class="reviewContainer container">
-                <h3> Reviews: </h3>
+                <h3 class="indent2"> Reviews: </h3>
                 {
                     reviews.map((e, i) => (
                         <Review 

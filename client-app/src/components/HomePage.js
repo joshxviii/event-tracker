@@ -32,7 +32,7 @@ export const HomePage = ( { onEventClick } ) => {
 
     return (
         <div>
-            <h2>Home Page</h2>
+            <h2 class="indent">Home Page</h2>
 
             <div class="mainContent">
                 {loading && <div>Loading demo events...</div>}

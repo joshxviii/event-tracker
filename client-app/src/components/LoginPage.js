@@ -1,20 +1,32 @@
 import React, { useState } from "react";
+import { login } from "../utils/users";
 
 export function LoginPage({ onLogin }) {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState(null);
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		// simple client-side validation
 		if (!email) return setError("Please enter your email.");
 		if (!password) return setError("Please enter your password.");
 
-		setError(null);
-		// call the provided onLogin handler. Keep it flexible: pass user info if caller expects it.
-		if (onLogin) onLogin({ email });
+		try {
+			const { token, user } = await login(email, password);
+			console.log('Logged in user:', user);
+			console.log('Token:', token);
+
+			setError(null);
+			if (onLogin) onLogin({ email });
+
+		} catch (error) {
+			setError(error.message);
+		} finally {
+			//setLoading(false);
+		}
 	};
+
 
 	const fillDemo = () => {
 		setEmail("demo@farmingdale.edu");

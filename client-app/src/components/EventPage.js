@@ -6,10 +6,10 @@ import Review from "./ui/review-panel";
 
 export function EventPage( {eventId, onBack } ) {
 
-    const event = findEventById(eventId)
-    const reviews = getReviewsFromEventID(eventId)
+    const event = findEventById(eventId);
+    const reviews = getReviewsFromEventID(eventId);
 
-    console.log(reviews)
+    console.log(reviews);
 
     return (
         <div>

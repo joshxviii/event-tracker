@@ -1,7 +1,7 @@
 // Event Related Routes
 const express = require('express');
 const router = express.Router();
-const Event = require('../models/Event');
+const Event = require('../schemas/Event');
 const auth = require('../middleware/auth'); //TODO
 
 // Create event (requires authentication)

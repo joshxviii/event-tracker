@@ -13,9 +13,11 @@ export function App() {
     const [isLoggedIn, setLoggedIn] = useState(false)
     const [currentPage, setCurrentPage] = useState('home') // 'home', 'account', 'event'
     const [selectedEventId, setSelectedEventId] = useState(0)
+    const [currentUser, setCurrentUser] = useState(null)
     
-    const handleLogin = () => {
+    const handleLogin = (user) => {
         setLoggedIn(true)
+        setCurrentUser(user)
     }
     const handleLogout = () => {
         setLoggedIn(false)
@@ -53,7 +55,9 @@ export function App() {
             )}
 
             {currentPage === 'account' && (
-                <AccountPage />
+                <AccountPage 
+                    user={currentUser}
+                />
             )}
 
             {currentPage === 'event' && selectedEventId && (

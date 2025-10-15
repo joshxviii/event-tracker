@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { healthCheck, login, signup } from "../utils/server_queries";
+import { signup, login } from "../utils/requests/user";
 
 export function LoginPage({ onLogin }) {
 	const [firstName, setFirstName] = useState("");

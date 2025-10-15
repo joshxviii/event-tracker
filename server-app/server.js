@@ -12,6 +12,13 @@ app.use(express.json());
 const authRouter = require('./routes/auth');
 app.use('/api/auth', authRouter);
 
+const eventsRouter = require('./routes/events');
+app.use('/api/events', eventsRouter);
+
+// Reviews nested under events
+const reviewsRouter = require('./routes/reviews');
+app.use('/api/events/:id/reviews', reviewsRouter);
+
 app.get('/api/health', (req, res) => {
     console.log("Health Check Passed!");
     res.json({ ok: true })

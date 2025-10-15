@@ -1,72 +1,63 @@
 const server = 'http://localhost:10255';
 
-// Attempt to login
+async function apiRequest(path, { method = 'GET', body = null, requireAuth = false } = {}) {
+    const headers = { 'Content-Type': 'application/json' };
+
+    if (requireAuth) {
+        const token = localStorage.getItem('token');
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    const res = await fetch(`${server}${path}`, {
+        method,
+        headers,
+        body: body ? JSON.stringify(body) : null,
+    });
+
+    if (!res.ok) {
+        let errorMessage = `${method} ${path} failed`;
+        try {
+            const err = await res.json();
+            errorMessage = err.message || errorMessage;
+        } catch (e) {/* igonre */}
+        const err = new Error(errorMessage);
+        err.status = res.status;
+        throw err;
+    }
+
+    try {
+        return await res.json();
+    } catch (e) {
+        return res;
+    }
+}
+
+
+
+// region EVENT REQUESTS
+const create_event = async (event_details) => await apiRequest('/api/events', { method: 'POST', body: event_details});
+// endregion
+
+
+
+// region USER REQUESTS
 const login = async (emailOrUsername, password) => {
-    try {
-        const response = await fetch(server+'/api/auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(emailOrUsername.includes('@') ? { email: emailOrUsername, password } : { username: emailOrUsername, password } ),
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Login failed');
-        }
-
-        const data = await response.json();
-        const { token, user } = data;
-
-        localStorage.setItem('token', token);
-
-        return { token, user };
-
-    } catch (error) {
-        console.error('Login error:', error.message);
-        throw error;
-    }
+    const body = emailOrUsername.includes('@') ? { email: emailOrUsername, password } : { username: emailOrUsername, password };
+    const data = await apiRequest('/api/auth/login', { method: 'POST', body });
+    if (data.token) localStorage.setItem('token', data.token);
+    return data;
 };
 
-// Attempt to signup
 const signup = async (firstName, lastName, username, email, password) => {
-    try {
-        const response = await fetch(server+'/api/auth/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ firstName, lastName, username, email, password }),
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Signup failed');
-        }
-
-        const data = await response.json();
-        const { token, user } = data;
-
-        localStorage.setItem('token', token);
-
-        return { token, user };
-
-    } catch (error) {
-        console.error('Signup error:', error.message);
-        throw error;
-    }
+    const data = await apiRequest('/api/auth/register', { method: 'POST', body: { firstName, lastName, username, email, password } });
+    if (data.token) localStorage.setItem('token', data.token);
+    return data;
 };
+// endregion
 
-// Health Check
-const healthCheck = async () => {
-    try {
-        const response = await fetch(server+'/api/health');
-        console.log('Health check response:', response);
-    }
-    catch (error) {
-        throw error;
-    }
-};
 
-export { login, signup, healthCheck };
+// region OTHER REQUESTS
+const healthCheck = async () => apiRequest('/api/health');
+// endregion
+
+export { create_event, login, signup, healthCheck };

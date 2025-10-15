@@ -2,10 +2,9 @@
 const express = require('express');
 const router = express.Router();
 const Event = require('../schemas/Event');
-const auth = require('../middleware/auth'); //TODO
 
-// Create event (requires authentication)
-router.post('/', auth, async (req, res) => {
+// Create event
+router.post('/', async (req, res) => {
   try {
     const eventData = { ...req.body, organizer: req.user.userId };
     const event = new Event(eventData);
@@ -52,8 +51,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Update event (only organizer)
-router.put('/:id', auth, async (req, res) => {
+// Update event
+router.put('/:id', async (req, res) => {
   try {
     const event = await Event.findOne({ 
       _id: req.params.id, 
@@ -66,14 +65,15 @@ router.put('/:id', auth, async (req, res) => {
     
     Object.assign(event, req.body);
     await event.save();
+    
     res.json(event);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-// Delete event (only organizer)
-router.delete('/:id', auth, async (req, res) => {
+// Delete event
+router.delete('/:id', async (req, res) => {
   try {
     const event = await Event.findOneAndDelete({ 
       _id: req.params.id, 

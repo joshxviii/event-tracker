@@ -38,7 +38,6 @@ router.post('/register', async (req, res) => {
 // Login (accepts either email or username as identifier)
 router.post('/login', async (req, res) => {
   try {
-    // client may send { identifier, password } or { email, password } or { username, password }
     const identifier = req.body.identifier ?? req.body.email ?? req.body.username;
     const password = req.body.password;
 

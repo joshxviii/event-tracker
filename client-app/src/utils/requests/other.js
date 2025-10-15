@@ -1,4 +1,4 @@
-import apiRequest from '../api-rquest.js';
+import { apiRequest } from '../api-request.js';
 
 const healthCheck = async () => apiRequest('/api/health');
 

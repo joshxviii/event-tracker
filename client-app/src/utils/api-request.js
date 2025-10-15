@@ -1,6 +1,6 @@
 const server = 'http://localhost:10255';
 
-async function apiRequest(path, { method = 'GET', body = null, requireAuth = false } = {}) {
+export async function apiRequest(path, { method = 'GET', body = null, requireAuth = false } = {}) {
     const headers = { 'Content-Type': 'application/json' };
 
     if (requireAuth) {

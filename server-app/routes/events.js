@@ -6,12 +6,14 @@ const Event = require('../schemas/Event');
 // Create event
 router.post('/', async (req, res) => {
   try {
-    const eventData = { ...req.body, organizer: req.user.userId };
+    console.log(req);
+    const eventData = { ...req.body, organizer: req.userId };
+    
     const event = new Event(eventData);
     await event.save();
 
     // Add to organizer's created events
-    await Event.findByIdAndUpdate(req.user.userId, {
+    await Event.findByIdAndUpdate(req.userId, {
       $push: { createdEvents: event._id }
     });
 
@@ -65,7 +67,7 @@ router.put('/:id', async (req, res) => {
     
     Object.assign(event, req.body);
     await event.save();
-    
+
     res.json(event);
   } catch (error) {
     res.status(500).json({ message: error.message });

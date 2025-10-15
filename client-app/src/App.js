@@ -4,6 +4,7 @@ import { HomePage } from './components/HomePage';
 import { AccountPage } from './components/AccountPage';
 import { EventPage } from './components/EventPage';
 import { NavigationBar } from './components/NavigationBar';
+import { EventCreationPage } from './components/EventCreationPage';
 
 export function App() {
     /* 
@@ -12,7 +13,7 @@ export function App() {
     */
     const [isLoggedIn, setLoggedIn] = useState(false)
     const [currentPage, setCurrentPage] = useState('home') // 'home', 'account', 'event'
-    const [selectedEventId, setSelectedEventId] = useState(0)
+    const [selectedEventId, setSelectedEventId] = useState(null)
     const [currentUser, setCurrentUser] = useState(null)
     
     const handleLogin = (user) => {
@@ -28,6 +29,7 @@ export function App() {
         setSelectedEventId(null)
     }
     const handleEventClick = (eventId) => {
+        console.log('Event clicked:', eventId)
         setCurrentPage('event')
         setSelectedEventId(eventId)
     }
@@ -51,6 +53,7 @@ export function App() {
             {currentPage === 'home' && (
                 <HomePage 
                     onEventClick={handleEventClick}
+                    onEventCreationClick={() => handlePageChange('event-creation')}
                 />
             )}
 
@@ -66,6 +69,14 @@ export function App() {
                     onBack={() => handlePageChange('home')}
                 />
             )}
+
+            {currentPage === 'event-creation' && (
+                <EventCreationPage 
+                    user={currentUser}
+                    onBack={() => handlePageChange('home')}
+                />
+            )}
+
         </div>
     );
 }

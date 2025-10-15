@@ -1,4 +1,4 @@
-import apiRequest from '../api-rquest.js';
+import { apiRequest } from '../api-request.js';
 
 const login = async (emailOrUsername, password) => {
     const body = emailOrUsername.includes('@') ? { email: emailOrUsername, password } : { username: emailOrUsername, password };

@@ -1,6 +1,6 @@
-import apiRequest from '../api-rquest.js';
+import { apiRequest } from '../api-request.js';
 
-const create_event = async (event_details) => await apiRequest('/api/events', { method: 'POST', body: event_details});
+const create_event = async (event_details, userId) => await apiRequest('/api/events', { method: 'POST', body: event_details, userId});
 const get_events = async () => await apiRequest('/api/events');
 const get_event = async (eventId) => await apiRequest(`/api/events/${eventId}`);
 const update_event = async (eventId, event_details) => await apiRequest(`/api/events/${eventId}`, { method: 'PUT', body: event_details, requireAuth: true});

@@ -1,19 +1,39 @@
-import React from "react";
-import { findEventById } from "../utils/events";
-import { getReviewsFromEventID } from "../utils/reviews";
+import React, { useEffect, useState } from "react";
 import Review from "./ui/review-panel";
+import { get_event } from "../utils/requests/event";
+import { get_reviews } from "../utils/requests/review";
 
 
 export function EventPage( {eventId, onBack } ) {
 
-    const event = findEventById(eventId);
-    const reviews = getReviewsFromEventID(eventId);
+    const [reviews, setReviews] = useState(null);
+    const [event, setEvent] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    console.log(reviews);
+    useEffect(() => {
+        let mounted = true;
+        (async () => {
+            try {
+                if (!mounted) return;
+                setReviews(await get_reviews(eventId) || []);
+                setEvent(await get_event(eventId) || {});
+            } catch (e) {
+                if (!mounted) return;
+                setError(e.message || String(e));
+                setReviews([]);
+                setEvent({});
+            } finally {
+                if (mounted) setLoading(false);
+            }
+        })();
 
-    return (
+        return () =>  mounted = false;
+    }, []);
+
+    if (event) return (
         <div>
-            <h2>{event.name}</h2>
+            <h2>{event.title}</h2>
             <br/>
             <button
                 onClick={onBack}
@@ -25,13 +45,12 @@ export function EventPage( {eventId, onBack } ) {
             <div class="reviewContainer container">
                 <h3> Reviews: </h3>
                 {
-                    reviews.map((e, i) => (
+                    reviews.map((review, i) => (
                         <Review 
-                            rating={e.rating}
-                            text={e.text}
-                            author={e.author}
+                            rating={review.rating}
+                            text={review.text}
+                            author={review.author}
                         />
-                        
                     ))
                 }
             </div>

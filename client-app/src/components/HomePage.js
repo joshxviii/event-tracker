@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { EventWidget } from "./ui/event-widget";
 import MapWidget from "./ui/map-widget";
-import { getEvents } from "../utils/events";
+import { get_events } from "../utils/requests/event";
 
-export const HomePage = ( { onEventClick } ) => {
+export const HomePage = ( { onEventClick, onEventCreationClick } ) => {
     const [events, setEvents] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -12,11 +12,9 @@ export const HomePage = ( { onEventClick } ) => {
         let mounted = true;
         (async () => {
             try {
-                const parsed = await getEvents();
                 if (!mounted) return;
-                setEvents(parsed);
+                setEvents(await get_events());
             } catch (e) {
-                console.warn('Failed to load DemoData.csv:', e.message || e);
                 if (!mounted) return;
                 setError(e.message || String(e));
                 setEvents([]);
@@ -25,14 +23,14 @@ export const HomePage = ( { onEventClick } ) => {
             }
         })();
 
-        return () => {
-            mounted = false;
-        };
+        return () =>  mounted = false;
     }, []);
 
     return (
         <div>
             <h2>Home Page</h2>
+
+            <button onClick={onEventCreationClick}>Create New Event</button>
 
             <div class="mainContent">
                 {loading && <div>Loading demo events...</div>}
@@ -52,7 +50,7 @@ export const HomePage = ( { onEventClick } ) => {
                     {!loading && events.length > 0 ? (
                         events.map((e, i) => (
                             <EventWidget
-                                eventId={e.id}
+                                event={e}
                                 onClick={onEventClick}
                             />
                         ))

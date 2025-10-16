@@ -19,6 +19,15 @@ body {
   background-color: #f9fafb;
 }
 
+:root {
+  /* Category color variables */
+  --event-color-volunteer: #2ecc71; /* green */
+  --event-color-social: #f39c12; /* orange */
+  --event-color-market: #3498db; /* blue */
+  --event-color-other: #7f8c8d; /* gray */
+  --event-label-foreground: #ffffff;
+}
+
 h1 {
   color: #000000;
 }
@@ -87,6 +96,17 @@ button {
   cursor: pointer;
   border-radius: 12px;
   box-shadow: 2px 2px 3px #00000057;
+}
+
+.eventLabel {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  color: var(--event-label-foreground);
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .reviewPanel {

@@ -1,19 +1,60 @@
-import React from "react";
-import { findEventById } from "../utils/events";
-import { getReviewsFromEventID } from "../utils/reviews";
+import React, { useEffect, useState } from "react";
 import Review from "./ui/review-panel";
+import { get_event } from "../utils/requests/event";
+import { delete_review, get_reviews } from "../utils/requests/review";
+import ReviewTextbox from "./ui/review-textbox";
 
 
 export function EventPage( {eventId, onBack } ) {
 
-    const event = findEventById(eventId)
-    const reviews = getReviewsFromEventID(eventId)
+    const [reviews, setReviews] = useState(null);
+    const [event, setEvent] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    console.log(reviews)
+    const reloadReviews = async () => {
+        try {
+            setReviews(await get_reviews(eventId) || []);
+        } catch (e) {
+            setError(e.message || String(e));
+            setReviews([]);
+        }
+    };
 
-    return (
+    const deleteReview = async (reviewId) => {
+
+        console.log("Deleting review", reviewId);
+
+        delete_review(eventId, reviewId).then(() => {
+            reloadReviews();
+        }).catch((e) => {
+            setError(e.message || String(e));
+        });
+    };
+
+    useEffect(() => {
+        let mounted = true;
+        (async () => {
+            try {
+                if (!mounted) return;
+                setReviews(await get_reviews(eventId) || []);
+                setEvent(await get_event(eventId) || {});
+            } catch (e) {
+                if (!mounted) return;
+                setError(e.message || String(e));
+                setReviews([]);
+                setEvent({});
+            } finally {
+                if (mounted) setLoading(false);
+            }
+        })();
+
+        return () =>  mounted = false;
+    }, []);
+
+    if (event) return (
         <div>
-            <h2 class="indent2">{event.name}</h2>
+            <h2>{event.name}</h2>
             <br/>
             <button  class="indent2"
                 onClick={onBack}
@@ -25,15 +66,22 @@ export function EventPage( {eventId, onBack } ) {
             <div class="reviewContainer container">
                 <h3 class="indent2"> Reviews: </h3>
                 {
-                    reviews.map((e, i) => (
-                        <Review 
-                            rating={e.rating}
-                            text={e.text}
-                            author={e.author}
+                    reviews.map((review, i) => (
+                        <Review
+                            reviewId={review._id}
+                            rating={review.rating}
+                            text={review.text}
+                            author={review.author}
+                            onDelete={deleteReview}
                         />
-                        
                     ))
                 }
+                {reviews.length === 0 && <div>No reviews yet</div>}
+
+                <ReviewTextbox
+                    eventId={event._id}
+                    onReviewSubmitted={reloadReviews}
+                />
             </div>
 
         </div>

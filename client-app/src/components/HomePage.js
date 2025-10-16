@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import { EventWidget } from "./ui/event-widget";
 import MapWidget from "./ui/map-widget";
 import { get_events } from "../utils/requests/event";
+import { PoiInfoWidget } from "./ui/poi-info-widget";
 
 export const HomePage = ( { onEventClick, onEventCreationClick, onEventManageClick } ) => {
     const [events, setEvents] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [selectedEventId, setSelectedEventId] = useState(null);
 
     useEffect(() => {
         let mounted = true;
@@ -26,6 +28,10 @@ export const HomePage = ( { onEventClick, onEventCreationClick, onEventManageCli
         return () =>  mounted = false;
     }, []);
 
+    const handlePoiClick = (id) => {
+        setSelectedEventId(prev => (prev === id ? null : id));
+    };
+
     return (
         <div>
             <h2>Home Page</h2>
@@ -41,11 +47,14 @@ export const HomePage = ( { onEventClick, onEventCreationClick, onEventManageCli
                 
                 <div class="mapContainer container">
                     <div>
-                    <MapWidget
-                        events = {!loading ? events : null}
-                    />
+                        <MapWidget
+                            events={!loading ? events : []}
+                            onPoiClick={handlePoiClick}
+                        />
                     </div>
-                    <h3> [Selected Event Info Here] </h3>
+                    <PoiInfoWidget
+                        eventId={selectedEventId}
+                    />
                 </div>
 
                 <div class="eventContainer container">

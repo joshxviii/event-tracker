@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Review from "./ui/review-panel";
 import { get_event } from "../utils/requests/event";
-import { get_reviews } from "../utils/requests/review";
+import { delete_review, get_reviews } from "../utils/requests/review";
+import ReviewTextbox from "./ui/review-textbox";
 
 
 export function EventPage( {eventId, onBack } ) {
@@ -10,6 +11,26 @@ export function EventPage( {eventId, onBack } ) {
     const [event, setEvent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const reloadReviews = async () => {
+        try {
+            setReviews(await get_reviews(eventId) || []);
+        } catch (e) {
+            setError(e.message || String(e));
+            setReviews([]);
+        }
+    };
+
+    const deleteReview = async (reviewId) => {
+
+        console.log("Deleting review", reviewId);
+
+        delete_review(eventId, reviewId).then(() => {
+            reloadReviews();
+        }).catch((e) => {
+            setError(e.message || String(e));
+        });
+    };
 
     useEffect(() => {
         let mounted = true;
@@ -46,13 +67,21 @@ export function EventPage( {eventId, onBack } ) {
                 <h3> Reviews: </h3>
                 {
                     reviews.map((review, i) => (
-                        <Review 
+                        <Review
+                            reviewId={review._id}
                             rating={review.rating}
                             text={review.text}
                             author={review.author}
+                            onDelete={deleteReview}
                         />
                     ))
                 }
+                {reviews.length === 0 && <div>No reviews yet</div>}
+
+                <ReviewTextbox
+                    eventId={event._id}
+                    onReviewSubmitted={reloadReviews}
+                />
             </div>
 
         </div>

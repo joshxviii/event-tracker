@@ -33,7 +33,7 @@ export const HomePage = ( { onEventClick, onEventCreationClick } ) => {
             <button onClick={onEventCreationClick}>Create New Event</button>
 
             <div class="mainContent">
-                {loading && <div>Loading demo events...</div>}
+                {loading && <div>Loading event data...</div>}
                 
                 <div class="mapContainer container">
                     <div>
@@ -45,7 +45,7 @@ export const HomePage = ( { onEventClick, onEventCreationClick } ) => {
                 </div>
 
                 <div class="eventContainer container">
-                    {!loading && error && <div className="error">Could not load demo data: {error}</div>}
+                    {!loading && error && <div className="error">Could not load event data: {error}</div>}
 
                     {!loading && events.length > 0 ? (
                         events.map((e, i) => (

@@ -2,7 +2,7 @@ import React from 'react';
 import {APIProvider, Map} from '@vis.gl/react-google-maps';
 import { PoiMarkers } from './poi-marker';
 
-export default function MapWidget( { events } ) {
+export default function MapWidget( { events, onPoiClick } ) {
     // Data from csv list
     const myLocations = Array.isArray(events)
         ? events
@@ -10,8 +10,9 @@ export default function MapWidget( { events } ) {
                   const lat = Number(e.location.coordinates.lat);
                   const lng = Number(e.location.coordinates.lng);
                   return {
-                      key: String(e.name),
+                      key: String(e._id),
                       location: { lat, lng },
+                      category: e.category
                   };
               })
               .filter(Boolean)
@@ -33,7 +34,10 @@ export default function MapWidget( { events } ) {
                     //     console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
                     // }
                 >
-                    <PoiMarkers pois={ myLocations } />
+                    <PoiMarkers 
+                        pois={ myLocations }
+                        onPoiClick={onPoiClick}
+                    />
                 </Map>
             </APIProvider>
         </div>

@@ -31,20 +31,24 @@ export const EventManagementPage = ({ user }) => {
             <h2>Event Management</h2>
 
             {loading && <div>Loading your events...</div>}
-
-            <div class="eventContainer container">
-                {!loading && error && <div className="error">Could not load event data: {error}</div>}
-
-                {!loading && myEvents.length > 0 ? (
-                    myEvents.map((e, i) => (
-                        <EventManagementWidget
-                            event={e}
-                        />
-                    ))
-                ) : (
-                    <div>You have not created any events.</div>
-                )}
-            </div>
+            {!loading && (
+                <div class="eventContainer container">
+                    {error && <div className="error">Could not load event data: {error}</div>}
+                    {!error && (
+                        <div>
+                            {myEvents.length > 0 ? (
+                                myEvents.map((e, i) => (
+                                    <EventManagementWidget
+                                        event={e}
+                                    />
+                                ))
+                            ) : (
+                                <div>You have not created any events.</div>
+                            )}
+                        </div>
+                    )}
+                </div>)
+            }
         </div>
     )
 

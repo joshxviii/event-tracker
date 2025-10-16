@@ -41,9 +41,7 @@ export const HomePage = ( { onEventClick, onEventCreationClick, onEventManageCli
                 <button onClick={onEventManageClick}>Manage My Events</button>
             </div>
 
-
             <div class="mainContent">
-                {loading && <div>Loading event data...</div>}
                 
                 <div class="mapContainer container">
                     <div>
@@ -57,9 +55,9 @@ export const HomePage = ( { onEventClick, onEventCreationClick, onEventManageCli
                     />
                 </div>
 
+                {loading && <div>Loading event data...</div>}
                 <div class="eventContainer container">
                     {!loading && error && <div className="error">Could not load event data: {error}</div>}
-
                     {!loading && events.length > 0 ? (
                         events.map((e, i) => (
                             <EventWidget

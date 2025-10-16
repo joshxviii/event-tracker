@@ -36,7 +36,8 @@ const eventSchema = new mongoose.Schema({
   },
   organizer: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    required: true
   },
   attendees: [{
     type: mongoose.Schema.Types.ObjectId,
@@ -78,6 +79,26 @@ eventSchema.virtual('formattedDateTime').get(function() {
     start: this.startTime,
     end: this.endTime
   };
+});
+
+// Cascade delete reviews when an event is removed.
+const Review = require('./Review');
+
+// remove()
+eventSchema.pre('remove', async function(next) {
+  try {
+    await Review.deleteMany({ event: this._id });
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
+// findOneAndDelete()
+eventSchema.post('findOneAndDelete', async function(doc) {
+  try {
+    if (doc) await Review.deleteMany({ event: doc._id });
+  } catch (err) {/* Ignore */}
 });
 
 module.exports = mongoose.model('Event', eventSchema);

@@ -3,7 +3,7 @@ import { EventWidget } from "./ui/event-widget";
 import MapWidget from "./ui/map-widget";
 import { get_events } from "../utils/requests/event";
 
-export const HomePage = ( { onEventClick, onEventCreationClick } ) => {
+export const HomePage = ( { onEventClick, onEventCreationClick, onEventManageClick } ) => {
     const [events, setEvents] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -30,7 +30,11 @@ export const HomePage = ( { onEventClick, onEventCreationClick } ) => {
         <div>
             <h2>Home Page</h2>
 
-            <button onClick={onEventCreationClick}>Create New Event</button>
+            <div class="buttonGroup">
+                <button onClick={onEventCreationClick}>Create New Event</button>
+                <button onClick={onEventManageClick}>Manage My Events</button>
+            </div>
+
 
             <div class="mainContent">
                 {loading && <div>Loading event data...</div>}

@@ -5,6 +5,7 @@ import { AccountPage } from './components/AccountPage';
 import { EventPage } from './components/EventPage';
 import { NavigationBar } from './components/NavigationBar';
 import { EventCreationPage } from './components/EventCreationPage';
+import { EventManagementPage } from './components/EventManagementPage';
 
 export function App() {
     /* 
@@ -54,6 +55,7 @@ export function App() {
                 <HomePage 
                     onEventClick={handleEventClick}
                     onEventCreationClick={() => handlePageChange('event-creation')}
+                    onEventManageClick={() => handlePageChange('event-management')}
                 />
             )}
 
@@ -73,7 +75,12 @@ export function App() {
             {currentPage === 'event-creation' && (
                 <EventCreationPage 
                     user={currentUser}
-                    onBack={() => handlePageChange('home')}
+                />
+            )}
+
+            {currentPage === 'event-management' && (
+                <EventManagementPage 
+                    user={currentUser}
                 />
             )}
 

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { create_event } from "../utils/requests/event";
+import { getCurrentUser } from "../utils/requests/user";
 
 // Simple event creation page with a minimal form
 export const EventCreationPage = ({ user }) => {
+
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [date, setDate] = useState("");
@@ -18,6 +20,7 @@ export const EventCreationPage = ({ user }) => {
     const [success, setSuccess] = useState(null);
 
     const handleSubmit = async (e) => {
+        
         e.preventDefault();
         setError(null);
         setSuccess(null);
@@ -37,15 +40,16 @@ export const EventCreationPage = ({ user }) => {
                 address: address || 'N/A',
                 coordinates: { lat: lat ? Number(lat) : null, lng: lng ? Number(lng) : null }
             },
+            organizer: user,
             category,
             isPublic: true,
         };
 
         setLoading(true);
         try {
-            const res = await create_event(payload, user.id);
+            const res = await create_event(payload);
             setSuccess('Event created');
-            // optionally clear form
+            // clear form
             setTitle(''); setDescription(''); setDate(''); setStartTime(''); setEndTime(''); setAddress(''); setLat(''); setLng('');
         } catch (err) {
             setError(err.message || 'Failed to create event');
@@ -53,13 +57,6 @@ export const EventCreationPage = ({ user }) => {
             setLoading(false);
         }
     };
-
-    if (!user) return (
-        <div style={{ maxWidth: 720, margin: '24px auto', padding: 16 }}>
-            <h2>Event Creation</h2>
-            <div>Please sign in to create events.</div>
-        </div>
-    );
 
     return (
         <div style={{ maxWidth: 720, margin: '24px auto', padding: 16 }}>

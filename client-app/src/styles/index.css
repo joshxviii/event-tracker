@@ -98,6 +98,13 @@ button {
   box-shadow: 2px 2px 3px #00000057;
 }
 
+/* Cut off title and other text */
+.eventWidget h1, .eventWidget p {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 .eventLabel {
   position: absolute;
   top: 8px;
@@ -109,6 +116,12 @@ button {
   font-weight: 600;
 }
 
+.eventHeader {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 .reviewPanel {
   min-width: 20em;
   border-radius: 12px;
@@ -118,6 +131,12 @@ button {
   box-shadow: 2px 2px 3px #00000057;
   max-width: 40em;
   position: relative;
+}
+
+.reviewPanel p {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .delete-review {

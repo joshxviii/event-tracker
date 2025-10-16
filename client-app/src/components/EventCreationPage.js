@@ -65,12 +65,12 @@ export const EventCreationPage = ({ user }) => {
             <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 12 }}>
                 <label>
                     Title
-                    <input value={title} onChange={(e) => setTitle(e.target.value)} />
+                    <input value={title} maxLength={50} onChange={(e) => setTitle(e.target.value)} />
                 </label>
 
                 <label>
                     Description
-                    <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
+                    <textarea value={description} maxLength={200} onChange={(e) => setDescription(e.target.value)} />
                 </label>
 
                 <div style={{ display: 'flex', gap: 8 }}>
@@ -90,7 +90,7 @@ export const EventCreationPage = ({ user }) => {
 
                 <label>
                     Address
-                    <input value={address} onChange={(e) => setAddress(e.target.value)} />
+                    <input value={address} maxLength={200} onChange={(e) => setAddress(e.target.value)} />
                 </label>
 
                 <div style={{ display: 'flex', gap: 8 }}>

@@ -1,4 +1,6 @@
 import React from "react"
+import {ReactComponent as CalendarIcon} from '../../assets/calendar.svg';
+import {ReactComponent as PoiIcon} from '../../assets/poi.svg';
 
 export function EventWidget( {event, onClick} ) {
 
@@ -21,8 +23,9 @@ export function EventWidget( {event, onClick} ) {
         onClick={ () => onClick(event._id) }
     >
         <h1> { event.title } </h1>
-        <p> Event ID: { event._id } </p>
         <p> { event.description } </p>
+        <p style={ {display: 'flex', gap: 6} }> <CalendarIcon/> {event.date} at { event.startTime } - { event.endTime } </p>
+        <div style={ {display: 'inline-flex', gap: 6} }> <PoiIcon/> <div style={ { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '220px'} }> {event.location.address} </div> </div>
         <div className="eventLabel" style={{ backgroundColor: bg }}>
           {category}
         </div>

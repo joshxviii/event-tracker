@@ -16,17 +16,27 @@ router.get('/', async (req, res) => {
 // Create a Review for an Event
 router.post('/', async (req, res) => {
     try {
-        const eventId = req.params.id;
-        const authorId = req.user && req.user.userId;
-        if (!authorId) return res.status(401).json({ message: 'Authentication required' });
+        const reviewData = { ...req.body };
 
-        const { rating, text } = req.body;
-        if (!rating || rating < 1 || rating > 5) return res.status(400).json({ message: 'Rating must be between 1 and 5' });
-
-        const review = new Review({ event: eventId, author: authorId, rating, text });
+        const review = new Review(reviewData);
         await review.save();
 
         res.status(201).json(review);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// DELETE a review (only the author can delete)
+router.delete('/:reviewId', async (req, res) => {
+    try {
+        const reviewId = req.params.reviewId;
+
+        const review = await Review.findById(reviewId);
+        if (!review) return res.status(404).json({ message: 'Review not found' });
+
+        await Review.findByIdAndDelete(reviewId);
+        res.json({ message: 'Review deleted' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { LoginPage } from './components/LoginPage';
 import { HomePage } from './components/HomePage';
 import { AccountPage } from './components/AccountPage';
@@ -35,6 +36,50 @@ export function App() {
         setSelectedEventId(eventId)
     }
 
+    // return (
+    //     <Router>
+    //         <Routes>
+    //             <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+    //             <Route path="/" element={
+    //                 <div>
+    //                     <NavigationBar
+    //                         currentPage={currentPage}
+    //                         onPageChange={handlePageChange}
+    //                         onLogout={handleLogout}
+    //                     />
+    //                     {currentPage === 'home' && (
+    //                         <HomePage
+    //                             onEventClick={handleEventClick}
+    //                             onEventCreationClick={() => handlePageChange('event-creation')}
+    //                             onEventManageClick={() => handlePageChange('event-management')}
+    //                         />
+    //                     )}
+    //                     {currentPage === 'account' && (
+    //                         <AccountPage
+    //                             user={currentUser}
+    //                         />
+    //                     )}
+    //                     {currentPage === 'event' && selectedEventId && (
+    //                         <EventPage
+    //                             eventId={selectedEventId}
+    //                             onBack={() => handlePageChange('home')}
+    //                         />
+    //                     )}
+    //                     {currentPage === 'event-creation' && (
+    //                         <EventCreationPage
+    //                             user={currentUser}
+    //                         />
+    //                     )}
+    //                     {currentPage === 'event-management' && (
+    //                         <EventManagementPage
+    //                             user={currentUser}
+    //                         />
+    //                     )}
+    //                 </div>
+    //             } />
+    //         </Routes>
+    //     </Router>
+    // );
 
     // if the user is not logged in display login page.
     if(!isLoggedIn) return (

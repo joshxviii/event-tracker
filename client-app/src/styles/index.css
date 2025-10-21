@@ -19,16 +19,11 @@ body {
   background-color: #f9fafb;
 }
 
-:root {
-  /* Category color variables */
-  --event-color-volunteer: #2ecc71; /* green */
-  --event-color-social: #f39c12; /* orange */
-  --event-color-market: #3498db; /* blue */
-  --event-color-other: #7f8c8d; /* gray */
-  --event-label-foreground: #ffffff;
+h1 {
+  color: #000000;
 }
 
-h1 {
+h2 {
   color: #000000;
 }
 

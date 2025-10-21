@@ -34,7 +34,7 @@ export const HomePage = ( { onEventClick, onEventCreationClick, onEventManageCli
 
     return (
         <div>
-            <h2>Home Page</h2>
+            <h2 class="indent">Home Page</h2>
 
             <div class="buttonGroup">
                 <button onClick={onEventCreationClick}>Create New Event</button>

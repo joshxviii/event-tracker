@@ -54,21 +54,17 @@ export function EventPage( {eventId, onBack } ) {
 
     if (event) return (
         <div>
-            
-            <div class="eventHeader container">
-                <h2>{event.title}</h2>
-                <br/>
-                <button
-                    onClick={onBack}
-                >
-                    Back Home
-                </button>
-                <p> Event Description: {event.description} </p>
-            </div>
-
+            <h2>{event.title}</h2>
+            <br/>
+            <button
+                onClick={onBack}
+            >
+                Back Home
+            </button>
+            <p> Event Description: {event.description} </p>
 
             <div class="reviewContainer container">
-                <h3> Reviews: </h3>
+                <h3 class="indent2"> Reviews: </h3>
                 {
                     reviews.map((review, i) => (
                         <Review

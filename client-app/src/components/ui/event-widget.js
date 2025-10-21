@@ -6,7 +6,7 @@ export function EventWidget( {event, onClick} ) {
 
   // TODO: create a function for fetching event details using the eventId prop
 
-  //const event = findEventById(eventId)
+  // const event = findEventById(eventId)
 
   const category = event.category || 'other';
   const cssVarMap = {

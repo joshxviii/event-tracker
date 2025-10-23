@@ -3,7 +3,7 @@ import {useMap, AdvancedMarker, Pin} from '@vis.gl/react-google-maps';
 import {MarkerClusterer} from '@googlemaps/markerclusterer';
 import { Circle } from './circle';
 
-export function PoiMarkers( { pois } ) {
+export function PoiMarkers( { pois, onPoiClick } ) {
     const map = useMap();
     const [markers, setMarkers] = useState({});
     const clusterer = useRef(null);
@@ -17,7 +17,7 @@ export function PoiMarkers( { pois } ) {
                 map.panTo(ev.latLng);
                 setCircleCenter(ev.latLng);
             }
-            console.log('event clicked:', key);
+            if (onPoiClick) onPoiClick(key);
         },
         [map]
     );
@@ -52,17 +52,27 @@ export function PoiMarkers( { pois } ) {
     return (
         <>
             <Circle center={circleCenter} />
-            {pois.map((poi) => (
-                <AdvancedMarker
-                    key={poi.key}
-                    position={poi.location}
-                    ref={(marker) => setMarkerRef(marker, poi.key)}
-                    clickable
-                    onClick={handleClick(poi.key)}
-                >
-                    <Pin background={'#FBBC04'} glyphColor={'#000'} borderColor={'#000'} />
-                </AdvancedMarker>
-            ))}
+            {pois.map((poi) => {
+                const category = poi.category || 'other';
+                const colorMap = {
+                    volunteer: 'var(--event-color-volunteer)',
+                    social: 'var(--event-color-social)',
+                    market: 'var(--event-color-market)',
+                    other: 'var(--event-color-other)'
+                };
+                const bg = colorMap[category] || 'var(--event-color-other)';
+                return (
+                    <AdvancedMarker
+                        key={poi.key}
+                        position={poi.location}
+                        ref={(marker) => setMarkerRef(marker, poi.key)}
+                        clickable
+                        onClick={handleClick(poi.key)}
+                    >
+                        <Pin background={bg} glyphColor={'#ffffff'} borderColor={'#000000ff'} />
+                    </AdvancedMarker>
+                );
+            })}
         </>
     );
 }

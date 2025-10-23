@@ -6,17 +6,17 @@
     "configurations": [
         {
             "type": "node-terminal",
-            "name": "Run Script: start (server-app)",
-            "request": "launch",
-            "command": "npm run start",
-            "cwd": "${workspaceFolder}\\server-app"
-        },
-        {
-            "type": "node-terminal",
-            "name": "Run Script: start (client-app)",
+            "name": "start (client-app)",
             "request": "launch",
             "command": "npm run start",
             "cwd": "${workspaceFolder}\\client-app"
+        },
+        {
+            "type": "node-terminal",
+            "name": "start (server-app)",
+            "request": "launch",
+            "command": "npm run start",
+            "cwd": "${workspaceFolder}\\server-app"
         }
     ]
 }

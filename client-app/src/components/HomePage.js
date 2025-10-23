@@ -1,84 +1,67 @@
 import React, { useEffect, useState } from "react";
 import { EventWidget } from "./ui/event-widget";
 import MapWidget from "./ui/map-widget";
+import { get_events } from "../utils/requests/event";
+import { PoiInfoWidget } from "./ui/poi-info-widget";
 
-export const HomePage = ( { onEventClick } ) => {
+export const HomePage = ( { onEventClick, onEventCreationClick, onEventManageClick } ) => {
     const [events, setEvents] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [selectedEventId, setSelectedEventId] = useState(null);
 
     useEffect(() => {
-        const loadDemoData = async () => {
+        let mounted = true;
+        (async () => {
             try {
-                const res = await fetch('/DemoData.csv');
-                if (!res.ok) throw new Error('DemoData.csv not found');
-                const text = await res.text();
-                const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
-                
-                console.log(res)
-
-                if (lines.length <= 1) {
-                    setEvents([]);
-                    return;
-                }
-
-                const headers = lines[0].split(',').map(h => h.trim());
-                const rows = lines.slice(1).map(line => line.split(',').map(c => c.trim()));
-                const data = rows.map(cols => {
-                    const obj = {};
-                    headers.forEach((h, i) => obj[h] = cols[i] ?? '');
-                    return obj;
-                });
-
-                // Detect an ID column from common names
-                const idKey = 'id';
-                const parsed = data.map((d, idx) => {
-                    let id = null;
-                    if (Object.prototype.hasOwnProperty.call(d, idKey) && d[idKey] !== '') { id = d[idKey]; }
-                    return { ...d, id: Number(id) };
-                });
-
-                setEvents(parsed);
+                if (!mounted) return;
+                setEvents(await get_events());
             } catch (e) {
-                // if anything goes wrong, just keep events null and show fallback
-                console.warn('Failed to load DemoData.csv:', e.message || e);
+                if (!mounted) return;
                 setError(e.message || String(e));
-                setEvents(null);
+                setEvents([]);
             } finally {
-                setLoading(false);
+                if (mounted) setLoading(false);
             }
-        };
+        })();
 
-        loadDemoData();
+        return () =>  mounted = false;
     }, []);
 
-    const fallbackIds = [16, 42, 3];
+    const handlePoiClick = (id) => {
+        setSelectedEventId(prev => (prev === id ? null : id));
+    };
 
     return (
         <div>
             <h2>Home Page</h2>
 
-            <div>
-                {loading && <div>Loading demo events...</div>}
+            <div class="buttonGroup">
+                <button onClick={onEventCreationClick}>Create New Event</button>
+                <button onClick={onEventManageClick}>Manage My Events</button>
+            </div>
+
+            <div class="mainContent">
                 
-                <div className="mapContainer container">
-                    <div id="map">
-                        <MapWidget 
-                            events = {!loading ? events : null}
+                <div class="mapContainer container">
+                    <div>
+                        <MapWidget
+                            events={!loading ? events : []}
+                            onPoiClick={handlePoiClick}
                         />
                     </div>
+                    <PoiInfoWidget
+                        eventId={selectedEventId}
+                    />
                 </div>
 
-                <div className="eventContainer container">
-                    {!loading && error && <div className="error">Could not load demo data: {error}</div>}
-
+                {loading && <div>Loading event data...</div>}
+                <div class="eventContainer container">
+                    {!loading && error && <div className="error">Could not load event data: {error}</div>}
                     {!loading && events.length > 0 ? (
                         events.map((e, i) => (
                             <EventWidget
-                                key={e.id ?? i}
-                                eventId={e.id}
-                                eventName={e.name}
-                                eventDsc={e.description}
+                                event={e}
                                 onClick={onEventClick}
                             />
                         ))

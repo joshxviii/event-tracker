@@ -16,6 +16,16 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #f9fafb;
+}
+
+:root {
+  /* Category color variables */
+  --event-color-volunteer: #2ecc71; /* green */
+  --event-color-social: #f39c12; /* orange */
+  --event-color-market: #3498db; /* blue */
+  --event-color-other: #7f8c8d; /* gray */
+  --event-label-foreground: #ffffff;
 }
 
 h1 {
@@ -27,23 +37,52 @@ code {
     monospace;
 }
 
+button {
+  padding: 6px 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  border: none;
+  background-color: #155dfc;
+  border-radius: 4px;
+  color: white;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 8px;
+}
+
+#navTitle {
+  margin-left: 16px;
+  font-weight: bold;
+  color: #155dfc;
+}
+
 #nav-bar {
-  background-color: #e1e1e1;
+  gap: 16px;
+  border-bottom: 1px #e5e7eb solid;
+  background-color: #ffffff;
   display: inline-flex;
   width: 100%;
   align-items: center;
 }
 
-#map {
-  width: 50em;
+.mainContent {
+  display: flex;
+  flex-direction: row;
 }
 
-.container {
-  color: #4d4d4d;
+.mapContainer {
+  width: 50em;
+  min-height: 2em;
+  padding: 20px;
   margin: 10px;
-  text-align: justify;
-  background-color: #00ffff00;
   float: left;
+  border-radius: 12px;
+  box-shadow: 2px 2px 3px #00000057;
 }
 
 .eventContainer {
@@ -51,6 +90,59 @@ code {
 }
 
 .eventWidget {
-  background-color: #e9e9e9;
+  padding: 1px 8px;
+  margin: 8px;
+  background-color: #ffffff;
   cursor: pointer;
+  border-radius: 12px;
+  box-shadow: 2px 2px 3px #00000057;
+}
+
+/* Cut off title and other text */
+.eventWidget h1, .eventWidget p {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.eventLabel {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  color: var(--event-label-foreground);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.eventHeader {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.reviewPanel {
+  min-width: 20em;
+  border-radius: 12px;
+  padding: 1px 8px;
+  margin: 8px;
+  background-color: #ffffff;
+  box-shadow: 2px 2px 3px #00000057;
+  max-width: 40em;
+  position: relative;
+}
+
+.reviewPanel p {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.delete-review {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  cursor: pointer;
+  color: #666;
 }

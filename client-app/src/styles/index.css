@@ -80,16 +80,56 @@ button {
   box-shadow: 2px 2px 3px #00000057;
 }
 
-.labelStyle {
+.eventList {
+  padding: 1px 8px;
+  margin: 8px;
+  min-width: 30em;
+  max-width: 30em;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 2px 2px 3px #00000057;
+}
+
+.eventSearch {
   display: flex;
+  padding: 12px;
+}
+
+.eventSearch input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.filterBar {
+  display: flex;
+  gap: 8px;
+  padding: 8px 12px;
   align-items: center;
-  gap: 5px;
-  font-family: Georgia, sans-serif;
-  font-weight: bold;
+}
+
+.filterBtn {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background: lightgray;
+  cursor: pointer;
+}
+
+.filterBtn.active {
+  box-shadow: 0 0 0 2px #6598ff inset;
+}
+
+.filterBtn.clear {
+  margin-left: auto;
+  background: transparent;
+  color: #444;
 }
 
 .eventContainer {
-  width: 24em;
+  overflow: scroll;
+  height: 80vh;
 }
 
 .eventWidget {

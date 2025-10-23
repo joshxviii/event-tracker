@@ -58,10 +58,14 @@ export const HomePage = ( { onEventClick, onEventCreationClick, onEventManageCli
                 if (!hay.includes(text)) return false;
             }
 
-            // filter by category buttons (if any selected)
+            // filter by category buttons
             if (activeFilters.size > 0) {
                 if (!activeFilters.has(e.category || 'other')) return false;
             }
+
+            // TODO filter by time
+
+            // TODO filter by distance
 
             return true;
         });
@@ -70,7 +74,6 @@ export const HomePage = ( { onEventClick, onEventCreationClick, onEventManageCli
     // Reset display count when filters or search change
     useEffect(() => {
         setDisplayCount(PAGE_SIZE);
-        // scroll to top of the list
         if (listRef.current) listRef.current.scrollTop = 0;
     }, [searchText, activeFilters]);
 
@@ -91,8 +94,7 @@ export const HomePage = ( { onEventClick, onEventCreationClick, onEventManageCli
 
     return (
         <div>
-            <h2>Home Page</h2>
-
+            <br/>
             <div class="buttonGroup">
                 <button onClick={onEventCreationClick}>Create New Event</button>
                 <button onClick={onEventManageClick}>Manage My Events</button>

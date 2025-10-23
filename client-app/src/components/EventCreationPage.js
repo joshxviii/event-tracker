@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { create_event } from "../utils/requests/event";
 import { getCurrentUser } from "../utils/requests/user";
 
@@ -18,6 +18,41 @@ export const EventCreationPage = ({ user }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
+
+
+    const geocodeAddress = async () => {
+        setError(null);
+        if (!address || address.trim() === "") {
+            //setError("Please enter an Address.");
+            return;
+        }
+
+        const key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+        if (!key) {
+            setError("Maps API not loaded and no geocoding key available.");
+            return;
+        }
+
+        try {
+            const resp = await fetch(
+                `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${key}`
+            );
+            const data = await resp.json();
+            if (data.status === "OK" && data.results && data.results[0]) {
+                const loc = data.results[0].geometry.location;
+                setLat(String(loc.lat));
+                setLng(String(loc.lng));
+            } else {
+                setError(`Geocoding failed: ${data.status}`);
+            }
+        } catch (e) {
+            setError(e.message || String(e));
+        }
+    };
+
+    useEffect(() => {
+        geocodeAddress();
+    }, [address]);
 
     const handleSubmit = async (e) => {
         
@@ -90,19 +125,8 @@ export const EventCreationPage = ({ user }) => {
 
                 <label>
                     Address
-                    <input value={address} maxLength={200} onChange={(e) => setAddress(e.target.value)} />
+                    <input value={address} maxLength={200} onChange={(e) => {setAddress(e.target.value)}} />
                 </label>
-
-                <div style={{ display: 'flex', gap: 8 }}>
-                    <label>
-                        Lat
-                        <input value={lat} onChange={(e) => setLat(e.target.value)} />
-                    </label>
-                    <label>
-                        Lng
-                        <input value={lng} onChange={(e) => setLng(e.target.value)} />
-                    </label>
-                </div>
 
                 <label>
                     Category

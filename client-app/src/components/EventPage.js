@@ -64,7 +64,7 @@ export function EventPage( {eventId, onBack } ) {
             <p> Event Description: {event.description} </p>
 
             <div class="reviewContainer container">
-                <h3 class="indent2"> Reviews: </h3>
+                <h3 class="indent"> Reviews: </h3>
                 {
                     reviews.map((review, i) => (
                         <Review

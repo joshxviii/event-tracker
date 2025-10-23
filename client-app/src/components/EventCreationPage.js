@@ -60,54 +60,43 @@ export const EventCreationPage = ({ user }) => {
 
     return (
         <div style={{ maxWidth: 720, margin: '24px auto', fontFamily: 'Georgia, sans-serif', padding: 16 }}>
-            <h2>Event Creation</h2>
+            <h2 class="blueColor">Event Creation</h2>
 
             <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 12 }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontFamily: 'Georgia, sans-serif', fontWeight: 'bold' }}>
+                <label class = "labelStyle">
                     Title:
                     <input value={title} maxLength={50} onChange={(e) => setTitle(e.target.value)} />
                 </label>
                 
 
-                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontFamily: 'Georgia, sans-serif', fontWeight: 'bold' }}>
+                <label class = "labelStyle">
                     Description:
                     <textarea value={description} maxLength={200} onChange={(e) => setDescription(e.target.value)} />
                 </label>
 
-                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontFamily: 'Georgia, sans-serif', fontWeight: 'bold' }}>
+                <label class = "labelStyle">
                         Date:
                         <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
                     </label>
 
                 <div style={{ display: 'flex', gap: 16 }}>
                     
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '5px', fontFamily: 'Georgia, sans-serif', fontWeight: 'bold' }}>
+                    <label class = "labelStyle">
                         Start:
                         <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
                     </label>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '5px', fontFamily: 'Georgia, sans-serif', fontWeight: 'bold' }}>
+                    <label class = "labelStyle">
                         End:
                         <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
                     </label>
                 </div>
 
-                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontFamily: 'Georgia, sans-serif', fontWeight: 'bold' }}>
+                <label class = "labelStyle">
                     Address:
                     <input value={address} maxLength={200} onChange={(e) => setAddress(e.target.value)} />
                 </label>
 
-                <div style={{ display: 'flex', gap: 8 }}>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '5px', fontFamily: 'Georgia, sans-serif', fontWeight: 'bold' }}>
-                        Lat:
-                        <input value={lat} onChange={(e) => setLat(e.target.value)} />
-                    </label>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '5px', fontFamily: 'Georgia, sans-serif', fontWeight: 'bold' }}>
-                        Long:
-                        <input value={lng} onChange={(e) => setLng(e.target.value)} />
-                    </label>
-                </div>
-
-                <label style={{ display: 'flex', alignItems: 'center', gap: '5px', fontFamily: 'Georgia, sans-serif', fontWeight: 'bold' }}>
+                <label class = "labelStyle">
                     Category:
                     <select value={category} onChange={(e) => setCategory(e.target.value)}>
                         <option value="social">Social</option>

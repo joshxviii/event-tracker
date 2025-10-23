@@ -80,6 +80,14 @@ button {
   box-shadow: 2px 2px 3px #00000057;
 }
 
+.labelStyle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: Georgia, sans-serif;
+  font-weight: bold;
+}
+
 .eventContainer {
   width: 24em;
 }
@@ -140,4 +148,21 @@ button {
   right: 8px;
   cursor: pointer;
   color: #666;
+}
+
+:root {
+  /* Category color variables */
+  --event-color-volunteer: #2ecc71; /* green */
+  --event-color-social: #f39c12; /* orange */
+  --event-color-market: #3498db; /* blue */
+  --event-color-other: #7f8c8d; /* gray */
+  --event-label-foreground: #ffffff;
+}
+
+.blueColor {
+  color: #155dfc;
+}
+
+.indent{
+  margin-left: 16px;
 }

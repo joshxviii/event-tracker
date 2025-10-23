@@ -34,12 +34,17 @@ export const HomePage = ( { onEventClick, onEventCreationClick, onEventManageCli
 
     return (
         <div>
-            <h2 class="indent">Home Page</h2>
-
+            <h2 class="indent blueColor">Discover Events Near You</h2>
+            <label class="indent labelStyle">
+                Find and join community events happening in your neighborhood
+            </label>
+            
+            <h2 class="indent">
             <div class="buttonGroup">
                 <button onClick={onEventCreationClick}>Create New Event</button>
                 <button onClick={onEventManageClick}>Manage My Events</button>
             </div>
+            </h2>
 
             <div class="mainContent">
                 

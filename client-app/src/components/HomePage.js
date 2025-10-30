@@ -54,8 +54,8 @@ export const HomePage = ( { onEventClick, onEventCreationClick, onEventManageCli
         return events.filter(e => {
             // filter by text
             if (text) {
-                const hay = `${e.title} ${e.description} ${e.category} ${e.location?.address || ''}`.toLowerCase();
-                if (!hay.includes(text)) return false;
+                const keyWords = `${e.title} ${e.description} ${e.category} ${e.location?.address || ''}`.toLowerCase();
+                if (!keyWords.includes(text)) return false;
             }
 
             // filter by category buttons
@@ -82,8 +82,7 @@ export const HomePage = ( { onEventClick, onEventCreationClick, onEventManageCli
     const handleScroll = (e) => {
         const node = e.target;
         if (!node) return;
-        const threshold = 200; // px from bottom
-        if (node.scrollTop + node.clientHeight >= node.scrollHeight - threshold) {
+        if (node.scrollTop + node.clientHeight >= node.scrollHeight - 200) {
             // load more
             setDisplayCount(prev => {
                 if (prev >= filteredEvents.length) return prev;
@@ -95,7 +94,7 @@ export const HomePage = ( { onEventClick, onEventCreationClick, onEventManageCli
     return (
         <div>
             <h2 class="indent blueColor">Discover Events Near You</h2>
-            <label class="indent labelStyle">
+            <label class="indent">
                 Find and join community events happening in your neighborhood
             </label>
             
@@ -155,7 +154,7 @@ export const HomePage = ( { onEventClick, onEventCreationClick, onEventManageCli
                                 />
                             ))
                         ) : (<div />)}
-                        {/* show loader when there are more events to fetch */}
+                        {}
                         {displayCount < filteredEvents.length && (
                             <div style={{ padding: 12, textAlign: 'center' }}>Loading more...</div>
                         )}

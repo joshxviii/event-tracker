@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { create_event } from "../utils/requests/event";
-import { getCurrentUser } from "../utils/requests/user";
 
-// Simple event creation page with a minimal form
+// Simple event creation page with a modern form
 export const EventCreationPage = ({ user }) => {
-
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [date, setDate] = useState("");
@@ -19,19 +17,15 @@ export const EventCreationPage = ({ user }) => {
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
 
-
     const geocodeAddress = async () => {
         setError(null);
         if (!address || address.trim() === "") {
-            //setError("Please enter an Address.");
+            setLat(""); setLng("");
             return;
         }
 
         const key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
-        if (!key) {
-            setError("Maps API not loaded and no geocoding key available.");
-            return;
-        }
+        if (!key) return;
 
         try {
             const resp = await fetch(
@@ -42,20 +36,23 @@ export const EventCreationPage = ({ user }) => {
                 const loc = data.results[0].geometry.location;
                 setLat(String(loc.lat));
                 setLng(String(loc.lng));
-            } else {
-                setError(`Geocoding failed: ${data.status}`);
+            }
+            else {
+                setLat(""); setLng("");
             }
         } catch (e) {
-            setError(e.message || String(e));
+            console.warn('Geocode failed', e);
         }
     };
 
     useEffect(() => {
-        geocodeAddress();
+        const t = setTimeout(() => {
+            geocodeAddress();
+        }, 400);
+        return () => clearTimeout(t);
     }, [address]);
 
     const handleSubmit = async (e) => {
-        
         e.preventDefault();
         setError(null);
         setSuccess(null);
@@ -82,7 +79,7 @@ export const EventCreationPage = ({ user }) => {
 
         setLoading(true);
         try {
-            const res = await create_event(payload);
+            await create_event(payload);
             setSuccess('Event created');
             // clear form
             setTitle(''); setDescription(''); setDate(''); setStartTime(''); setEndTime(''); setAddress(''); setLat(''); setLng('');
@@ -94,60 +91,77 @@ export const EventCreationPage = ({ user }) => {
     };
 
     return (
-        <div style={{ maxWidth: 720, margin: '24px auto', fontFamily: 'Georgia, sans-serif', padding: 16 }}>
-            <h2 class="blueColor">Event Creation</h2>
+        <div className="formContainer">
+            <h2 className="blueColor">Create an Event</h2>
 
-            <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 12 }}>
-                <label class = "labelStyle">
-                    Title:
-                    <input value={title} maxLength={50} onChange={(e) => setTitle(e.target.value)} />
-                </label>
-                
-
-                <label class = "labelStyle">
-                    Description:
-                    <textarea value={description} maxLength={200} onChange={(e) => setDescription(e.target.value)} />
+            <form onSubmit={handleSubmit} className="formGrid" aria-label="Create event form">
+                <label className="labelStyle">
+                    <div style={{ width: '100%' }}>
+                        <div style={{ fontSize: 14, marginBottom: 6 }}>Title</div>
+                        <input className="input" id="title" value={title} maxLength={80} onChange={(e) => setTitle(e.target.value)} placeholder="Event title" />
+                    </div>
                 </label>
 
-                <label class = "labelStyle">
-                        Date:
-                        <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+                <label className="labelStyle">
+                    <div style={{ width: '100%' }}>
+                        <div style={{ fontSize: 14, marginBottom: 6 }}>Description</div>
+                        <textarea className="input" id="description" value={description} maxLength={800} onChange={(e) => setDescription(e.target.value)} placeholder="Describe the event..." />
+                    </div>
+                </label>
+
+                <div className="twoCols">
+                    <label className="labelStyle" style={{ flex: 1 }}>
+                        <div style={{ fontSize: 14, marginBottom: 6 }}>Date</div>
+                        <input className="input" type="date" id="date" value={date} onChange={(e) => setDate(e.target.value)} />
                     </label>
 
-                <div style={{ display: 'flex', gap: 16 }}>
-                    
-                    <label class = "labelStyle">
-                        Start:
-                        <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
-                    </label>
-                    <label class = "labelStyle">
-                        End:
-                        <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
-                    </label>
+                    <div style={{ flex: 1, display: 'flex', gap: 8 }}>
+                        <label className="labelStyle" style={{ flex: 1 }}>
+                            <div style={{ fontSize: 14, marginBottom: 6 }}>Start</div>
+                            <input className="input" type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
+                        </label>
+                        <label className="labelStyle" style={{ flex: 1 }}>
+                            <div style={{ fontSize: 14, marginBottom: 6 }}>End</div>
+                            <input className="input" type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
+                        </label>
+                    </div>
                 </div>
 
-                <label class = "labelStyle">
-                    Address:
-                    <input value={address} maxLength={200} onChange={(e) => setAddress(e.target.value)} />
+                <label className="labelStyle">
+                    <div style={{ width: '100%' }}>
+                        <div style={{ fontSize: 14, marginBottom: 6 }}>Address</div>
+                        <input className="input" id="address" value={address} maxLength={200} onChange={(e) => setAddress(e.target.value)} placeholder="Street, city, state" />
+                    </div>
                 </label>
 
-                <label class = "labelStyle">
-                    Category:
-                    <select value={category} onChange={(e) => setCategory(e.target.value)}>
-                        <option value="social">Social</option>
-                        <option value="volunteer">Volunteer</option>
-                        <option value="market">Market</option>
-                        <option value="other">Other</option>
-                    </select>
-                </label>
+                <div className="twoCols">
+                    <label className="labelStyle" style={{ flex: 1 }}>
+                        <div style={{ fontSize: 14, marginBottom: 6 }}>Category</div>
+                        <select className="input" value={category} onChange={(e) => setCategory(e.target.value)}>
+                            <option value="social">Social</option>
+                            <option value="volunteer">Volunteer</option>
+                            <option value="market">Market</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </label>
 
-                {error && <div style={{ color: 'red' }}>{error}</div>}
-                {success && <div style={{ color: 'green' }}>{success}</div>}
+                    <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: 14, marginBottom: 6 }}>Coordinates</div>
+                        <div className="coordsRow">
+                            <input className="input smallInput" readOnly value={lat || ''} placeholder="lat" />
+                            <input className="input smallInput" readOnly value={lng || ''} placeholder="lng" />
+                        </div>
+                        <div style={{ fontSize: 12, color: '#666', marginTop: 6 }}>Coordinates are auto-filled from the address when available.</div>
+                    </div>
+                </div>
 
-                <div>
+                {error && <div className="formError">{error}</div>}
+                {success && <div className="formSuccess">{success}</div>}
+
+                <div className="formActions">
                     <button type="submit" disabled={loading}>{loading ? 'Creating...' : 'Create Event'}</button>
                 </div>
-            </form>
+            </form>         
         </div>
     );
 };

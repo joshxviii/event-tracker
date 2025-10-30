@@ -2,7 +2,6 @@
 const express = require('express');
 const router = express.Router();
 const Event = require('../schemas/Event');
-const User = require('../schemas/User');
 
 // Create event
 router.post('/', async (req, res) => {
@@ -13,7 +12,7 @@ router.post('/', async (req, res) => {
     await event.save();
 
     // Add to organizer's created events
-    await User.findByIdAndUpdate(eventData.organizer._id, {
+    await Event.findByIdAndUpdate(eventData.organizer._id, {
       $push: { createdEvents: event._id }
     });
 
@@ -30,21 +29,6 @@ router.get('/', async (req, res) => {
       .populate('organizer', 'username firstName lastName')
       .populate('attendees', 'username firstName lastName')
       .sort({ date: 1, startTime: 1 });
-    res.json(events);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-// Get all events organized by a specific user
-router.get('/organizer/:organizerId', async (req, res) => {
-  try {
-
-    const events = await Event.find({ organizer: req.params.organizerId })
-      .populate('organizer', 'username firstName lastName')
-      .populate('attendees', 'username firstName lastName')
-      .sort({ date: 1, startTime: 1 });
-
     res.json(events);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -72,7 +56,8 @@ router.get('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const event = await Event.findOne({ 
-      _id: req.params.id
+      _id: req.params.id, 
+      organizer: req.user.userId 
     });
     
     if (!event) {
@@ -92,23 +77,14 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const event = await Event.findOneAndDelete({ 
-      _id: req.params.id 
+      _id: req.params.id, 
+      organizer: req.user.userId 
     });
     
     if (!event) {
       return res.status(404).json({ message: 'Event not found or unauthorized' });
     }
-
-    // Remove references to this event from any users' createdEvents/attendedEvents
-    try {
-      await User.updateMany(
-        { $or: [ { createdEvents: event._id }, { attendedEvents: event._id } ] },
-        { $pull: { createdEvents: event._id, attendedEvents: event._id } }
-      );
-    } catch (e) {
-      console.error('Failed to clean up user event references for event', event._id, e);
-    }
-
+    
     res.json({ message: 'Event deleted' });
   } catch (error) {
     res.status(500).json({ message: error.message });

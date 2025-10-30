@@ -1,4 +1,6 @@
 import React from "react"
+import {ReactComponent as DeleteIcon} from '../../assets/delete.svg';
+import {ReactComponent as EditIcon} from '../../assets/edit.svg';
 
 export function EventManagementWidget( {event} ) {
 
@@ -11,6 +13,11 @@ export function EventManagementWidget( {event} ) {
         <p> Time: { event.startTime } - { event.endTime } </p>
         <p> Location: { event.location.address } </p>
         <p> Category: { event.category } </p>
+
+        <div class="buttonGroup">
+          <button onClick={() => alert('Edit not implemented')}><EditIcon/> Edit Event</button>
+          <button onClick={() => alert('Edit not implemented')}><DeleteIcon /> Delete Event </button>
+        </div>
     </div>
   );
 }

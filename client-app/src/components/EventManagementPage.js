@@ -28,9 +28,9 @@ export const EventManagementPage = ({ user }) => {
 
     return (
         <div>
-            <h2>Event Management</h2>
+            <h2 class="indent blueColor">Event Management</h2>
 
-            {loading && <div>Loading your events...</div>}
+            {loading && <div class="indent">Loading your events...</div>}
             {!loading && (
                 <div class="eventContainer container">
                     {error && <div className="error">Could not load event data: {error}</div>}

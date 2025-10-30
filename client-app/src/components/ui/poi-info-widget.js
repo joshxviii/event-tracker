@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { get_event } from '../../utils/requests/event';
 
-export function PoiInfoWidget({ eventId }) {
+export function PoiInfoWidget({ eventId, onClick }) {
     const [event, setEvent] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -53,6 +53,7 @@ export function PoiInfoWidget({ eventId }) {
                             {event.date && `Date: ${new Date(event.date).toLocaleDateString()}`}
                         </small>
                     </div>
+                    <button onClick={ () => onClick(eventId) }>View Details</button>
                 </div>
             )}
         </div>

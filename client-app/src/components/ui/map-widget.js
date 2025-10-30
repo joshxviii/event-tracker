@@ -6,16 +6,17 @@ export default function MapWidget( { events, onPoiClick } ) {
     // Data from csv list
     const myLocations = Array.isArray(events)
         ? events
-              .map((e, idx) => {
-                  const lat = Number(e.location.coordinates.lat);
-                  const lng = Number(e.location.coordinates.lng);
+              .map((e) => {
+                  const lat = Number(e.location?.coordinates?.lat);
+                  const lng = Number(e.location?.coordinates?.lng);
                   return {
                       key: String(e._id),
                       location: { lat, lng },
-                      category: e.category
+                      category: e.category,
+                      title: e.title
                   };
               })
-              .filter(Boolean)
+              .filter((p) => !Number.isNaN(p.location.lat) && !Number.isNaN(p.location.lng))
         : [];
 
     return (

@@ -9,7 +9,6 @@ export function PoiMarkers( { pois, onPoiClick } ) {
     const clusterer = useRef(null);
     const [circleCenter, setCircleCenter] = useState(null);
 
-    // handleClick is a higher-order function so we can capture the POI key
     const handleClick = useCallback(
         (key) => (ev) => {
             if (!map) return;
@@ -33,6 +32,7 @@ export function PoiMarkers( { pois, onPoiClick } ) {
         clusterer.current?.clearMarkers();
         clusterer.current?.addMarkers(Object.values(markers));
     }, [markers]);
+
 
     const setMarkerRef = (marker, key) => {
         if (marker && markers[key]) return;
@@ -63,13 +63,17 @@ export function PoiMarkers( { pois, onPoiClick } ) {
                 const bg = colorMap[category] || 'var(--event-color-other)';
                 return (
                     <AdvancedMarker
+                        title={poi.title} 
                         key={poi.key}
                         position={poi.location}
                         ref={(marker) => setMarkerRef(marker, poi.key)}
                         clickable
                         onClick={handleClick(poi.key)}
                     >
-                        <Pin background={bg} glyphColor={'#ffffff'} borderColor={'#000000ff'} />
+                        <div className="poiMarker"  style={{backgroundColor: 'red'}}>
+                            <Pin background={bg} glyphColor={'#0000007c'} borderColor={'#000000ff'} />
+
+                        </div>
                     </AdvancedMarker>
                 );
             })}

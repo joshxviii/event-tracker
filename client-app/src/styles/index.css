@@ -238,9 +238,17 @@ button {
   z-index: 2000;
 }
 
-.poiMarker:hover .poiTooltip {
+.poiTooltip.visible {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
+}
+
+/* limit tooltip width and wrap if needed */
+.poiTooltip {
+  max-width: 220px;
+  white-space: normal;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 /* Event Creation Page */

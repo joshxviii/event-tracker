@@ -116,6 +116,7 @@ export const HomePage = ( { onEventClick, onEventCreationClick, onEventManageCli
                     </div>
                     <PoiInfoWidget
                         eventId={selectedEventId}
+                        onClick={onEventClick}
                     />
                 </div>
 

@@ -6,16 +6,17 @@ export default function MapWidget( { events, onPoiClick } ) {
     // Data from csv list
     const myLocations = Array.isArray(events)
         ? events
-              .map((e, idx) => {
-                  const lat = Number(e.location.coordinates.lat);
-                  const lng = Number(e.location.coordinates.lng);
+              .map((e) => {
+                  const lat = Number(e.location?.coordinates?.lat);
+                  const lng = Number(e.location?.coordinates?.lng);
                   return {
                       key: String(e._id),
                       location: { lat, lng },
-                      category: e.category
+                      category: e.category,
+                      title: e.title
                   };
               })
-              .filter(Boolean)
+              .filter((p) => !Number.isNaN(p.location.lat) && !Number.isNaN(p.location.lng))
         : [];
 
     return (
@@ -25,7 +26,7 @@ export default function MapWidget( { events, onPoiClick } ) {
                 onLoad={() => console.log('Maps API loaded')}
             >
                 <Map
-                    style={{ width: '50em', height: '40em' }}
+                    style={{ width: '50em', height: '30em' }}
                     defaultZoom={11}
                     defaultCenter={{ lat: 40.789142, lng: -73.13496 }}
                     

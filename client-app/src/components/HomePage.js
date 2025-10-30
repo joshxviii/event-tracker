@@ -59,10 +59,8 @@ export const HomePage = ({
         return events.filter((e) => {
             // text filter
             if (text) {
-                const hay = `${e.title} ${e.description} ${e.category} ${
-                    e.location?.address || ""
-                }`.toLowerCase();
-                if (!hay.includes(text)) return false;
+                const keyWords = `${e.title} ${e.description} ${e.category} ${e.location?.address || ''}`.toLowerCase();
+                if (!keyWords.includes(text)) return false;
             }
 
             // category filter
@@ -91,8 +89,7 @@ export const HomePage = ({
     const handleScroll = (e) => {
         const node = e.target;
         if (!node) return;
-        const threshold = 200; // px from bottom
-        if (node.scrollTop + node.clientHeight >= node.scrollHeight - threshold) {
+        if (node.scrollTop + node.clientHeight >= node.scrollHeight - 200) {
             // load more
             setDisplayCount((prev) => {
                 if (prev >= filteredEvents.length) return prev;
@@ -121,7 +118,10 @@ export const HomePage = ({
                     <div>
                         <MapWidget events={!loading ? events : []} onPoiClick={handlePoiClick} />
                     </div>
-                    <PoiInfoWidget eventId={selectedEventId} />
+                    <PoiInfoWidget
+                        eventId={selectedEventId}
+                        onClick={onEventClick}
+                    />
                 </div>
 
                 {/* Right: Calendar + Event List */}
@@ -173,12 +173,14 @@ export const HomePage = ({
 
                         {!loading && displayedEvents.length > 0 ? (
                             displayedEvents.map((e, i) => (
-                                <EventWidget key={e._id || i} event={e} onClick={onEventClick} />
+                                <EventWidget
+                                    key={e._id || i}
+                                    event={e}
+                                    onClick={onEventClick}
+                                />
                             ))
-                        ) : (
-                            <div />
-                        )}
-
+                        ) : (<div />)}
+                        {}
                         {displayCount < filteredEvents.length && (
                             <div style={{ padding: 12, textAlign: "center" }}>Loading more...</div>
                         )}

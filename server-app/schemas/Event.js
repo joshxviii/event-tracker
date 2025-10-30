@@ -10,17 +10,20 @@ const eventSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  date: {
+  // ISO datetimes for start/end (preferred for timezone-safe storage)
+  startAt: {
     type: Date,
     required: true
   },
-  startTime: {
-    type: String,
+  endAt: {
+    type: Date,
     required: true
   },
-  endTime: {
+  // Repeat rules: none/weekly/monthly/annual
+  repeat: {
     type: String,
-    required: true
+    enum: ['none', 'weekly', 'monthly', 'annual'],
+    default: 'none'
   },
   location: {
     address: {
@@ -74,10 +77,13 @@ const eventSchema = new mongoose.Schema({
 
 // Virtual for formatted date/time
 eventSchema.virtual('formattedDateTime').get(function() {
+  const start = this.startAt ? new Date(this.startAt) : null;
+  const end = this.endAt ? new Date(this.endAt) : null;
   return {
-    date: this.date.toLocaleDateString(),
-    start: this.startTime,
-    end: this.endTime
+    date: start ? start.toLocaleDateString() : null,
+    start: start ? start.toLocaleTimeString() : null,
+    end: end ? end.toLocaleTimeString() : null,
+    repeat: this.repeat || 'none'
   };
 });
 

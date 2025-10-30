@@ -50,7 +50,19 @@ export function PoiInfoWidget({ eventId, onClick }) {
                     {event.location && event.location.address && <div>{event.location.address}</div>}
                     <div>
                         <small>
-                            {event.date && `Date: ${new Date(event.date).toLocaleDateString()}`}
+                            {event.startAt && `Date: ${new Date(event.startAt).toLocaleDateString()}`}
+                        </small>
+                        <br />
+                        <small>
+                            {event.startAt && `Start: ${new Date(event.startAt).toLocaleTimeString()}`}
+                        </small>
+                        <br />
+                        <small>
+                            {event.endAt && `End: ${new Date(event.endAt).toLocaleTimeString()}`}
+                        </small>
+                        <br />
+                        <small>
+                            {event.repeat && event.repeat !== 'none' && `Repeats: ${event.repeat}`}
                         </small>
                     </div>
                     <button onClick={ () => onClick(eventId) }>View Details</button>

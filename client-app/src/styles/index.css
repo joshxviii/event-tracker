@@ -102,7 +102,7 @@ button {
   border: 1px solid #e5e7eb;
 }
 
-.filterBar {
+.filterCatagory, .filterDate {
   display: flex;
   gap: 8px;
   padding: 8px 12px;
@@ -118,7 +118,7 @@ button {
 }
 
 .filterBtn.active {
-  box-shadow: 0 0 0 2px #6598ff inset;
+  box-shadow: 0 0 0 3px #6598ff;
 }
 
 .filterBtn.clear {

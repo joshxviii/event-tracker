@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { create_event } from "../utils/requests/event";
+import { get_event, update_event } from "../utils/requests/event";
 
-export const EventCreationPage = ({ user }) => {
+// Props: eventId (string), user (object), onSaved (fn), onCancel (fn)
+export const EventEditPage = ({ eventId, user, onSaved, onCancel }) => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [date, setDate] = useState(""); // yyyy-mm-dd
@@ -52,6 +53,46 @@ export const EventCreationPage = ({ user }) => {
         return () => clearTimeout(t);
     }, [address]);
 
+    // load event data when editing
+    useEffect(() => {
+        let mounted = true;
+        if (!eventId) return;
+        (async () => {
+            try {
+                const ev = await get_event(eventId);
+                if (!mounted || !ev) return;
+                setTitle(ev.title || "");
+                setDescription(ev.description || "");
+                // parse ISO datetimes
+                if (ev.startAt) {
+                    const s = new Date(ev.startAt);
+                    if (!isNaN(s.getTime())) {
+                        const y = s.getFullYear();
+                        const m = String(s.getMonth() + 1).padStart(2, '0');
+                        const d = String(s.getDate()).padStart(2, '0');
+                        setDate(`${y}-${m}-${d}`);
+                        setStartTime(String(s.getHours()).padStart(2,'0') + ':' + String(s.getMinutes()).padStart(2,'0'));
+                    }
+                }
+                if (ev.endAt) {
+                    const e = new Date(ev.endAt);
+                    if (!isNaN(e.getTime())) {
+                        setEndTime(String(e.getHours()).padStart(2,'0') + ':' + String(e.getMinutes()).padStart(2,'0'));
+                    }
+                }
+                setAddress(ev.location?.address || "");
+                setLat(ev.location?.coordinates?.lat ? String(ev.location.coordinates.lat) : "");
+                setLng(ev.location?.coordinates?.lng ? String(ev.location.coordinates.lng) : "");
+                setCategory(ev.category || 'social');
+                setRepeat(ev.repeat || 'none');
+            } catch (err) {
+                console.warn('Failed to load event for editing', err);
+            }
+        })();
+
+        return () => { mounted = false; };
+    }, [eventId]);
+
     const toISOStringFromDateAndTime = (d, t) => {
         if (!d || !t) return null;
         // d: YYYY-MM-DD, t: HH:MM
@@ -88,19 +129,22 @@ export const EventCreationPage = ({ user }) => {
                 address: address || 'N/A',
                 coordinates: { lat: lat ? Number(lat) : null, lng: lng ? Number(lng) : null }
             },
-            organizer: user,
             category,
             isPublic: true,
         };
 
+        if (!eventId) {
+            setError('No event selected to edit');
+            return;
+        }
+
         setLoading(true);
         try {
-            await create_event(payload);
-            setSuccess('Event created');
-            // clear form
-            setTitle(''); setDescription(''); setDate(''); setStartTime(''); setEndTime(''); setAddress(''); setLat(''); setLng(''); setRepeat('none');
+            await update_event(eventId, payload);
+            setSuccess('Event updated');
+            if (onSaved) onSaved();
         } catch (err) {
-            setError(err.message || 'Failed to create event');
+            setError(err.message || 'Failed to update event');
         } finally {
             setLoading(false);
         }
@@ -108,7 +152,7 @@ export const EventCreationPage = ({ user }) => {
 
     return (
         <div className="formContainer">
-            <h2 className="blueColor">Create an Event</h2>
+                    <h2 className="blueColor">Edit Event</h2>
 
             <form onSubmit={handleSubmit} className="formGrid" aria-label="Create event form">
                 <label className="labelStyle">
@@ -184,8 +228,9 @@ export const EventCreationPage = ({ user }) => {
                 {error && <div className="formError">{error}</div>}
                 {success && <div className="formSuccess">{success}</div>}
 
-                <div className="formActions">
-                    <button type="submit" disabled={loading}>{loading ? 'Creating...' : 'Create Event'}</button>
+                <div className="formActions" style={{ display: 'flex', gap: 8 }}>
+                    <button type="submit" disabled={loading}>{loading ? 'Saving...' : 'Save Changes'}</button>
+                    <button type="button" onClick={() => onCancel ? onCancel() : null}>Cancel</button>
                 </div>
             </form>         
         </div>

@@ -6,6 +6,7 @@ import { EventPage } from './components/EventPage';
 import { NavigationBar } from './components/NavigationBar';
 import { EventCreationPage } from './components/EventCreationPage';
 import { EventManagementPage } from './components/EventManagementPage';
+import { EventEditPage } from './components/EventEditPage';
 
 export function App() {
     /* 
@@ -81,6 +82,16 @@ export function App() {
             {currentPage === 'event-management' && (
                 <EventManagementPage 
                     user={currentUser}
+                    onEditEvent={(id) => { setSelectedEventId(id); setCurrentPage('event-edit'); }}
+                />
+            )}
+
+            {currentPage === 'event-edit' && selectedEventId && (
+                <EventEditPage
+                    eventId={selectedEventId}
+                    user={currentUser}
+                    onSaved={() => setCurrentPage('event-management')}
+                    onCancel={() => setCurrentPage('event-management')}
                 />
             )}
 

@@ -29,7 +29,7 @@ router.get('/', async (req, res) => {
     const events = await Event.find()
       .populate('organizer', 'username firstName lastName')
       .populate('attendees', 'username firstName lastName')
-      .sort({ date: 1, startTime: 1 });
+      .sort({ startAt: 1 });
     res.json(events);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -60,7 +60,7 @@ router.get('/organizer/:organizerId', async (req, res) => {
     const events = await Event.find({ organizer: req.params.organizerId })
       .populate('organizer', 'username firstName lastName')
       .populate('attendees', 'username firstName lastName')
-      .sort({ date: 1, startTime: 1 });
+      .sort({ startAt: 1 });
 
     res.json(events);
   } catch (error) {

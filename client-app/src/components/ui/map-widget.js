@@ -26,7 +26,7 @@ export default function MapWidget( { events, onPoiClick } ) {
                 onLoad={() => console.log('Maps API loaded')}
             >
                 <Map
-                    style={{ width: '50em', height: '40em' }}
+                    style={{ width: '50em', height: '30em' }}
                     defaultZoom={11}
                     defaultCenter={{ lat: 40.789142, lng: -73.13496 }}
                     

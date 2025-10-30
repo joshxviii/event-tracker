@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { create_event } from "../utils/requests/event";
 
-// Simple event creation page with a modern form
 export const EventCreationPage = ({ user }) => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");

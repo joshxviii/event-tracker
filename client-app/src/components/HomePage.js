@@ -6,10 +6,10 @@ import { PoiInfoWidget } from "./ui/poi-info-widget";
 import CalendarPanel from "./ui/CalendarPanel";
 
 export const HomePage = ({
-                             onEventClick,
-                             onEventCreationClick,
-                             onEventManageClick
-                         }) => {
+        onEventClick,
+        onEventCreationClick,
+        onEventManageClick
+    }) => {
     const [events, setEvents] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -69,7 +69,9 @@ export const HomePage = ({
             }
 
             // TODO time filter
+
             // TODO distance filter
+            
 
             return true;
         });
@@ -113,7 +115,6 @@ export const HomePage = ({
             </h2>
 
             <div className="mainContent">
-                {/* Left: Map + POI Info */}
                 <div className="mapContainer container">
                     <div>
                         <MapWidget events={!loading ? events : []} onPoiClick={handlePoiClick} />
@@ -124,10 +125,8 @@ export const HomePage = ({
                     />
                 </div>
 
-                {/* Right: Calendar + Event List */}
                 {loading && <div>Loading event data...</div>}
                 <div className="eventList">
-                    {/* NEW: Google Calendar panel */}
                     <div style={{ marginBottom: 16 }}>
                         <CalendarPanel />
                     </div>

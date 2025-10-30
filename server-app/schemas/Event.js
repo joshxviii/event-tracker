@@ -16,11 +16,11 @@ const eventSchema = new mongoose.Schema({
   },
   startTime: {
     type: String,
-    required: true // Format: "14:30"
+    required: true
   },
   endTime: {
     type: String,
-    required: true // Format: "16:00"
+    required: true
   },
   location: {
     address: {

@@ -3,13 +3,7 @@ const express = require('express');
 const router = express.Router();
 const Event = require('../schemas/Event');
 const User = require('../schemas/User');
-
-const requireAuth = (req, res, next) => {
-  if (!req.user || !req.user.userId) {
-    return res.status(401).json({ message: 'Authentication required' });
-  }
-  next();
-};
+const { requireAuth } = require('../middleware/auth');
 
 // Create event (authenticated)
 router.post('/', requireAuth, async (req, res) => {
@@ -78,6 +72,9 @@ router.get('/:id', async (req, res) => {
 router.put('/:id', requireAuth, async (req, res) => {
   try {
     const eventData = { ...req.body };
+
+    // Prevent client from changing the organizer field
+    if (eventData.organizer) delete eventData.organizer;
 
     const event = await Event.findOne({ 
       _id: req.params.id, 

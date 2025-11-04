@@ -4,17 +4,24 @@ const router = express.Router();
 const Event = require('../schemas/Event');
 const User = require('../schemas/User');
 
-// Create event
-router.post('/', async (req, res) => {
+const requireAuth = (req, res, next) => {
+  if (!req.user || !req.user.userId) {
+    return res.status(401).json({ message: 'Authentication required' });
+  }
+  next();
+};
+
+// Create event (authenticated)
+router.post('/', requireAuth, async (req, res) => {
   try {
     const eventData = { ...req.body };
+    eventData.organizer = req.user.userId;
 
     const event = new Event(eventData);
     await event.save();
 
-    // Add to organizer's created events
-    await User.findByIdAndUpdate(eventData.organizer._id, {
-      $push: { createdEvents: event._id }
+    await User.findByIdAndUpdate(req.user.userId, {
+      $addToSet: { createdEvents: event._id }
     });
 
     res.status(201).json(event);
@@ -30,6 +37,20 @@ router.get('/', async (req, res) => {
       .populate('organizer', 'username firstName lastName')
       .populate('attendees', 'username firstName lastName')
       .sort({ startAt: 1 });
+    res.json(events);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Get all events organized by a specific user
+router.get('/organizer/:userId', async (req, res) => {
+  try {
+    const events = await Event.find({ organizer: req.params.userId })
+      .populate('organizer', 'username firstName lastName')
+      .populate('attendees', 'username firstName lastName')
+      .sort({ startAt: 1 });
+
     res.json(events);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -53,34 +74,21 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Get all events organized by a specific user
-router.get('/organizer/:organizerId', async (req, res) => {
-  try {
-
-    const events = await Event.find({ organizer: req.params.organizerId })
-      .populate('organizer', 'username firstName lastName')
-      .populate('attendees', 'username firstName lastName')
-      .sort({ startAt: 1 });
-
-    res.json(events);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
 // Update event
-router.put('/:id', async (req, res) => {
+router.put('/:id', requireAuth, async (req, res) => {
   try {
+    const eventData = { ...req.body };
+
     const event = await Event.findOne({ 
       _id: req.params.id, 
-      organizer: req.user.userId 
+      organizer: req.user.userId
     });
     
     if (!event) {
       return res.status(404).json({ message: 'Event not found or unauthorized' });
     }
     
-    Object.assign(event, req.body);
+    Object.assign(event, eventData);
     await event.save();
 
     res.json(event);
@@ -90,8 +98,9 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete event
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', requireAuth, async (req, res) => {
   try {
+
     const event = await Event.findOneAndDelete({ 
       _id: req.params.id, 
       organizer: req.user.userId 

@@ -129,6 +129,7 @@ export const EventEditPage = ({ eventId, user, onSaved, onCancel }) => {
                 address: address || 'N/A',
                 coordinates: { lat: lat ? Number(lat) : null, lng: lng ? Number(lng) : null }
             },
+            organizer: user,
             category,
             isPublic: true,
         };

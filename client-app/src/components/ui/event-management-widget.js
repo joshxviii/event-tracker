@@ -1,6 +1,7 @@
 import React from "react"
 import {ReactComponent as DeleteIcon} from '../../assets/delete.svg';
 import {ReactComponent as EditIcon} from '../../assets/edit.svg';
+import { delete_event } from "../../utils/requests/event";
 
 export function EventManagementWidget( {event, onEdit, onDelete} ) {
 
@@ -16,7 +17,11 @@ export function EventManagementWidget( {event, onEdit, onDelete} ) {
 
         <div className="buttonGroup">
           <button onClick={() => onEdit ? onEdit(event._id) : null}><EditIcon/> Edit Event</button>
-          <button onClick={() => onDelete ? onDelete(event._id) : null}><DeleteIcon /> Delete Event </button>
+          <button onClick={async () => {
+            if (!window.confirm(`Delete '${event.title}'?\nThis can not be undone.`)) return;
+            await delete_event(event._id);
+            onDelete(event._id);
+          }}><DeleteIcon /> Delete Event </button>
         </div>
     </div>
   );

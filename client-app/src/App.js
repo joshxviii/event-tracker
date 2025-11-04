@@ -7,6 +7,7 @@ import { NavigationBar } from './components/NavigationBar';
 import { EventCreationPage } from './components/EventCreationPage';
 import { EventManagementPage } from './components/EventManagementPage';
 import { EventEditPage } from './components/EventEditPage';
+import { delete_event } from './utils/requests/event';
 
 export function App() {
     /* 

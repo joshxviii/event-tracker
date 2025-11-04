@@ -82,7 +82,7 @@ router.put('/:id', requireAuth, async (req, res) => {
     });
     
     if (!event) {
-      return res.status(404).json({ message: 'Event not found or unauthorized' });
+      return res.status(404).json({ message: 'Event not found or unauthorized. UPDATE' });
     }
     
     Object.assign(event, eventData);
@@ -104,7 +104,7 @@ router.delete('/:id', requireAuth, async (req, res) => {
     });
     
     if (!event) {
-      return res.status(404).json({ message: 'Event not found or unauthorized' });
+      return res.status(404).json({ message: 'Event not found or unauthorized. DELETE' });
     }
 
     try {

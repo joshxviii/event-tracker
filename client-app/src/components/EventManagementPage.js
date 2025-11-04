@@ -13,7 +13,11 @@ export const EventManagementPage = ({ user, onEditEvent }) => {
         (async () => {
             try {
                 if (!mounted) return;
-                setMyEvents(await get_events_by_user(user._id));
+                setLoading(true);
+                setError(null);
+                const events = await get_events_by_user(user._id);
+                if (!mounted) return;
+                setMyEvents(events || []);
             } catch (e) {
                 if (!mounted) return;
                 setError(e.message || String(e));
@@ -24,7 +28,7 @@ export const EventManagementPage = ({ user, onEditEvent }) => {
         })();
 
         return () =>  mounted = false;
-    }, []);
+    }, [user?._id]);
 
     return (
         <div>
@@ -42,6 +46,7 @@ export const EventManagementPage = ({ user, onEditEvent }) => {
                                         key={e._id || i}
                                         event={e}
                                         onEdit={onEditEvent}
+                                        onDelete={(deletedId) => setMyEvents((prev) => prev.filter(ev => ev._id !== deletedId))}
                                     />
                                 ))
                             ) : (

@@ -6,6 +6,8 @@ import ReviewTextbox from "./ui/review-textbox";
 import {ReactComponent as HeartIcon} from '../assets/heart.svg';
 import {ReactComponent as ShareIcon} from '../assets/share.svg';
 import {ReactComponent as BackIcon} from '../assets/back.svg';
+import {ReactComponent as PoiIcon} from '../assets/poi.svg';
+import {ReactComponent as CalendarIcon} from '../assets/calendar.svg';
 
 
 export function EventPage( {eventId, onBack } ) {
@@ -84,6 +86,12 @@ export function EventPage( {eventId, onBack } ) {
                         <span className="eventLabel" style={{ backgroundColor: `var(--event-color-${event.category || 'other'})` }}>{event.category}</span>
                     </div>
                     <p style={{ color: '#374151' }}>{event.description}</p>
+                    <p style={ {display: 'flex', gap: 6} }>
+                        <CalendarIcon/>
+                        {event.startAt ? new Date(event.startAt).toLocaleDateString() : ''}
+                        {event.startAt && ` at ${new Date(event.startAt).toLocaleTimeString()} - ${event.endAt ? new Date(event.endAt).toLocaleTimeString() : ''}`}
+                    </p>
+                    <div style={ {display: 'inline-flex', gap: 6} }> <PoiIcon/> <div style={ { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'} }> {event.location.address} </div> </div> 
                 </div>
             </div>
 

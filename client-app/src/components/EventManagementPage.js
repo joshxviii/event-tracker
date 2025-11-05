@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { get_events_by_user } from "../utils/requests/event";
 import { EventManagementWidget } from "./ui/event-management-widget";
+import { useNotifications } from './ui/Notifications';
 
 export const EventManagementPage = ({ user, onEditEvent }) => {
 
     const [myEvents, setMyEvents] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const notify = useNotifications();
 
     useEffect(() => {
         let mounted = true;
@@ -20,7 +22,9 @@ export const EventManagementPage = ({ user, onEditEvent }) => {
                 setMyEvents(events || []);
             } catch (e) {
                 if (!mounted) return;
-                setError(e.message || String(e));
+                const msg = e.message || String(e);
+                setError(msg);
+                notify.push({ type: 'error', message: `Failed to load events: ${msg}` });
                 setMyEvents([]);
             } finally {
                 if (mounted) setLoading(false);

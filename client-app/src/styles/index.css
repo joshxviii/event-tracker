@@ -354,3 +354,41 @@ textarea {
   display: flex;
   gap: 8px;
 }
+
+/* Notifications */
+.notificationRoot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+.notification {
+  margin: 12px;
+  height: 20px;
+  background: #222;
+  color: white;
+  border-radius: 6px;
+  padding: 10px 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+  display:flex;
+  align-items: center;
+  gap: 10px;
+  transform: translateY(-20px);
+  opacity: 0;
+  pointer-events: auto;
+  transition: transform 220ms ease, opacity 220ms ease;
+}
+.notification + .notification {
+  margin-top: 8px;
+}
+.notification.info { background: #333 }
+.notification.success { background: #0A7F3D }
+.notification.error { background: #E03D3D }
+.notification.warn { background: #E08F0A }
+.notification.show { transform: translateY(0); opacity: 1 }
+.notificationMessage { flex: 1; font-size: 14px; }
+.notificationClose { background: transparent; border: none; color: #fff; cursor: pointer; font-size: 14px }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { get_event, update_event } from "../utils/requests/event";
+import { useNotifications } from './ui/Notifications';
 
 // Props: eventId (string), user (object), onSaved (fn), onCancel (fn)
 export const EventEditPage = ({ eventId, user, onSaved, onCancel }) => {
@@ -17,6 +18,7 @@ export const EventEditPage = ({ eventId, user, onSaved, onCancel }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
+    const notify = useNotifications();
 
     const geocodeAddress = async () => {
         setError(null);
@@ -143,9 +145,12 @@ export const EventEditPage = ({ eventId, user, onSaved, onCancel }) => {
         try {
             await update_event(eventId, payload);
             setSuccess('Event updated');
+            notify.push({ type: 'success', message: 'Event updated' });
             if (onSaved) onSaved();
         } catch (err) {
-            setError(err.message || 'Failed to update event');
+            const msg = err.message || 'Failed to update event';
+            setError(msg);
+            notify.push({ type: 'error', message: msg });
         } finally {
             setLoading(false);
         }

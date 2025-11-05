@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { create_event } from "../utils/requests/event";
+import { useNotifications } from './ui/Notifications';
 
 export const EventCreationPage = ({ user }) => {
     const [title, setTitle] = useState("");
@@ -16,6 +17,7 @@ export const EventCreationPage = ({ user }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
+    const notify = useNotifications();
 
     const geocodeAddress = async () => {
         setError(null);
@@ -97,10 +99,13 @@ export const EventCreationPage = ({ user }) => {
         try {
             await create_event(payload);
             setSuccess('Event created');
+            notify.push({ type: 'success', message: 'Event created' });
             // clear form
             setTitle(''); setDescription(''); setDate(''); setStartTime(''); setEndTime(''); setAddress(''); setLat(''); setLng(''); setRepeat('none');
         } catch (err) {
-            setError(err.message || 'Failed to create event');
+            const msg = err.message || 'Failed to create event';
+            setError(msg);
+            notify.push({ type: 'error', message: msg });
         } finally {
             setLoading(false);
         }

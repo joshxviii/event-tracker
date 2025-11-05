@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { signup, login } from "../utils/requests/user";
+import { useNotifications } from './ui/Notifications';
 
 export function LoginPage({ onLogin }) {
 	const [firstName, setFirstName] = useState("");
@@ -14,8 +15,14 @@ export function LoginPage({ onLogin }) {
 	const handleLogin = async (e) => {
 		e.preventDefault();
 		// simple client-side validation
-		if (!emailOrUsername) return setError("Please enter your email/username.");
-		if (!password) return setError("Please enter your password.");
+		let error_msg = null
+		if (!emailOrUsername) error_msg = "Please enter your email/username."
+		if (!password) error_msg = "Please enter your password."
+		if (error_msg) {
+			setError(error_msg);
+			notify.push({ type: 'error', message: error_msg });
+			return;
+		}
 
 		try {
 			const { token, user } = await login(emailOrUsername, password);
@@ -23,10 +30,12 @@ export function LoginPage({ onLogin }) {
 			console.log('Token:', token);
 
 			setError(null);
+            notify.push({ type: 'success', message: 'Logged in' });
 			if (onLogin) onLogin(user);
 
 		} catch (error) {
 			setError(error.message);
+            notify.push({ type: 'error', message: error.message || 'Login failed' });
 		}
 	};
 
@@ -45,12 +54,16 @@ export function LoginPage({ onLogin }) {
 			console.log('Token:', token);
 
 			setError(null);
+			notify.push({ type: 'success', message: 'Account created' });
 			if (onLogin) onLogin(user);
 
 		} catch (error) {
 			setError(error.message);
+            notify.push({ type: 'error', message: error.message || 'Signup failed' });
 		}
 	};
+
+    const notify = useNotifications();
 
 	const fillDemo = () => {
 		setEmailOrUsername("demo@farmingdale.edu");

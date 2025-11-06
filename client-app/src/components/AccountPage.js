@@ -1,7 +1,9 @@
 import React from "react";
+import { useNotifications } from './ui/Notifications';
 
 // Simple, view-only account page for displaying account information
 export const AccountPage = ({ user = { username: 'Demo', email: 'demo@farmingdale.edu' } }) => {
+    const notify = useNotifications();
     if (user) return (
         <div className="formContainer">
             <h2 className="blueColor">Account Information</h2>
@@ -31,7 +33,8 @@ export const AccountPage = ({ user = { username: 'Demo', email: 'demo@farmingdal
             <div style={{ marginTop: 18 }}>
                 <button
                     onClick={() => alert('Edit not implemented')}
-                    style={{ padding: '8px 12px' }}>
+                    style={{ padding: '8px 12px' }}
+                >
                     Edit account
                 </button>
             </div>

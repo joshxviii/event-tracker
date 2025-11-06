@@ -24,7 +24,11 @@ export function EventWidget( {event, onClick} ) {
     >
         <h1> { event.title } </h1>
         <p> { event.description } </p>
-        <p style={ {display: 'flex', gap: 6} }> <CalendarIcon/> {event.date} at { event.startTime } - { event.endTime } </p>
+        <p style={ {display: 'flex', gap: 6} }>
+          <CalendarIcon/>
+          {event.startAt ? new Date(event.startAt).toLocaleDateString() : ''}
+          {event.startAt && ` at ${new Date(event.startAt).toLocaleTimeString()} - ${event.endAt ? new Date(event.endAt).toLocaleTimeString() : ''}`}
+        </p>
         <div style={ {display: 'inline-flex', gap: 6} }> <PoiIcon/> <div style={ { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '220px'} }> {event.location.address} </div> </div>
         <div className="eventLabel" style={{ backgroundColor: bg }}>
           {category}

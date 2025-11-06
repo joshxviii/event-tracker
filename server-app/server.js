@@ -8,6 +8,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Parse JWT (if present) and attach req.user; non-blocking
+const { parseToken } = require('./middleware/auth');
+app.use(parseToken);
+
 // Mount API routes
 const authRouter = require('./routes/auth');
 app.use('/api/auth', authRouter);

@@ -16,7 +16,12 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f9fafb;
+  background-color: #e4f1ff;
+  
+}
+
+.backgroundGradient {
+  background: linear-gradient(#c6b7ff, #d694ff);
 }
 
 h1 {
@@ -348,6 +353,70 @@ textarea {
   background-color: #ffffff;
   box-shadow: 2px 2px 3px #00000057;
   position: relative;
+}
+
+.loginText {
+  color: #043fc0;
+  font-size: 48px;
+  font-weight: 700px;
+}
+
+.loginHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  margin-top: 30px;
+}
+
+.loginInput {
+  display: flex;
+  align-items: center;
+  margin: auto;
+  width: 400px;
+  height: 20px;
+  background: #f0f0f0;
+  border-radius: 6px;
+}
+
+.loginContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+  margin-top: 100px;
+  width: 600px;
+  background: linear-gradient(#d2c7ff, #bdb3ff);
+  padding-bottom: 30px;
+}
+
+.login-page {
+  display: contents;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  max-width: 100%;
+  padding: 24px;
+}
+
+.buttonStyle {
+  display: flex; 
+  justify-content: center; 
+  align-items: center;
+  width: 150px;
+  height: 50px;
+  color: #fff;
+  border-radius: 50px;
+  font-size: 19px;
+  font-weight: 700; 
+  cursor: pointer;
+}
+
+.center-button {
+  display: flex;
+  justify-content: center;
+  margin-left: 130px;
 }
 
 .eventActions {

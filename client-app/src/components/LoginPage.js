@@ -75,76 +75,77 @@ export function LoginPage({ onLogin }) {
 		<div className="login-page" style={{ maxWidth: 420, margin: "48px auto", padding: 24, fontSize: 14 }}>
 			
 			{ isSignUp ? (
-				<div>
-					<h2 style={{ marginBottom: 12 }}>Sign Up</h2>
+				<div className="loginContainer">
+					<h2 className = "loginText loginHeader" style={{ marginBottom: 12 }}>Create an Account</h2>
 
 					<form onSubmit={handleSignup} className="login-form" aria-label="login form">
 
 						<div style={{ display: "flex", gap:0, marginBottom: 12 }}>
 							<label style={{ width: "100%", display: "grid"}} htmlFor="fname">
-								First Name
 								<input
+									className = "loginInput"
 									id="fname"
 									type="name"
 									value={firstName}
 									onChange={(e) => setFirstName(e.target.value)}
 									placeholder="First Name"
-									style={{ padding: 8}}
+									style={{ padding: 8, fontFamily: 'Cantarell', fontSize: 15}}
 								/>
-							</label>
-							
+							</label>							
+
+						</div>
+						<div style={{ display: "flex", gap:0, marginBottom: 12 }}>
 							<label style={{ width: "100%", display: "grid" }} htmlFor="lname">
-								Last Name
 								<input
+									className = "loginInput"
 									id="lname"
 									type="name"
 									value={lastName}
 									onChange={(e) => setLastName(e.target.value)}
 									placeholder="Last Name"
-									style={{ padding: 8 }}
+									style={{ padding: 8, fontFamily: 'Cantarell', fontSize: 15}}
 								/>
 							</label>
-
 						</div>
 
 						<div style={{ marginBottom: 12 }}>
 							<label style={{ width: "100%", display: "grid" }} htmlFor="username">
-								Username
 								<input
+									className = "loginInput"
 									id="username"
 									type="username"
 									value={username}
 									onChange={(e) => setUsername(e.target.value)}
 									placeholder="Username"
-									style={{ padding: 8 }}
+									style={{ padding: 8, fontFamily: 'Cantarell', fontSize: 15}}
 								/>
 							</label>
 						</div>
 
 						<div style={{ marginBottom: 12 }}>
 							<label style={{ width: "100%", display: "grid" }} htmlFor="email">
-								Email
 								<input
+									className = "loginInput"
 									id="email"
 									type="email"
 									value={email}
 									onChange={(e) => setEmail(e.target.value)}
 									placeholder="Email"
-									style={{ padding: 8, }}
+									style={{ padding: 8, fontFamily: 'Cantarell', fontSize: 15}}
 								/>
 							</label>
 						</div>
 
 						<div style={{ marginBottom: 12 }}>
 							<label style={{ width: "100%", display: "grid" }} htmlFor="password">
-								Password
 								<input
+									className = "loginInput"
 									id="password"
 									type="password"
 									value={password}
 									onChange={(e) => setPassword(e.target.value)}
 									placeholder="Password"
-									style={{ padding: 8}}
+									style={{ padding: 8, fontFamily: 'Cantarell', fontSize: 15}}
 								/>
 							</label>
 						</div>
@@ -156,8 +157,8 @@ export function LoginPage({ onLogin }) {
 						)}
 
 						
-						<button type="submit" style={{ padding: "8px 12px" }}>
-							Sign up
+						<button type="submit" className="buttonStyle  center-button" style={{ padding: "8px 12px"}}>
+							Sign Up
 						</button>
 						
 					</form>
@@ -166,21 +167,21 @@ export function LoginPage({ onLogin }) {
 
 				</div>
 			) : (
-				<div>
-					<h2 style={{ marginBottom: 12 }}>Log In</h2>
+				<div className="loginContainer">
+					<h2 className = "loginText loginHeader" style={{ marginBottom: 12 }}>Log In</h2>
 
 					<form onSubmit={handleLogin} className="login-form" aria-label="login form">
 						
 						<div style={{ marginBottom: 12 }}>
 							<label style={{ width: "100%", display: "grid" }} htmlFor="user">
-								Username
 								<input
+									className = "loginInput"
 									id="user"
 									type="text"
 									value={emailOrUsername}
 									onChange={(e) => setEmailOrUsername(e.target.value)}
 									placeholder="Email or Username"
-									style={{ padding: 8}}
+									style={{ padding: 8, fontFamily: 'Cantarell', fontSize: 15}}
 								/>
 							</label>
 
@@ -188,14 +189,14 @@ export function LoginPage({ onLogin }) {
 
 						<div style={{ marginBottom: 12 }}>
 							<label style={{ width: "100%", display: "grid" }} htmlFor="password">
-								Password
 								<input
+									className = "loginInput"
 									id="password"
 									type="password"
 									value={password}
 									onChange={(e) => setPassword(e.target.value)}
 									placeholder="Password"
-									style={{ padding: 8, }}
+									style={{ padding: 8, fontFamily: 'Cantarell', fontSize: 15}}
 								/>
 							</label>
 
@@ -207,12 +208,12 @@ export function LoginPage({ onLogin }) {
 							</div>
 						)}
 
-						<div style={{ display: "flex", gap: 8 }}>
-							<button type="submit" style={{ padding: "8px 12px" }}>
-								Log in
+						<div style={{ display: "flex", gap: 120 }}>
+							<button type="submit" className="buttonStyle" style={{padding: "8px 12px" }}>
+								Log In
 							</button>
 
-							<button type="button" onClick={fillDemo} style={{ padding: "8px 12px" }}>
+							<button type="button" className="buttonStyle" onClick={fillDemo} style={{ padding: "8px 12px" }}>
 								Fill demo
 							</button>
 						</div>

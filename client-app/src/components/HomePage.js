@@ -206,6 +206,7 @@ export const HomePage = ({
 
                         <div className="eventSearch">
                             <input
+                                className="input"
                                 type="text"
                                 placeholder="Search events..."
                                 value={searchText}
@@ -227,28 +228,25 @@ export const HomePage = ({
                             <button
                                 className="filterBtn clear"
                                 onClick={() => {
-                                    setActiveFilters(new Set());
-                                    setSearchText("");
+                                    setActiveFilters(new Set()); setSearchText(""); setDateFilter(''); setTimeStartFilter(''); setTimeEndFilter(''); 
                                 }}
                             >
-                                Clear
+                                Clear Filters
                             </button>
                         </div>
 
                         <div className="filterDate">
-                            <label>
-                                <span style={{ fontSize: 12 }}>Date: </span>
-                                <input type="date" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} />
-                                <span style={{ fontSize: 12 }}>From: </span>
-                                <input type="time" value={timeStartFilter} onChange={(e) => setTimeStartFilter(e.target.value)} />
-                                <span style={{ fontSize: 12 }}>To: </span>
-                                <input type="time" value={timeEndFilter} onChange={(e) => setTimeEndFilter(e.target.value)} />
+                            <label style={{display: 'flex', gap: '4px'}}>
+                                <label style={{ fontSize: 12 }}>Date:
+                                    <input type="date" className="input" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} />
+                                </label>
+                                <label style={{ fontSize: 12 }}>From: 
+                                    <input type="time" className="input" value={timeStartFilter} onChange={(e) => setTimeStartFilter(e.target.value)} />
+                                </label>
+                                <label style={{ fontSize: 12 }}>To:
+                                    <input type="time" className="input" value={timeEndFilter} onChange={(e) => setTimeEndFilter(e.target.value)} />
+                                </label>
                             </label>
-                            <button
-                                className="filterBtn clear"
-                                onClick={() => { setDateFilter(''); setTimeStartFilter(''); setTimeEndFilter(''); }}
-                                style={{ marginLeft: 'auto' }}
-                            >Clear</button>
                         </div>
 
                         <div

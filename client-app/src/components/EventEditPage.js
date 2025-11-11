@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { get_event, update_event } from "../utils/requests/event";
 import { useNotifications } from './ui/Notifications';
 import EventMapWidget from "./ui/event-map-widget";
 
 // Props: eventId (string), user (object), onSaved (fn), onCancel (fn)
 export const EventEditPage = ({ eventId, user, onSaved, onCancel }) => {
+    const fileInputRef = useRef(null);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [date, setDate] = useState(""); // yyyy-mm-dd
@@ -20,6 +21,18 @@ export const EventEditPage = ({ eventId, user, onSaved, onCancel }) => {
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
     const notify = useNotifications();
+
+    const handleImageSelect = (event) => {
+        const selectedFile = event.target.files[0];
+        if (selectedFile) {
+        console.log("Selected image:", selectedFile);
+            // TODO
+        }
+    };
+
+    const handleButtonClick = () => {
+        fileInputRef.current.click(); // Programmatically click the hidden file input
+    };
 
     const geocodeAddress = async () => {
         setError(null);
@@ -164,6 +177,18 @@ export const EventEditPage = ({ eventId, user, onSaved, onCancel }) => {
                 <h2 className="blueColor">Edit Event</h2>
 
                 <form onSubmit={handleSubmit} className="formGrid" aria-label="Create event form">
+
+                    <input
+                        type="file"
+                        accept="image/*"
+                        ref={fileInputRef}
+                        onChange={handleImageSelect}
+                        style={{ display: 'none' }}
+                    />
+                    <button onClick={handleButtonClick}>
+                        Update Image
+                    </button>
+
                     <label className="labelStyle">
                         <div style={{ width: '100%' }}>
                             <div style={{ fontSize: 14, marginBottom: 6 }}>Title</div>

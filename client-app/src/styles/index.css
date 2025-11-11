@@ -98,18 +98,6 @@ button {
   box-shadow: 2px 2px 3px #00000057;
 }
 
-.eventSearch {
-  display: flex;
-  padding: 12px;
-}
-
-.eventSearch input[type="text"] {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-}
-
 .filterCatagory, .filterDate {
   display: flex;
   gap: 8px;
@@ -287,6 +275,11 @@ button {
   border-radius: 8px;
   border: 1px solid #e5e7eb;
   font-size: 14px;
+}
+
+.eventSearch {
+  display: flex;
+  padding: 12px;
 }
 
 textarea {

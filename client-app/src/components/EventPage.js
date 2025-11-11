@@ -86,12 +86,14 @@ export function EventPage( {eventId, onBack } ) {
                         <span className="eventLabel" style={{ backgroundColor: `var(--event-color-${event.category || 'other'})` }}>{event.category}</span>
                     </div>
                     <p style={{ color: '#374151' }}>{event.description}</p>
-                    <p style={ {display: 'flex', gap: 6} }>
-                        <CalendarIcon/>
-                        {event.startAt ? new Date(event.startAt).toLocaleDateString() : ''}
-                        {event.startAt && ` at ${new Date(event.startAt).toLocaleTimeString()} - ${event.endAt ? new Date(event.endAt).toLocaleTimeString() : ''}`}
-                    </p>
-                    <div style={ {display: 'inline-flex', gap: 6} }> <PoiIcon/> <div style={ { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'} }> {event.location.address} </div> </div> 
+                    <div style={ {display:'flex', flexDirection: 'column', gap: 6} }>
+                        <div style={ {display: 'flex', gap: 6} }>
+                            <CalendarIcon/>
+                            {event.startAt ? new Date(event.startAt).toLocaleDateString() : ''}
+                            {event.startAt && ` at ${new Date(event.startAt).toLocaleTimeString()} - ${event.endAt ? new Date(event.endAt).toLocaleTimeString() : ''}`}
+                        </div>
+                        <div style={ {display: 'flex', gap: 6} }> <PoiIcon/> <div style={ { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'} }> {event.location.address} </div> </div> 
+                    </div>
                 </div>
             </div>
 

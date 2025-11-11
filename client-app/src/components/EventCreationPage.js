@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { create_event } from "../utils/requests/event";
 import { useNotifications } from './ui/Notifications';
+import EventMapWidget from "./ui/event-map-widget";
 
 export const EventCreationPage = ({ user }) => {
     const [title, setTitle] = useState("");
@@ -148,13 +149,6 @@ export const EventCreationPage = ({ user }) => {
                     </div>
                 </div>
 
-                <label className="labelStyle">
-                    <div style={{ width: '100%' }}>
-                        <div style={{ fontSize: 14, marginBottom: 6 }}>Address</div>
-                        <input className="input" id="address" value={address} maxLength={200} onChange={(e) => setAddress(e.target.value)} placeholder="Street, city, state" />
-                    </div>
-                </label>
-
                 <div className="twoCols">
                     <label className="labelStyle" style={{ flex: 1 }}>
                         <div style={{ fontSize: 14, marginBottom: 6 }}>Category</div>
@@ -174,17 +168,17 @@ export const EventCreationPage = ({ user }) => {
                             <option value="monthly">Monthly</option>
                             <option value="annual">Annually</option>
                         </select>
-                        <div style={{ fontSize: 12, color: '#666', marginTop: 6 }}>Coordinates are auto-filled from the address when available.</div>
                     </div>
                 </div>
 
-                <div style={{ marginTop: 8 }}>
-                    <div style={{ fontSize: 14, marginBottom: 6 }}>Coordinates</div>
-                    <div className="coordsRow">
-                        <input className="input smallInput" readOnly value={lat || ''} placeholder="lat" />
-                        <input className="input smallInput" readOnly value={lng || ''} placeholder="lng" />
+                <label className="labelStyle">
+                    <div style={{ width: '100%' }}>
+                        <div style={{ fontSize: 14, marginBottom: 6 }}>Address</div>
+                        <input className="input" id="address" value={address} maxLength={200} onChange={(e) => setAddress(e.target.value)} placeholder="Street, city, state" />
                     </div>
-                </div>
+                </label>
+
+                <EventMapWidget lat={lat} lng={lng}/>
 
                 {error && <div className="formError">{error}</div>}
                 {success && <div className="formSuccess">{success}</div>}

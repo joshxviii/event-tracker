@@ -26,8 +26,6 @@ export const HomePage = ({
     const listRef = useRef(null);
     const PAGE_SIZE = 5;
 
-
-
     useEffect(() => {
         let mounted = true;
         (async () => {
@@ -267,7 +265,8 @@ export const HomePage = ({
                                     <EventWidget
                                         key={e._id || i}
                                         event={e}
-                                        onClick={onEventClick}
+                                        onViewDetails={onEventClick}
+                                        onClick={handlePoiClick}
                                     />
                                 ))
                             ) : (<div />)}

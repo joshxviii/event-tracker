@@ -44,13 +44,12 @@ export function MapController() {
                 display: 'flex',
             }}
         >
-            <button onClick={() => {map.panTo(defaultCenter); map.setZoom(10);}} > Reset </button>
+            <button onClick={() => {map.panTo(defaultCenter); map.setZoom(10);}} > Recenter </button>
         </div>
     );
 }
 
 export default function MapWidget( { events, onPoiClick } ) {
-    // Data from csv list
     const myLocations = Array.isArray(events)
         ? events
               .map((e) => {
@@ -66,9 +65,6 @@ export default function MapWidget( { events, onPoiClick } ) {
               .filter((p) => !Number.isNaN(p.location.lat) && !Number.isNaN(p.location.lng))
         : [];
 
-    const initialPanDone = useRef(false);
-
-    // ask browser for geolocation on mount; this will prompt user for permission
 
     return (
         <div style={{ width: '100%', height: '100%' }}>
@@ -81,6 +77,7 @@ export default function MapWidget( { events, onPoiClick } ) {
                     controlled={false}
                     style={{ width: '50em', height: '30em' }}
                     defaultZoom={11}
+                    defaultCenter={0}
                     // onCameraChanged={(ev) => {
                     //     try {
                     //         const c = ev?.detail?.center;

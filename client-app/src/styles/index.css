@@ -45,6 +45,14 @@ button {
   color: white;
 }
 
+.viewDetailsBtn {
+    background-color: #00000000;
+    border: 1px solid #155dfc;
+    color: #155dfc;
+    border-radius: 16px;
+    margin-bottom: 8px;
+}
+
 .buttonGroup {
   display: flex;
   gap: 8px;
@@ -343,7 +351,7 @@ textarea {
 .eventMeta {
   flex: 1;
   border-radius: 12px;
-  padding: 1px 8px;
+  padding: 10px 10px;
   margin-top: 8px;
   background-color: #ffffff;
   box-shadow: 2px 2px 3px #00000057;

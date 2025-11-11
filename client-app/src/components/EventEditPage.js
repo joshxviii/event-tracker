@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { get_event, update_event } from "../utils/requests/event";
 import { useNotifications } from './ui/Notifications';
+import EventMapWidget from "./ui/event-map-widget";
 
 // Props: eventId (string), user (object), onSaved (fn), onCancel (fn)
 export const EventEditPage = ({ eventId, user, onSaved, onCancel }) => {
@@ -157,88 +158,85 @@ export const EventEditPage = ({ eventId, user, onSaved, onCancel }) => {
     };
 
     return (
-        <div className="formContainer">
-                    <h2 className="blueColor">Edit Event</h2>
+        <div>
 
-            <form onSubmit={handleSubmit} className="formGrid" aria-label="Create event form">
-                <label className="labelStyle">
-                    <div style={{ width: '100%' }}>
-                        <div style={{ fontSize: 14, marginBottom: 6 }}>Title</div>
-                        <input className="input" id="title" value={title} maxLength={80} onChange={(e) => setTitle(e.target.value)} placeholder="Event title" />
-                    </div>
-                </label>
+            <div className="formContainer" >
+                <h2 className="blueColor">Edit Event</h2>
 
-                <label className="labelStyle">
-                    <div style={{ width: '100%' }}>
-                        <div style={{ fontSize: 14, marginBottom: 6 }}>Description</div>
-                        <textarea className="input" id="description" value={description} maxLength={800} onChange={(e) => setDescription(e.target.value)} placeholder="Describe the event..." />
-                    </div>
-                </label>
-
-                <div className="twoCols">
-                    <label className="labelStyle" style={{ flex: 1 }}>
-                        <div style={{ fontSize: 14, marginBottom: 6 }}>Date</div>
-                        <input className="input" type="date" id="date" value={date} onChange={(e) => setDate(e.target.value)} />
+                <form onSubmit={handleSubmit} className="formGrid" aria-label="Create event form">
+                    <label className="labelStyle">
+                        <div style={{ width: '100%' }}>
+                            <div style={{ fontSize: 14, marginBottom: 6 }}>Title</div>
+                            <input className="input" id="title" value={title} maxLength={80} onChange={(e) => setTitle(e.target.value)} placeholder="Event title" />
+                        </div>
                     </label>
 
-                    <div style={{ flex: 1, display: 'flex', gap: 8 }}>
-                        <label className="labelStyle" style={{ flex: 1 }}>
-                            <div style={{ fontSize: 14, marginBottom: 6 }}>Start</div>
-                            <input className="input" type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
-                        </label>
-                        <label className="labelStyle" style={{ flex: 1 }}>
-                            <div style={{ fontSize: 14, marginBottom: 6 }}>End</div>
-                            <input className="input" type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
-                        </label>
-                    </div>
-                </div>
-
-                <label className="labelStyle">
-                    <div style={{ width: '100%' }}>
-                        <div style={{ fontSize: 14, marginBottom: 6 }}>Address</div>
-                        <input className="input" id="address" value={address} maxLength={200} onChange={(e) => setAddress(e.target.value)} placeholder="Street, city, state" />
-                    </div>
-                </label>
-
-                <div className="twoCols">
-                    <label className="labelStyle" style={{ flex: 1 }}>
-                        <div style={{ fontSize: 14, marginBottom: 6 }}>Category</div>
-                        <select className="input" value={category} onChange={(e) => setCategory(e.target.value)}>
-                            <option value="social">Social</option>
-                            <option value="volunteer">Volunteer</option>
-                            <option value="market">Market</option>
-                            <option value="other">Other</option>
-                        </select>
+                    <label className="labelStyle">
+                        <div style={{ width: '100%' }}>
+                            <div style={{ fontSize: 14, marginBottom: 6 }}>Description</div>
+                            <textarea className="input" id="description" value={description} maxLength={800} onChange={(e) => setDescription(e.target.value)} placeholder="Describe the event..." />
+                        </div>
                     </label>
 
-                    <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: 14, marginBottom: 6 }}>Repeat</div>
-                        <select className="input" value={repeat} onChange={(e) => setRepeat(e.target.value)}>
-                            <option value="none">Does not repeat</option>
-                            <option value="weekly">Weekly</option>
-                            <option value="monthly">Monthly</option>
-                            <option value="annual">Annually</option>
-                        </select>
-                        <div style={{ fontSize: 12, color: '#666', marginTop: 6 }}>Coordinates are auto-filled from the address when available.</div>
+                    <div className="twoCols">
+                        <label className="labelStyle" style={{ flex: 1 }}>
+                            <div style={{ fontSize: 14, marginBottom: 6 }}>Date</div>
+                            <input className="input" type="date" id="date" value={date} onChange={(e) => setDate(e.target.value)} />
+                        </label>
+
+                        <div style={{ flex: 1, display: 'flex', gap: 8 }}>
+                            <label className="labelStyle" style={{ flex: 1 }}>
+                                <div style={{ fontSize: 14, marginBottom: 6 }}>Start</div>
+                                <input className="input" type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
+                            </label>
+                            <label className="labelStyle" style={{ flex: 1 }}>
+                                <div style={{ fontSize: 14, marginBottom: 6 }}>End</div>
+                                <input className="input" type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
+                            </label>
+                        </div>
                     </div>
-                </div>
 
-                <div style={{ marginTop: 8 }}>
-                    <div style={{ fontSize: 14, marginBottom: 6 }}>Coordinates</div>
-                    <div className="coordsRow">
-                        <input className="input smallInput" readOnly value={lat || ''} placeholder="lat" />
-                        <input className="input smallInput" readOnly value={lng || ''} placeholder="lng" />
+                    <div className="twoCols">
+                        <label className="labelStyle" style={{ flex: 1 }}>
+                            <div style={{ fontSize: 14, marginBottom: 6 }}>Category</div>
+                            <select className="input" value={category} onChange={(e) => setCategory(e.target.value)}>
+                                <option value="social">Social</option>
+                                <option value="volunteer">Volunteer</option>
+                                <option value="market">Market</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </label>
+
+                        <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: 14, marginBottom: 6 }}>Repeat</div>
+                            <select className="input" value={repeat} onChange={(e) => setRepeat(e.target.value)}>
+                                <option value="none">Does not repeat</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="annual">Annually</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
 
-                {error && <div className="formError">{error}</div>}
-                {success && <div className="formSuccess">{success}</div>}
+                    <label className="labelStyle">
+                        <div style={{ width: '100%' }}>
+                            <div style={{ fontSize: 14, marginBottom: 6 }}>Address</div>
+                            <input className="input" id="address" value={address} maxLength={200} onChange={(e) => setAddress(e.target.value)} placeholder="Street, city, state" />
+                        </div>
+                    </label>
 
-                <div className="formActions" style={{ display: 'flex', gap: 8 }}>
-                    <button type="submit" disabled={loading}>{loading ? 'Saving...' : 'Save Changes'}</button>
-                    <button type="button" onClick={() => onCancel ? onCancel() : null}>Cancel</button>
-                </div>
-            </form>         
+                    <EventMapWidget lat={lat} lng={lng}/>
+
+                    {error && <div className="formError">{error}</div>}
+                    {success && <div className="formSuccess">{success}</div>}
+
+                    <div className="formActions" style={{ display: 'flex', gap: 8 }}>
+                        <button type="submit" disabled={loading}>{loading ? 'Saving...' : 'Save Changes'}</button>
+                        <button type="button" onClick={() => onCancel ? onCancel() : null}>Cancel</button>
+                    </div>
+                </form>         
+
+            </div>
         </div>
     );
 };

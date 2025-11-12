@@ -3,11 +3,14 @@ const express = require('express');
 const router = express.Router();
 const User = require('../schemas/User');
 const jwt = require('jsonwebtoken');
-const { requireAuth } = require('../middleware/auth');
+const { dbConnect } = require('../middleware/mongoose');
+
 
 // Register
 router.post('/register', async (req, res) => {
   try {
+    await dbConnect();
+
     const { username, email, password, firstName, lastName } = req.body;
 
     const normalizedEmail = typeof email === 'string' ? email.toLowerCase() : email;
@@ -39,6 +42,8 @@ router.post('/register', async (req, res) => {
 // Login (accepts either email or username as identifier)
 router.post('/login', async (req, res) => {
   try {
+    await dbConnect();
+
     const identifier = req.body.identifier ?? req.body.email ?? req.body.username;
     const password = req.body.password;
 

@@ -3,9 +3,10 @@ const express = require('express');
 const router = express.Router();
 const User = require('../schemas/User');
 const jwt = require('jsonwebtoken');
+const { requireAuth } = require('../middleware/auth');
 
 // Register
-router.post('/register', async (req, res) => {
+router.post('/register', requireAuth, async (req, res) => {
   try {
     const { username, email, password, firstName, lastName } = req.body;
 
@@ -36,7 +37,7 @@ router.post('/register', async (req, res) => {
 });
 
 // Login (accepts either email or username as identifier)
-router.post('/login', async (req, res) => {
+router.post('/login', requireAuth, async (req, res) => {
   try {
     const identifier = req.body.identifier ?? req.body.email ?? req.body.username;
     const password = req.body.password;

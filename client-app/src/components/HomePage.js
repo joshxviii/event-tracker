@@ -4,12 +4,16 @@ import MapWidget from "./ui/map-widget";
 import { get_events } from "../utils/requests/event";
 import { PoiInfoWidget } from "./ui/poi-info-widget";
 import CalendarPanel from "./ui/CalendarPanel";
+import { useMap } from "@vis.gl/react-google-maps";
 
 export const HomePage = ({
         onEventClick,
         onEventCreationClick,
         onEventManageClick
     }) => {
+
+    const map = useMap();
+
     const [events, setEvents] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -46,6 +50,8 @@ export const HomePage = ({
 
     const handlePoiClick = (id) => {
         setSelectedEventId((prev) => (prev === id ? null : id));
+        if (!map) return;
+        map.panTo({lat: 0, lng: 0});
     };
 
     const handleViewportChange = ({ center, zoom }) => {
@@ -122,7 +128,6 @@ export const HomePage = ({
             }
 
             // TODO distance filter
-            // distance filter (if map viewport provided)
             if (mapViewport && mapViewport.center) {
                 const lat1 = Number(mapViewport.center.lat);
                 const lng1 = Number(mapViewport.center.lng);
@@ -131,16 +136,15 @@ export const HomePage = ({
                 if ([lat2, lng2].some((v) => Number.isNaN(v))) return false;
 
                 const toRad = (deg) => (deg * Math.PI) / 180;
-                const R = 6371000; // meters
+                const R = 6371000;
                 const dLat = toRad(lat2 - lat1);
                 const dLon = toRad(lng2 - lng1);
                 const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2);
                 const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-                const dist = R * c; // meters
+                const dist = R * c;
 
-                // approximate visible radius based on zoom (very rough): meters
                 const zoom = mapViewport.zoom || 11;
-                const approxRadiusMeters = (20000 / Math.pow(2, zoom)) * 1000; // rough estimate
+                const approxRadiusMeters = (20000 / Math.pow(2, zoom)) * 1000;
                 if (dist > approxRadiusMeters) return false;
             }
 

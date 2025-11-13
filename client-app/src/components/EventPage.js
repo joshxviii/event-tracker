@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from "react";
 import Review from "./ui/review-panel";
-import { get_event } from "../utils/requests/event";
+import { get_event, favorite_event } from "../utils/requests/event";
 import { delete_review, get_reviews } from "../utils/requests/review";
 import ReviewTextbox from "./ui/review-textbox";
 import {ReactComponent as HeartIcon} from '../assets/heart.svg';
+import {ReactComponent as HeartFilledIcon} from '../assets/heart-filled.svg';
 import {ReactComponent as ShareIcon} from '../assets/share.svg';
 import {ReactComponent as BackIcon} from '../assets/back.svg';
 import {ReactComponent as PoiIcon} from '../assets/poi.svg';
 import {ReactComponent as CalendarIcon} from '../assets/calendar.svg';
 
-
-export function EventPage( {eventId, onBack } ) {
+export function EventPage( {user, eventId, onBack } ) {
 
     const [reviews, setReviews] = useState(null);
     const [event, setEvent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isToggling, setIsToggling] = useState(false);
+    const [isFavorited, setIsFavorited] = useState(false);
 
     const reloadReviews = async () => {
         try {
@@ -44,6 +46,7 @@ export function EventPage( {eventId, onBack } ) {
                 if (!mounted) return;
                 setReviews(await get_reviews(eventId) || []);
                 setEvent(await get_event(eventId) || {});
+                setIsFavorited(user?.favoriteEvents?.includes(eventId) ?? false);
             } catch (e) {
                 if (!mounted) return;
                 setError(e.message || String(e));
@@ -55,7 +58,23 @@ export function EventPage( {eventId, onBack } ) {
         })();
 
         return () =>  mounted = false;
-    }, []);
+    }, [eventId, user]);
+
+
+    const toggleFavorite = async () => {
+        if (isToggling || !user) return;
+        
+        setIsToggling(true);
+        try {
+            setIsFavorited(!isFavorited);
+            await favorite_event(eventId);
+        } catch (error) {
+            setIsFavorited(!isFavorited);
+            setError(error.message || 'Failed to toggle favorite');
+        } finally {
+            setIsToggling(false);
+        }
+    };
 
     if (event) return (
         <div className="eventPageContainer">
@@ -68,7 +87,16 @@ export function EventPage( {eventId, onBack } ) {
             <div className="eventInfo">
                 <div className="eventImage">
                     <div className="buttonGroup eventButtons" >
-                        <button onClick={()=>{}}><HeartIcon/></button>
+                        <button
+                            onClick={toggleFavorite}
+                            disabled={isToggling || !user}
+                            style={{ 
+                                opacity: (isToggling || !user) ? 0.6 : 1,
+                                cursor: (isToggling || !user) ? 'not-allowed' : 'pointer'
+                            }}
+                        >
+                            {isFavorited ? <HeartFilledIcon /> : <HeartIcon />}
+                        </button>
                         <button onClick={()=>{}}><ShareIcon/></button>
                     </div>
                     {event.image ? (

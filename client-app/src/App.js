@@ -68,7 +68,8 @@ export function App() {
             )}
 
             {currentPage === 'event' && selectedEventId && (
-                <EventPage 
+                <EventPage
+                    user={currentUser}
                     eventId={selectedEventId}
                     onBack={() => handlePageChange('home')}
                 />

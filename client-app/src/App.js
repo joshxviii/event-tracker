@@ -17,11 +17,9 @@ export function App() {
     const [isLoggedIn, setLoggedIn] = useState(false)
     const [currentPage, setCurrentPage] = useState('home') // 'home', 'account', 'event'
     const [selectedEventId, setSelectedEventId] = useState(null)
-    const [currentUser, setCurrentUser] = useState(null)
     
     const handleLogin = (user) => {
         setLoggedIn(true)
-        setCurrentUser(user)
     }
     const handleLogout = () => {
         setLoggedIn(false)
@@ -62,28 +60,22 @@ export function App() {
             )}
 
             {currentPage === 'account' && (
-                <AccountPage 
-                    user={currentUser}
-                />
+                <AccountPage />
             )}
 
             {currentPage === 'event' && selectedEventId && (
                 <EventPage
-                    user={currentUser}
                     eventId={selectedEventId}
                     onBack={() => handlePageChange('home')}
                 />
             )}
 
             {currentPage === 'event-creation' && (
-                <EventCreationPage 
-                    user={currentUser}
-                />
+                <EventCreationPage />
             )}
 
             {currentPage === 'event-management' && (
                 <EventManagementPage 
-                    user={currentUser}
                     onEditEvent={(id) => { setSelectedEventId(id); setCurrentPage('event-edit'); }}
                 />
             )}
@@ -91,7 +83,6 @@ export function App() {
             {currentPage === 'event-edit' && selectedEventId && (
                 <EventEditPage
                     eventId={selectedEventId}
-                    user={currentUser}
                     onSaved={() => setCurrentPage('event-management')}
                     onCancel={() => setCurrentPage('event-management')}
                 />

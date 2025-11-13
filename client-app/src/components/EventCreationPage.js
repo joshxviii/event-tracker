@@ -2,8 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { create_event } from "../utils/requests/event";
 import { useNotifications } from './ui/Notifications';
 import EventMapWidget from "./ui/event-map-widget";
+import { getCurrentUser } from "../utils/requests/user";
 
-export const EventCreationPage = ({ user }) => {
+export const EventCreationPage = ({  }) => {
+
+    const user = getCurrentUser();
+
     const fileInputRef = useRef(null);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");

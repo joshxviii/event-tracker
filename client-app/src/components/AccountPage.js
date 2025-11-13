@@ -1,9 +1,11 @@
 import React from "react";
 import { useNotifications } from './ui/Notifications';
+import { getCurrentUser } from "../utils/requests/user";
 
 // Simple, view-only account page for displaying account information
-export const AccountPage = ({ user = { username: 'Demo', email: 'demo@farmingdale.edu' } }) => {
+export const AccountPage = ({  }) => {
     const notify = useNotifications();
+    const user = getCurrentUser();
     if (user) return (
         <div style={{ maxWidth: 720, margin: '24px auto', padding: 16 }}>
             <h2>Account</h2>

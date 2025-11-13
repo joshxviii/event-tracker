@@ -9,8 +9,11 @@ import {ReactComponent as ShareIcon} from '../assets/share.svg';
 import {ReactComponent as BackIcon} from '../assets/back.svg';
 import {ReactComponent as PoiIcon} from '../assets/poi.svg';
 import {ReactComponent as CalendarIcon} from '../assets/calendar.svg';
+import { getCurrentUser } from "../utils/requests/user";
 
-export function EventPage( {user, eventId, onBack } ) {
+export function EventPage( { eventId, onBack } ) {
+
+    const user = getCurrentUser();
 
     const [reviews, setReviews] = useState(null);
     const [event, setEvent] = useState(null);
@@ -46,6 +49,7 @@ export function EventPage( {user, eventId, onBack } ) {
                 if (!mounted) return;
                 setReviews(await get_reviews(eventId) || []);
                 setEvent(await get_event(eventId) || {});
+                console.log('User favorite events:', user);
                 setIsFavorited(user?.favoriteEvents?.includes(eventId) ?? false);
             } catch (e) {
                 if (!mounted) return;
@@ -95,7 +99,7 @@ export function EventPage( {user, eventId, onBack } ) {
                                 cursor: (isToggling || !user) ? 'not-allowed' : 'pointer'
                             }}
                         >
-                            {isFavorited ? <HeartFilledIcon /> : <HeartIcon />}
+                            {isFavorited ? <HeartFilledIcon style={{color: "#e84343ff"}}/> : <HeartIcon />}
                         </button>
                         <button onClick={()=>{}}><ShareIcon/></button>
                     </div>

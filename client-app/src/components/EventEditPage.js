@@ -2,9 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { get_event, update_event } from "../utils/requests/event";
 import { useNotifications } from './ui/Notifications';
 import EventMapWidget from "./ui/event-map-widget";
+import { getCurrentUser } from "../utils/requests/user";
 
 // Props: eventId (string), user (object), onSaved (fn), onCancel (fn)
-export const EventEditPage = ({ eventId, user, onSaved, onCancel }) => {
+export const EventEditPage = ({ eventId, onSaved, onCancel }) => {
+    const user = getCurrentUser();
+    
     const fileInputRef = useRef(null);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");

@@ -2,8 +2,11 @@ import { useEffect, useState } from "react";
 import { get_events_by_user } from "../utils/requests/event";
 import { EventManagementWidget } from "./ui/event-management-widget";
 import { useNotifications } from './ui/Notifications';
+import { getCurrentUser } from "../utils/requests/user";
 
-export const EventManagementPage = ({ user, onEditEvent }) => {
+export const EventManagementPage = ({ onEditEvent }) => {
+
+    const user = getCurrentUser();
 
     const [myEvents, setMyEvents] = useState(null);
     const [loading, setLoading] = useState(true);

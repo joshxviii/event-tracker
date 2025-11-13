@@ -129,4 +129,20 @@ router.delete('/:id', requireAuth, async (req, res) => {
   }
 });
 
+router.post('/:id/favorite', requireAuth, async (req, res) => {
+  const { id } = req.params;
+  const userId = req.user.userId;
+
+  const user = await User.findById(userId);
+  const isFav = user.favoriteEvents.includes(id);
+
+  if (isFav) {
+    await User.updateOne({ _id: userId }, { $pull: { favoriteEvents: id } });
+  } else {
+    await User.updateOne({ _id: userId }, { $addToSet: { favoriteEvents: id } });
+  }
+
+  res.json({ isFavorite: !isFav });
+});
+
 module.exports = router;

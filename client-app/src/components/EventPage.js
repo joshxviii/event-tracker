@@ -13,7 +13,7 @@ import { getCurrentUser } from "../utils/requests/user";
 
 export function EventPage( { eventId, onBack } ) {
 
-    const user = getCurrentUser();
+    const [user, setUser ] = useState(null);
 
     const [reviews, setReviews] = useState(null);
     const [event, setEvent] = useState(null);
@@ -47,10 +47,12 @@ export function EventPage( { eventId, onBack } ) {
         (async () => {
             try {
                 if (!mounted) return;
+                const currentUser = await getCurrentUser()
+                setUser(currentUser);
                 setReviews(await get_reviews(eventId) || []);
                 setEvent(await get_event(eventId) || {});
-                console.log('User favorite events:', user);
-                setIsFavorited(user?.favoriteEvents?.includes(eventId) ?? false);
+                console.log('User favorite events:', currentUser);
+                setIsFavorited(currentUser?.favoriteEvents?.includes(eventId) ?? false);
             } catch (e) {
                 if (!mounted) return;
                 setError(e.message || String(e));
@@ -62,7 +64,7 @@ export function EventPage( { eventId, onBack } ) {
         })();
 
         return () =>  mounted = false;
-    }, [eventId, user]);
+    }, [eventId]);
 
 
     const toggleFavorite = async () => {

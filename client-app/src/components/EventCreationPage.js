@@ -6,7 +6,7 @@ import { getCurrentUser } from "../utils/requests/user";
 
 export const EventCreationPage = ({  }) => {
 
-    const user = getCurrentUser();
+    const [user, setUser] = useState(null);
 
     const fileInputRef = useRef(null);
     const [title, setTitle] = useState("");
@@ -66,6 +66,9 @@ export const EventCreationPage = ({  }) => {
     };
 
     useEffect(() => {
+        (async () => {
+            setUser(await getCurrentUser());
+        })();
         const t = setTimeout(() => {
             geocodeAddress();
         }, 400);

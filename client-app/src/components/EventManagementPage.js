@@ -6,7 +6,7 @@ import { getCurrentUser } from "../utils/requests/user";
 
 export const EventManagementPage = ({ onEditEvent }) => {
 
-    const user = getCurrentUser();
+    const [ user, setUser ] = useState(null);
 
     const [myEvents, setMyEvents] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -20,7 +20,9 @@ export const EventManagementPage = ({ onEditEvent }) => {
                 if (!mounted) return;
                 setLoading(true);
                 setError(null);
-                const events = await get_events_by_user(user._id);
+                const currentUser = await getCurrentUser();
+                setUser(currentUser);
+                const events = await get_events_by_user(currentUser._id);
                 if (!mounted) return;
                 setMyEvents(events || []);
             } catch (e) {

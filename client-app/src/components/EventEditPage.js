@@ -6,7 +6,7 @@ import { getCurrentUser } from "../utils/requests/user";
 
 // Props: eventId (string), user (object), onSaved (fn), onCancel (fn)
 export const EventEditPage = ({ eventId, onSaved, onCancel }) => {
-    const user = getCurrentUser();
+    const [ user, setUser ] = useState(null);
     
     const fileInputRef = useRef(null);
     const [title, setTitle] = useState("");
@@ -78,6 +78,7 @@ export const EventEditPage = ({ eventId, onSaved, onCancel }) => {
         if (!eventId) return;
         (async () => {
             try {
+                setUser(await getCurrentUser());
                 const ev = await get_event(eventId);
                 if (!mounted || !ev) return;
                 setTitle(ev.title || "");

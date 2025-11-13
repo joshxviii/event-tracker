@@ -129,6 +129,7 @@ router.delete('/:id', requireAuth, async (req, res) => {
   }
 });
 
+//Favorite/Unfavorite event
 router.post('/:id/favorite', requireAuth, async (req, res) => {
   const { id } = req.params;
   const userId = req.user.userId;

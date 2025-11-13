@@ -5,7 +5,7 @@ import {ReactComponent as AccountIcon} from '../assets/account.svg';
 import {ReactComponent as LogOutIcon} from '../assets/log-out.svg';
 
 
-export function NavigationBar( { currentPage, onPageChange, onLogout } ) {
+export function NavigationBar( { currentPage, onPageChange, onLogout, onEventCreationClick, onEventManageClick } ) {
     return (
         <nav id='nav-bar'>
             <h3 id="navTitle"> Event Tracker </h3>
@@ -24,6 +24,14 @@ export function NavigationBar( { currentPage, onPageChange, onLogout } ) {
                     Account
                 </button>
             </div>
+
+            <h2 className="indent">
+                <div className="buttonGroup">
+                    <button onClick={onEventCreationClick}>Create New Event</button>
+                    <button onClick={onEventManageClick}>Manage My Events</button>
+                </div>
+            </h2>
+
             <button
                 style={{marginLeft: 'auto', marginRight: '16px'}}
                 onClick={ onLogout }

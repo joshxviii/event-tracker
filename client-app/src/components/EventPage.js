@@ -1,21 +1,26 @@
 import React, { useEffect, useState } from "react";
 import Review from "./ui/review-panel";
-import { get_event } from "../utils/requests/event";
+import { get_event, favorite_event } from "../utils/requests/event";
 import { delete_review, get_reviews } from "../utils/requests/review";
 import ReviewTextbox from "./ui/review-textbox";
 import {ReactComponent as HeartIcon} from '../assets/heart.svg';
+import {ReactComponent as HeartFilledIcon} from '../assets/heart-filled.svg';
 import {ReactComponent as ShareIcon} from '../assets/share.svg';
 import {ReactComponent as BackIcon} from '../assets/back.svg';
 import {ReactComponent as PoiIcon} from '../assets/poi.svg';
 import {ReactComponent as CalendarIcon} from '../assets/calendar.svg';
+import { getCurrentUser } from "../utils/requests/user";
 
+export function EventPage( { eventId, onBack } ) {
 
-export function EventPage( {eventId, onBack } ) {
+    const [user, setUser ] = useState(null);
 
     const [reviews, setReviews] = useState(null);
     const [event, setEvent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isToggling, setIsToggling] = useState(false);
+    const [isFavorited, setIsFavorited] = useState(false);
 
     const reloadReviews = async () => {
         try {
@@ -42,8 +47,12 @@ export function EventPage( {eventId, onBack } ) {
         (async () => {
             try {
                 if (!mounted) return;
+                const currentUser = await getCurrentUser()
+                setUser(currentUser);
                 setReviews(await get_reviews(eventId) || []);
                 setEvent(await get_event(eventId) || {});
+                console.log('User favorite events:', currentUser);
+                setIsFavorited(currentUser?.favoriteEvents?.includes(eventId) ?? false);
             } catch (e) {
                 if (!mounted) return;
                 setError(e.message || String(e));
@@ -55,7 +64,23 @@ export function EventPage( {eventId, onBack } ) {
         })();
 
         return () =>  mounted = false;
-    }, []);
+    }, [eventId]);
+
+
+    const toggleFavorite = async () => {
+        if (isToggling || !user) return;
+        
+        setIsToggling(true);
+        try {
+            setIsFavorited(!isFavorited);
+            await favorite_event(eventId);
+        } catch (error) {
+            setIsFavorited(!isFavorited);
+            setError(error.message || 'Failed to toggle favorite');
+        } finally {
+            setIsToggling(false);
+        }
+    };
 
     if (event) return (
         <div className="eventPageContainer">
@@ -68,7 +93,16 @@ export function EventPage( {eventId, onBack } ) {
             <div className="eventInfo">
                 <div className="eventImage">
                     <div className="buttonGroup eventButtons" >
-                        <button onClick={()=>{}}><HeartIcon/></button>
+                        <button
+                            onClick={toggleFavorite}
+                            disabled={isToggling || !user}
+                            style={{ 
+                                opacity: (isToggling || !user) ? 0.6 : 1,
+                                cursor: (isToggling || !user) ? 'not-allowed' : 'pointer'
+                            }}
+                        >
+                            {isFavorited ? <HeartFilledIcon style={{color: "#e84343ff"}}/> : <HeartIcon />}
+                        </button>
                         <button onClick={()=>{}}><ShareIcon/></button>
                     </div>
                     {event.image ? (
@@ -86,12 +120,14 @@ export function EventPage( {eventId, onBack } ) {
                         <span className="eventLabel" style={{ backgroundColor: `var(--event-color-${event.category || 'other'})` }}>{event.category}</span>
                     </div>
                     <p style={{ color: '#374151' }}>{event.description}</p>
-                    <p style={ {display: 'flex', gap: 6} }>
-                        <CalendarIcon/>
-                        {event.startAt ? new Date(event.startAt).toLocaleDateString() : ''}
-                        {event.startAt && ` at ${new Date(event.startAt).toLocaleTimeString()} - ${event.endAt ? new Date(event.endAt).toLocaleTimeString() : ''}`}
-                    </p>
-                    <div style={ {display: 'inline-flex', gap: 6} }> <PoiIcon/> <div style={ { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'} }> {event.location.address} </div> </div> 
+                    <div style={ {display:'flex', flexDirection: 'column', gap: 6} }>
+                        <div style={ {display: 'flex', gap: 6} }>
+                            <CalendarIcon/>
+                            {event.startAt ? new Date(event.startAt).toLocaleDateString() : ''}
+                            {event.startAt && ` at ${new Date(event.startAt).toLocaleTimeString()} - ${event.endAt ? new Date(event.endAt).toLocaleTimeString() : ''}`}
+                        </div>
+                        <div style={ {display: 'flex', gap: 6} }> <PoiIcon/> <div style={ { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'} }> {event.location.address} </div> </div> 
+                    </div>
                 </div>
             </div>
 

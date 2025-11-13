@@ -1,9 +1,18 @@
-import React from "react";
+import React, { use, useEffect, useState } from "react";
 import { useNotifications } from './ui/Notifications';
+import { getCurrentUser } from "../utils/requests/user";
 
 // Simple, view-only account page for displaying account information
-export const AccountPage = ({ user = { username: 'Demo', email: 'demo@farmingdale.edu' } }) => {
+export const AccountPage = ({  }) => {
+    const [ user, setUser ] = useState(null);
+
     const notify = useNotifications();
+    useEffect(() => {
+        (async () => {
+            setUser(await getCurrentUser());
+        })();
+    }, [user]);
+
     if (user) return (
         <div className="formContainer">
             <h2 className="blueColor">Account Information</h2>

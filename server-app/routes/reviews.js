@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
 const Review = require('../schemas/Review');
+const { dbConnect } = require('../middleware/mongoose');
 
 // Get All Reviews for an Event
 router.get('/', async (req, res) => {
     try {
+        await dbConnect();
         const eventId = req.params.id;
         const reviews = await Review.find({ event: eventId }).populate('author', 'username firstName lastName').sort({ createdAt: -1 });
         res.json(reviews);
@@ -16,6 +18,7 @@ router.get('/', async (req, res) => {
 // Create a Review for an Event
 router.post('/', async (req, res) => {
     try {
+        await dbConnect();
         const reviewData = { ...req.body };
 
         const review = new Review(reviewData);

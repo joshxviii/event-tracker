@@ -4,10 +4,13 @@ const router = express.Router();
 const Event = require('../schemas/Event');
 const User = require('../schemas/User');
 const { requireAuth } = require('../middleware/auth');
+const { dbConnect } = require('../middleware/mongoose');
+
 
 // Create event (authenticated)
 router.post('/', requireAuth, async (req, res) => {
   try {
+    await dbConnect;
     const eventData = { ...req.body };
     eventData.organizer = req.user.userId;
 
@@ -27,6 +30,7 @@ router.post('/', requireAuth, async (req, res) => {
 // Get all events
 router.get('/', async (req, res) => {
   try {
+    await dbConnect();
     const events = await Event.find()
       .populate('organizer', 'username firstName lastName')
       .populate('attendees', 'username firstName lastName')
@@ -40,6 +44,7 @@ router.get('/', async (req, res) => {
 // Get all events organized by a specific user
 router.get('/organizer/:userId', async (req, res) => {
   try {
+    await dbConnect();
     const events = await Event.find({ organizer: req.params.userId })
       .populate('organizer', 'username firstName lastName')
       .populate('attendees', 'username firstName lastName')
@@ -54,6 +59,7 @@ router.get('/organizer/:userId', async (req, res) => {
 // Get single event
 router.get('/:id', async (req, res) => {
   try {
+    await dbConnect();
     const event = await Event.findById(req.params.id)
       .populate('organizer', 'username firstName lastName')
       .populate('attendees', 'username firstName lastName');
@@ -71,6 +77,7 @@ router.get('/:id', async (req, res) => {
 // Update event
 router.put('/:id', requireAuth, async (req, res) => {
   try {
+    await dbConnect();
     const eventData = { ...req.body };
 
     // Prevent client from changing the organizer field
@@ -97,7 +104,7 @@ router.put('/:id', requireAuth, async (req, res) => {
 // Delete event
 router.delete('/:id', requireAuth, async (req, res) => {
   try {
-
+    await dbConnect();
     const event = await Event.findOneAndDelete({ 
       _id: req.params.id, 
       organizer: req.user.userId 
@@ -120,6 +127,23 @@ router.delete('/:id', requireAuth, async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+});
+
+//Favorite/Unfavorite event
+router.post('/:id/favorite', requireAuth, async (req, res) => {
+  const { id } = req.params;
+  const userId = req.user.userId;
+
+  const user = await User.findById(userId);
+  const isFav = user.favoriteEvents.includes(id);
+
+  if (isFav) {
+    await User.updateOne({ _id: userId }, { $pull: { favoriteEvents: id } });
+  } else {
+    await User.updateOne({ _id: userId }, { $addToSet: { favoriteEvents: id } });
+  }
+
+  res.json({ isFavorite: !isFav });
 });
 
 module.exports = router;

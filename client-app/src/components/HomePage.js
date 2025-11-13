@@ -4,12 +4,9 @@ import MapWidget from "./ui/map-widget";
 import { get_events } from "../utils/requests/event";
 import { PoiInfoWidget } from "./ui/poi-info-widget";
 import CalendarPanel from "./ui/CalendarPanel";
+import { useMap } from "@vis.gl/react-google-maps";
 
-export const HomePage = ({
-        onEventClick,
-        onEventCreationClick,
-        onEventManageClick
-    }) => {
+export const HomePage = ({ onEventClick }) => {
     const [events, setEvents] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -25,8 +22,6 @@ export const HomePage = ({
     const [displayCount, setDisplayCount] = useState(20);
     const listRef = useRef(null);
     const PAGE_SIZE = 5;
-
-
 
     useEffect(() => {
         let mounted = true;
@@ -124,7 +119,6 @@ export const HomePage = ({
             }
 
             // TODO distance filter
-            // distance filter (if map viewport provided)
             if (mapViewport && mapViewport.center) {
                 const lat1 = Number(mapViewport.center.lat);
                 const lng1 = Number(mapViewport.center.lng);
@@ -133,16 +127,15 @@ export const HomePage = ({
                 if ([lat2, lng2].some((v) => Number.isNaN(v))) return false;
 
                 const toRad = (deg) => (deg * Math.PI) / 180;
-                const R = 6371000; // meters
+                const R = 6371000;
                 const dLat = toRad(lat2 - lat1);
                 const dLon = toRad(lng2 - lng1);
                 const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2);
                 const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-                const dist = R * c; // meters
+                const dist = R * c;
 
-                // approximate visible radius based on zoom (very rough): meters
                 const zoom = mapViewport.zoom || 11;
-                const approxRadiusMeters = (20000 / Math.pow(2, zoom)) * 1000; // rough estimate
+                const approxRadiusMeters = (20000 / Math.pow(2, zoom)) * 1000;
                 if (dist > approxRadiusMeters) return false;
             }
 
@@ -180,17 +173,10 @@ export const HomePage = ({
                 Find and join community events happening in your neighborhood
             </label>
 
-            <h2 className="indent">
-                <div className="buttonGroup">
-                    <button onClick={onEventCreationClick}>Create New Event</button>
-                    <button onClick={onEventManageClick}>Manage My Events</button>
-                </div>
-            </h2>
-
             <div className="mainContent">
                 <div className="mapContainer container">
                     <div>
-                        <MapWidget events={!loading ? filteredEvents : []} onPoiClick={handlePoiClick} />
+                        <MapWidget focusedEventId={selectedEventId} events={!loading ? filteredEvents : []} onPoiClick={handlePoiClick} />
                     </div>
                     <PoiInfoWidget
                         eventId={selectedEventId}
@@ -208,6 +194,7 @@ export const HomePage = ({
 
                         <div className="eventSearch">
                             <input
+                                className="input"
                                 type="text"
                                 placeholder="Search events..."
                                 value={searchText}
@@ -229,28 +216,25 @@ export const HomePage = ({
                             <button
                                 className="filterBtn clear"
                                 onClick={() => {
-                                    setActiveFilters(new Set());
-                                    setSearchText("");
+                                    setActiveFilters(new Set()); setSearchText(""); setDateFilter(''); setTimeStartFilter(''); setTimeEndFilter(''); 
                                 }}
                             >
-                                Clear
+                                Clear Filters
                             </button>
                         </div>
 
                         <div className="filterDate">
-                            <label>
-                                <span style={{ fontSize: 12 }}>Date: </span>
-                                <input type="date" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} />
-                                <span style={{ fontSize: 12 }}>From: </span>
-                                <input type="time" value={timeStartFilter} onChange={(e) => setTimeStartFilter(e.target.value)} />
-                                <span style={{ fontSize: 12 }}>To: </span>
-                                <input type="time" value={timeEndFilter} onChange={(e) => setTimeEndFilter(e.target.value)} />
+                            <label style={{display: 'flex', gap: '4px'}}>
+                                <label style={{ fontSize: 12 }}>Date:
+                                    <input type="date" className="input" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} />
+                                </label>
+                                <label style={{ fontSize: 12 }}>From: 
+                                    <input type="time" className="input" value={timeStartFilter} onChange={(e) => setTimeStartFilter(e.target.value)} />
+                                </label>
+                                <label style={{ fontSize: 12 }}>To:
+                                    <input type="time" className="input" value={timeEndFilter} onChange={(e) => setTimeEndFilter(e.target.value)} />
+                                </label>
                             </label>
-                            <button
-                                className="filterBtn clear"
-                                onClick={() => { setDateFilter(''); setTimeStartFilter(''); setTimeEndFilter(''); }}
-                                style={{ marginLeft: 'auto' }}
-                            >Clear</button>
                         </div>
 
                         <div
@@ -267,7 +251,9 @@ export const HomePage = ({
                                     <EventWidget
                                         key={e._id || i}
                                         event={e}
-                                        onClick={onEventClick}
+                                        onViewDetails={onEventClick}
+                                        onClick={handlePoiClick}
+                                        isSelected={selectedEventId === e._id}
                                     />
                                 ))
                             ) : (<div />)}

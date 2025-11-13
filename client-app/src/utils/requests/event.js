@@ -6,5 +6,6 @@ const get_event = async (eventId) => await apiRequest(`/api/events/${eventId}`);
 const get_events_by_user = async (userId) => await apiRequest(`/api/events/organizer/${userId}`);
 const update_event = async (eventId, event_details) => await apiRequest(`/api/events/${eventId}`, { method: 'PUT', body: event_details, requireAuth: true});
 const delete_event = async (eventId) => await apiRequest(`/api/events/${eventId}`, { method: 'DELETE', requireAuth: true});
+const favorite_event = async (eventId) => await apiRequest(`/api/events/${eventId}/favorite`, { method: 'POST', requireAuth: true});
 
-export { create_event, get_events, get_event, get_events_by_user, update_event, delete_event };
+export { create_event, get_events, get_event, get_events_by_user, update_event, delete_event, favorite_event };

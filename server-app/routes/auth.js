@@ -3,10 +3,14 @@ const express = require('express');
 const router = express.Router();
 const User = require('../schemas/User');
 const jwt = require('jsonwebtoken');
+const { dbConnect } = require('../middleware/mongoose');
+
 
 // Register
 router.post('/register', async (req, res) => {
   try {
+    await dbConnect();
+
     const { username, email, password, firstName, lastName } = req.body;
 
     const normalizedEmail = typeof email === 'string' ? email.toLowerCase() : email;
@@ -38,6 +42,8 @@ router.post('/register', async (req, res) => {
 // Login (accepts either email or username as identifier)
 router.post('/login', async (req, res) => {
   try {
+    await dbConnect();
+
     const identifier = req.body.identifier ?? req.body.email ?? req.body.username;
     const password = req.body.password;
 
@@ -64,6 +70,20 @@ router.post('/login', async (req, res) => {
       token,
       user,
     });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Get current user (authenticated)
+router.get('/me', async (req, res) => {
+  try {
+    await dbConnect();
+    const userId = req.user?.userId;
+    if (!userId) return res.status(401).json({ message: 'Unauthorized' });
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.json(user);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

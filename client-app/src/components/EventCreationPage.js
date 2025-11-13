@@ -1,8 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { create_event } from "../utils/requests/event";
 import { useNotifications } from './ui/Notifications';
+import EventMapWidget from "./ui/event-map-widget";
+import { getCurrentUser } from "../utils/requests/user";
 
-export const EventCreationPage = ({ user }) => {
+export const EventCreationPage = ({  }) => {
+
+    const [user, setUser] = useState(null);
+
+    const fileInputRef = useRef(null);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [date, setDate] = useState(""); // yyyy-mm-dd
@@ -18,6 +24,18 @@ export const EventCreationPage = ({ user }) => {
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
     const notify = useNotifications();
+
+    const handleImageSelect = (event) => {
+        const selectedFile = event.target.files[0];
+        if (selectedFile) {
+        console.log("Selected image:", selectedFile);
+            // TODO
+        }
+    };
+
+    const handleButtonClick = () => {
+        fileInputRef.current.click(); // Programmatically click the hidden file input
+    };
 
     const geocodeAddress = async () => {
         setError(null);
@@ -48,6 +66,9 @@ export const EventCreationPage = ({ user }) => {
     };
 
     useEffect(() => {
+        (async () => {
+            setUser(await getCurrentUser());
+        })();
         const t = setTimeout(() => {
             geocodeAddress();
         }, 400);
@@ -116,6 +137,18 @@ export const EventCreationPage = ({ user }) => {
             <h2 className="blueColor">Create an Event</h2>
 
             <form onSubmit={handleSubmit} className="formGrid" aria-label="Create event form">
+
+                <input
+                    type="file"
+                    accept="image/*"
+                    ref={fileInputRef}
+                    onChange={handleImageSelect}
+                    style={{ display: 'none' }}
+                />
+                <button onClick={handleButtonClick}>
+                    Select Image
+                </button>
+
                 <label className="labelStyle">
                     <div style={{ width: '100%' }}>
                         <div style={{ fontSize: 14, marginBottom: 6 }}>Title</div>
@@ -148,13 +181,6 @@ export const EventCreationPage = ({ user }) => {
                     </div>
                 </div>
 
-                <label className="labelStyle">
-                    <div style={{ width: '100%' }}>
-                        <div style={{ fontSize: 14, marginBottom: 6 }}>Address</div>
-                        <input className="input" id="address" value={address} maxLength={200} onChange={(e) => setAddress(e.target.value)} placeholder="Street, city, state" />
-                    </div>
-                </label>
-
                 <div className="twoCols">
                     <label className="labelStyle" style={{ flex: 1 }}>
                         <div style={{ fontSize: 14, marginBottom: 6 }}>Category</div>
@@ -174,17 +200,17 @@ export const EventCreationPage = ({ user }) => {
                             <option value="monthly">Monthly</option>
                             <option value="annual">Annually</option>
                         </select>
-                        <div style={{ fontSize: 12, color: '#666', marginTop: 6 }}>Coordinates are auto-filled from the address when available.</div>
                     </div>
                 </div>
 
-                <div style={{ marginTop: 8 }}>
-                    <div style={{ fontSize: 14, marginBottom: 6 }}>Coordinates</div>
-                    <div className="coordsRow">
-                        <input className="input smallInput" readOnly value={lat || ''} placeholder="lat" />
-                        <input className="input smallInput" readOnly value={lng || ''} placeholder="lng" />
+                <label className="labelStyle">
+                    <div style={{ width: '100%' }}>
+                        <div style={{ fontSize: 14, marginBottom: 6 }}>Address</div>
+                        <input className="input" id="address" value={address} maxLength={200} onChange={(e) => setAddress(e.target.value)} placeholder="Street, city, state" />
                     </div>
-                </div>
+                </label>
+
+                <EventMapWidget lat={lat} lng={lng}/>
 
                 {error && <div className="formError">{error}</div>}
                 {success && <div className="formSuccess">{success}</div>}

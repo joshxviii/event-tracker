@@ -6,14 +6,7 @@ import { PoiInfoWidget } from "./ui/poi-info-widget";
 import CalendarPanel from "./ui/CalendarPanel";
 import { useMap } from "@vis.gl/react-google-maps";
 
-export const HomePage = ({
-        onEventClick,
-        onEventCreationClick,
-        onEventManageClick
-    }) => {
-
-    const map = useMap();
-
+export const HomePage = ({ onEventClick }) => {
     const [events, setEvents] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -50,8 +43,6 @@ export const HomePage = ({
 
     const handlePoiClick = (id) => {
         setSelectedEventId((prev) => (prev === id ? null : id));
-        if (!map) return;
-        map.panTo({lat: 0, lng: 0});
     };
 
     const handleViewportChange = ({ center, zoom }) => {
@@ -182,17 +173,10 @@ export const HomePage = ({
                 Find and join community events happening in your neighborhood
             </label>
 
-            <h2 className="indent">
-                <div className="buttonGroup">
-                    <button onClick={onEventCreationClick}>Create New Event</button>
-                    <button onClick={onEventManageClick}>Manage My Events</button>
-                </div>
-            </h2>
-
             <div className="mainContent">
                 <div className="mapContainer container">
                     <div>
-                        <MapWidget events={!loading ? filteredEvents : []} onPoiClick={handlePoiClick} />
+                        <MapWidget focusedEventId={selectedEventId} events={!loading ? filteredEvents : []} onPoiClick={handlePoiClick} />
                     </div>
                     <PoiInfoWidget
                         eventId={selectedEventId}
@@ -269,6 +253,7 @@ export const HomePage = ({
                                         event={e}
                                         onViewDetails={onEventClick}
                                         onClick={handlePoiClick}
+                                        isSelected={selectedEventId === e._id}
                                     />
                                 ))
                             ) : (<div />)}

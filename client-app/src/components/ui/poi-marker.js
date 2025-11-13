@@ -3,22 +3,15 @@ import {useMap, AdvancedMarker, Pin} from '@vis.gl/react-google-maps';
 import {MarkerClusterer} from '@googlemaps/markerclusterer';
 import { Circle } from './circle';
 
-export function PoiMarkers( { pois, onPoiClick } ) {
+export function PoiMarkers( { pois, onPoiClick, circleCenter } ) {
     const map = useMap();
     const [markers, setMarkers] = useState({});
     const clusterer = useRef(null);
-    const [circleCenter, setCircleCenter] = useState(null);
 
     const handleClick = useCallback(
         (key) => (ev) => {
-            if (!map) return;
-            if (ev && ev.latLng) {
-                map.panTo(ev.latLng);
-                setCircleCenter(ev.latLng);
-            }
             if (onPoiClick) onPoiClick(key);
-        },
-        [map]
+        }
     );
 
     useEffect(() => {
@@ -52,7 +45,7 @@ export function PoiMarkers( { pois, onPoiClick } ) {
     return (
         <>
             <Circle center={circleCenter} />
-            {pois.map((poi) => {
+            {Object.values(pois).map((poi) => {
                 const category = poi.category || 'other';
                 const colorMap = {
                     volunteer: 'var(--event-color-volunteer)',

@@ -137,6 +137,10 @@ button {
   box-shadow: 2px 2px 3px #00000057;
 }
 
+.eventWidget.selected {
+  box-shadow: 0 0 0 3px #6598ff;
+}
+
 /* Cut off title and other text */
 .eventWidget h1, .eventWidget p {
   text-overflow: ellipsis;

@@ -51,13 +51,13 @@ export function App() {
                 currentPage={currentPage}
                 onPageChange = {handlePageChange}
                 onLogout={handleLogout}
+                onEventCreationClick={() => handlePageChange('event-creation')}
+                onEventManageClick={() => handlePageChange('event-management')}
             />
 
             {currentPage === 'home' && (
                 <HomePage 
                     onEventClick={handleEventClick}
-                    onEventCreationClick={() => handlePageChange('event-creation')}
-                    onEventManageClick={() => handlePageChange('event-management')}
                 />
             )}
 

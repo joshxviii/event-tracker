@@ -2,7 +2,7 @@ import React from "react"
 import {ReactComponent as CalendarIcon} from '../../assets/calendar.svg';
 import {ReactComponent as PoiIcon} from '../../assets/poi.svg';
 
-export function EventWidget( {event, onClick, onViewDetails} ) {
+export function EventWidget( {event, onClick, onViewDetails, isSelected} ) {
 
   // TODO: create a function for fetching event details using the eventId prop
 
@@ -19,7 +19,7 @@ export function EventWidget( {event, onClick, onViewDetails} ) {
   const bg = cssVarMap[category] || cssVarMap.other;
 
   return (
-    <div className="eventWidget" style={{ position: 'relative' }}
+    <div className={isSelected ? 'eventWidget selected' : 'eventWidget'} style={{ position: 'relative' }}
         onClick={ () => onClick(event._id) }
     >
         <h1> { event.title } </h1>

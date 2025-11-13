@@ -2,10 +2,12 @@ import React, { useEffect, useState, useRef, use } from 'react';
 import {APIProvider, Map, useMap} from '@vis.gl/react-google-maps';
 import { PoiMarkers } from './poi-marker';
 
-export function MapController() {
+export function MapController( { focusedLocation } ) {
     const map = useMap();
     const hasCentered = useRef(false);
-    const [defaultCenter, setDefaultCenter] = useState({ lat: 0, lng: 0 });
+    const [defaultCenter, setDefaultCenter] = useState(focusedLocation ?? { lat: 0, lng: 0 });
+
+    map.panTo(focusedLocation ?? defaultCenter);
 
     useEffect(() => {
         if (!map || hasCentered.current) return;
@@ -33,6 +35,8 @@ export function MapController() {
         },
         { enableHighAccuracy: false, timeout: 10_000, maximumAge: 60_000 }
         );
+
+
     }, [map]);
 
     return (
@@ -49,22 +53,25 @@ export function MapController() {
     );
 }
 
-export default function MapWidget( { events, onPoiClick } ) {
+export default function MapWidget( { focusedEventId, events, onPoiClick } ) {
     const myLocations = Array.isArray(events)
-        ? events
-              .map((e) => {
-                  const lat = Number(e.location?.coordinates?.lat);
-                  const lng = Number(e.location?.coordinates?.lng);
-                  return {
-                      key: String(e._id),
-                      location: { lat, lng },
-                      category: e.category,
-                      title: e.title
-                  };
-              })
-              .filter((p) => !Number.isNaN(p.location.lat) && !Number.isNaN(p.location.lng))
-        : [];
+        ? events.reduce((dict, e) => {
+            const lat = Number(e.location?.coordinates?.lat);
+            const lng = Number(e.location?.coordinates?.lng);
 
+            // Only include if lat/lng are valid numbers
+            if (!Number.isNaN(lat) && !Number.isNaN(lng)) {
+                const key = String(e._id);
+                dict[key] = {
+                    key,
+                    location: { lat, lng },
+                    category: e.category,
+                    title: e.title,
+                };
+            }
+            return dict;
+            }, {})
+        : {};
 
     return (
         <div style={{ width: '100%', height: '100%' }}>
@@ -99,9 +106,10 @@ export default function MapWidget( { events, onPoiClick } ) {
                     <PoiMarkers 
                         pois={ myLocations }
                         onPoiClick={onPoiClick}
+                        circleCenter={ focusedEventId ? myLocations[focusedEventId]?.location : null }
                     />
 
-                    <MapController />
+                    <MapController focusedLocation={myLocations[focusedEventId]?.location}/>
                 </Map>
             </APIProvider>
         </div>

@@ -7,7 +7,7 @@ import {ReactComponent as LogOutIcon} from '../assets/log-out.svg';
 
 export function NavigationBar( { currentPage, onPageChange, onLogout, onEventCreationClick, onEventManageClick } ) {
     return (
-        <nav id='nav-bar'>
+        <nav id='nav-bar' style={{ backgroundColor: '#f1f8ffff' }}>
             <h3 id="navTitle"> Event Tracker </h3>
             <div class="buttonGroup">
                 <button

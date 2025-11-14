@@ -174,7 +174,7 @@ export const HomePage = ({ onEventClick }) => {
             </label>
 
             <div className="mainContent">
-                <div className="mapContainer container">
+                <div className="mapContainer container" style={{ backgroundColor: '#ffffffff' }}>
                     <div>
                         <MapWidget focusedEventId={selectedEventId} events={!loading ? filteredEvents : []} onPoiClick={handlePoiClick} />
                     </div>

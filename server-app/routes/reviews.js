@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
     try {
         await dbConnect();
         const eventId = req.params.id;
-        const reviews = await Review.find({ event: eventId }).populate('author', 'username firstName lastName').sort({ createdAt: -1 });
+        const reviews = await Review.find({ event: eventId }).populate('author', 'username firstName lastName profilePicture').sort({ createdAt: -1 });
         res.json(reviews);
     } catch (error) {
         res.status(500).json({ message: error.message });

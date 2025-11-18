@@ -247,16 +247,20 @@ export const HomePage = ({ onEventClick }) => {
                                 <div className="error">Could not load event data: {error}</div>
                             )}
 
-                            {!loading && displayedEvents.length > 0 ? (
-                                displayedEvents.map((e, i) => (
-                                    <EventWidget
-                                        key={e._id || i}
-                                        event={e}
-                                        onViewDetails={onEventClick}
-                                        onClick={handlePoiClick}
-                                        isSelected={selectedEventId === e._id}
-                                    />
-                                ))
+                            {!loading ? (
+                                displayedEvents.length > 0 ? (
+                                    displayedEvents.map((e, i) => (
+                                        <EventWidget
+                                            key={e._id || i}
+                                            event={e}
+                                            onViewDetails={onEventClick}
+                                            onClick={handlePoiClick}
+                                            isSelected={selectedEventId === e._id}
+                                        />
+                                    ))
+                                ) : (
+                                    <p style={{textAlign: 'center'}}>No Results Found.</p>
+                                )
                             ) : (
                                 <Loading/>
                             )}

@@ -36,6 +36,10 @@ const userSchema = new mongoose.Schema({
     type: String, // URL to profile image
     default: null
   },
+  friends :[{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
   createdEvents: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Event'

@@ -133,6 +133,7 @@ button {
 .eventContainer {
   overflow: scroll;
   height: 80vh;
+  overflow-x: hidden;
 }
 
 .eventWidget {
@@ -180,12 +181,12 @@ button {
 .reviewPanel {
   min-width: 20em;
   border-radius: 12px;
-  padding: 1px 8px;
-  margin: 8px;
+  padding: 16px 32px;
   background-color: #ffffff;
   box-shadow: 2px 2px 3px #00000057;
-  max-width: 40em;
   position: relative;
+  display: 'flex';
+  flex-direction: 'column';
 }
 
 .reviewPanel p {

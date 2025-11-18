@@ -50,7 +50,7 @@ export function NavigationBar( { currentPage, onPageChange, onLogout, onEventCre
             >
             {user && (
                 user.profilePicture ? (
-                    <img className="profilePicture" src={user?.profilePicture} alt={user?.username}/>
+                    <img className="profilePicture" src={user?.profilePicture}/>
                 ) : (
                     <div aria-hidden className="nullPicture"> {user?.username.charAt(0).toUpperCase()} </div>
                 )

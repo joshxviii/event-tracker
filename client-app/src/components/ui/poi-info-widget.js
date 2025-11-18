@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { get_event } from '../../utils/requests/event';
+import { Loading } from './loading';
 
 export function PoiInfoWidget({ eventId, onClick }) {
     const [event, setEvent] = useState(null);
@@ -39,8 +40,8 @@ export function PoiInfoWidget({ eventId, onClick }) {
     }, [eventId]);
 
     return (
-        <div className="poiInfoWidget">
-            {loading && <div>Loading event data...</div>}
+        <div className="poiInfoWidget" style={{margin: 10}}>
+            {loading && <Loading/>}
             {!loading && !event && !error && <div>No event selected</div>}
             {!loading && error && <div style={{ color: 'red' }}>{error}</div>}
             {!loading && event && (

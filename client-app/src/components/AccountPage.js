@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNotifications } from './ui/Notifications';
 import { getCurrentUser, updateCurrentUser } from "../utils/requests/user";
 import { uploadProfileImage } from '../utils/requests/storage';
+import { Loading } from "./ui/loading";
 
 // Editable account page: allows updating name, username, email and profile picture.
 export const AccountPage = () => {
@@ -68,7 +69,10 @@ export const AccountPage = () => {
     };
 
     if (!user) return (
-        <div className="formContainer">Loading account...</div>
+        <div className="formContainer">
+            <Loading/>
+            <p>Loading account...</p>
+        </div>
     );
 
     return (
@@ -79,7 +83,7 @@ export const AccountPage = () => {
                 <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
                     <div>
                         {profilePreview ? (
-                            <img src={profilePreview} alt={username} className="profilePicture big" />
+                            <img src={profilePreview} className="profilePicture big" />
                         ) : (
                             <div aria-hidden className="nullPicture big">{(username || 'U').charAt(0).toUpperCase()}</div>
                         )}

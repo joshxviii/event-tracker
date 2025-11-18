@@ -3,6 +3,7 @@ import { get_events_by_user } from "../utils/requests/event";
 import { EventManagementWidget } from "./ui/event-management-widget";
 import { useNotifications } from './ui/Notifications';
 import { getCurrentUser } from "../utils/requests/user";
+import { Loading } from "./ui/loading";
 
 export const EventManagementPage = ({ onEditEvent }) => {
 
@@ -43,7 +44,7 @@ export const EventManagementPage = ({ onEditEvent }) => {
         <div>
             <h2 className="indent blueColor">Event Management</h2>
 
-            {loading && <div className="indent">Loading your events...</div>}
+            {loading && <div className="indent"> <Loading/> Loading your events...</div>}
             {!loading && (
                 <div className="eventContainer container">
                     {error && <div className="error">Could not load event data: {error}</div>}

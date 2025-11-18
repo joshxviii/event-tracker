@@ -5,6 +5,7 @@ import { get_events } from "../utils/requests/event";
 import { PoiInfoWidget } from "./ui/poi-info-widget";
 import CalendarPanel from "./ui/CalendarPanel";
 import { useMap } from "@vis.gl/react-google-maps";
+import { Loading } from "./ui/loading";
 
 export const HomePage = ({ onEventClick }) => {
     const [events, setEvents] = useState(null);
@@ -256,8 +257,10 @@ export const HomePage = ({ onEventClick }) => {
                                         isSelected={selectedEventId === e._id}
                                     />
                                 ))
-                            ) : (<div />)}
-                            {}
+                            ) : (
+                                <Loading/>
+                            )}
+
                             {displayCount < filteredEvents.length && (
                                 <div style={{ padding: 12, textAlign: "center" }}>Loading more...</div>
                             )}

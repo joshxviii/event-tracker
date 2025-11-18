@@ -26,18 +26,18 @@ export default function Review({ review, onDelete }) {
     const username = review.author?.username || 'Anonymous';
 
     return (
-        <div className="reviewPanel" style={{display: 'flex', flexDirection: 'column', gap: 8}}>
+        <div className="reviewPanel" >
             <span style={{display: "flex", alignItems: "center", gap: 8}}>
                 {review.author?.profilePicture ? (
-                    <img className="profilePicture" src={review.author.profilePicture} alt={username}/>
+                    <img className="profilePicture" src={review.author.profilePicture}/>
                 ) : (
                     <div aria-hidden className="nullPicture"> {username.charAt(0).toUpperCase()} </div>
                 )}
-
-                <p style={{}}>{username}</p>
+                <p style={{margin: 0}}>{username}</p>
             </span>
-            <p style={{margin: 0, textIndent: '30px'}}>{review.text}</p>
-            <span className="stars" style={{color: '#f5b401ff'}}>{'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}</span>
+            <span className="stars" style={{fontSize: 20, color: '#f5b401ff'}}>{'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}</span>
+            
+            <p style={{margin: 0}}>{review.text}</p>
             {canDelete && (
                 <div>
                     <DeleteIcon onClick={handleDelete} className="delete-review" />

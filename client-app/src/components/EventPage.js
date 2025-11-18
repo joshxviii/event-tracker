@@ -10,6 +10,7 @@ import {ReactComponent as BackIcon} from '../assets/back.svg';
 import {ReactComponent as PoiIcon} from '../assets/poi.svg';
 import {ReactComponent as CalendarIcon} from '../assets/calendar.svg';
 import { getCurrentUser } from "../utils/requests/user";
+import { Loading } from "./ui/loading";
 
 export function EventPage( { eventId, onBack } ) {
 
@@ -153,4 +154,12 @@ export function EventPage( { eventId, onBack } ) {
             </div>
         </div>
     );
+    else return (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 40 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+                <Loading/>
+                <div style={{ color: '#374151' }}>Loading event...</div>
+            </div>
+        </div>
+    )
 }

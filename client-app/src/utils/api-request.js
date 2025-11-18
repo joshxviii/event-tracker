@@ -1,4 +1,4 @@
-const server = 'https://cae-event-tracker-backend.vercel.app';
+export const server = 'https://cae-event-tracker-backend.vercel.app';
 
 export async function apiRequest(path, { method = 'GET', body = null, requireAuth = false } = {}) {
     const headers = { 'Content-Type': 'application/json' };

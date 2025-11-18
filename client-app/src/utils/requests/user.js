@@ -5,6 +5,11 @@ const getCurrentUser = async () => {
     return currentUser;
 }
 
+const updateCurrentUser = async (userDetails) => {
+    const data = await apiRequest('/api/auth/me', { method: 'PUT', body: userDetails, requireAuth: true });
+    return data;
+}
+
 const login = async (emailOrUsername, password) => {
     const body = emailOrUsername.includes('@') ? { email: emailOrUsername, password } : { username: emailOrUsername, password };
     const data = await apiRequest('/api/auth/login', { method: 'POST', body });
@@ -18,4 +23,6 @@ const signup = async (firstName, lastName, username, email, password) => {
     return data;
 };
 
-export { login, signup, getCurrentUser };
+// TODO update_user route and profile picture uploading
+
+export { login, signup, getCurrentUser, updateCurrentUser };

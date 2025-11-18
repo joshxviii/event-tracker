@@ -1,13 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { App, setLoggedIn } from "../App";
 import {ReactComponent as HomeIcon} from '../assets/home.svg';
 import {ReactComponent as AccountIcon} from '../assets/account.svg';
 import {ReactComponent as LogOutIcon} from '../assets/log-out.svg';
+import { getCurrentUser } from "../utils/requests/user";
 
 
 export function NavigationBar( { currentPage, onPageChange, onLogout, onEventCreationClick, onEventManageClick } ) {
+    
+    const [user, setUser ] = useState(null);
+    
+    useEffect(() => {
+        (async () => {
+            setUser(await getCurrentUser());
+        })();
+    });
+
     return (
-        <nav id='nav-bar' style={{ backgroundColor: '#f1f8ffff' }}>
+        <nav id='nav-bar' style={{ backgroundColor: '#cee7ffff' }}>
             <h3 id="navTitle"> Event Tracker </h3>
             <div class="buttonGroup">
                 <button
@@ -32,10 +42,19 @@ export function NavigationBar( { currentPage, onPageChange, onLogout, onEventCre
                 </div>
             </h2>
 
+
+
             <button
-                style={{marginLeft: 'auto', marginRight: '16px'}}
+                style={{marginLeft: 'auto', marginRight: '16px', backgroundColor: 'transparent', color: '#155dfc', fontWeight: 600}}
                 onClick={ onLogout }
             >
+            {user && (
+                user.profilePicture ? (
+                    <img className="profilePicture" src={user?.profilePicture} alt={user?.username}/>
+                ) : (
+                    <div aria-hidden className="nullPicture"> {user?.username.charAt(0).toUpperCase()} </div>
+                )
+            )}
                 <LogOutIcon />
                 Sign Out
             </button>

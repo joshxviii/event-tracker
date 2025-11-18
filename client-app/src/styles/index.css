@@ -51,11 +51,13 @@ button {
 }
 
 .viewDetailsBtn {
-    background-color: #00000000;
-    border: 1px solid #155dfc;
-    color: #155dfc;
-    border-radius: 16px;
-    margin-bottom: 8px;
+  font-weight: 500;
+  background-color: #00000000;
+  border: 1px solid #155dfc;
+  color: #155dfc;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  width: 120px;
 }
 
 .buttonGroup {
@@ -147,10 +149,21 @@ button {
 }
 
 /* Cut off title and other text */
-.eventWidget h1, .eventWidget p {
+.eventWidget h1, .eventHeader {
+  font-size: larger;
+  font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.eventWidget p {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .eventLabel {
@@ -162,12 +175,6 @@ button {
   color: var(--event-label-foreground);
   font-size: 12px;
   font-weight: 600;
-}
-
-.eventHeader {
-  white-space: normal;
-  overflow-wrap: anywhere;
-  word-break: break-word;
 }
 
 .reviewPanel {
@@ -468,3 +475,33 @@ textarea {
 .notification.show { transform: translateY(0); opacity: 1 }
 .notificationMessage { flex: 1; font-size: 14px; }
 .notificationClose { background: transparent; border: none; color: #fff; cursor: pointer; font-size: 14px }
+
+.nullPicture {
+  width: 32px;
+  height: 32px;
+  border-radius: 100%;
+  background: #dbeafe;
+  color: #155dfc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 15px;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.nullPicture.big, .profilePicture.big {
+  width: 126px;
+  height: 126px;
+  font-weight: 700;
+  font-size: 45px;
+}
+
+.profilePicture {
+  width: 32px;
+  height: 32;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}

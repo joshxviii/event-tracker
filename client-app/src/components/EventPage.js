@@ -109,7 +109,7 @@ export function EventPage( { eventId, onBack } ) {
                         <img src={event.image} alt={event.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8 }} />
                     ) : (
                         <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f3f4f6', borderRadius: 8 }}>
-                            <span style={{ color: '#9ca3af' }}>No image</span>
+                            <span style={{ color: '#9ca3af' }}>No Image</span>
                         </div>
                     )}
                 </div>
@@ -137,11 +137,7 @@ export function EventPage( { eventId, onBack } ) {
                     {reviews && reviews.length > 0 ? (
                         reviews.map((review) => (
                             <Review
-                                key={review._id}
-                                reviewId={review._id}
-                                rating={review.rating}
-                                text={review.text}
-                                author={review.author}
+                                review={review}
                                 onDelete={deleteReview}
                             />
                         ))

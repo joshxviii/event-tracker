@@ -128,9 +128,6 @@ export const HomePage = ({ onEventClick }) => {
             if (!showPastEvents && evEnd < today) {
                 return false;
             }
-            if (showPastEvents && evEnd >= today) {
-                return false;
-            }
 
             // Distance filter
             if (mapViewport && mapViewport.center) {

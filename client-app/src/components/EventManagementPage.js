@@ -46,7 +46,7 @@ export const EventManagementPage = ({ onEditEvent }) => {
 
             {loading && <div className="indent"> <Loading/> Loading your events...</div>}
             {!loading && (
-                <div className="eventContainer container">
+                <div>
                     {error && <div className="error">Could not load event data: {error}</div>}
                     {!error && (
                         <div>

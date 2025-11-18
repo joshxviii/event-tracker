@@ -13,7 +13,7 @@ export default function EventMapWidget( { lat, lng } ) {
                 <Map
                     disableDefaultUI={true}
                     controlled={true}
-                    style={{height: '18em' }}
+                    style={{height: '18em'}}
                     zoom={11}
                     center={lat && lng ? { lat: parseFloat(lat),  lng: parseFloat(lng) } : { lat: 0, lng: 0 }}
                     mapId="db37f3254e6a6d1b"

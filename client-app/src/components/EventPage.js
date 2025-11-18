@@ -11,6 +11,7 @@ import {ReactComponent as PoiIcon} from '../assets/poi.svg';
 import {ReactComponent as CalendarIcon} from '../assets/calendar.svg';
 import { getCurrentUser } from "../utils/requests/user";
 import { Loading } from "./ui/loading";
+import EventMapWidget from "./ui/event-map-widget";
 
 export function EventPage( { eventId, onBack } ) {
 
@@ -107,7 +108,7 @@ export function EventPage( { eventId, onBack } ) {
                         <button onClick={()=>{}}><ShareIcon/></button>
                     </div>
                     {event.image ? (
-                        <img src={event.image} alt={event.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8 }} />
+                        <img src={event.image} alt={event.title} className="eventBanner" />
                     ) : (
                         <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f3f4f6', borderRadius: 8 }}>
                             <span style={{ color: '#9ca3af' }}>No Image</span>
@@ -120,17 +121,29 @@ export function EventPage( { eventId, onBack } ) {
                     <div style={{ marginBottom: 8 }}>
                         <span className="eventLabel" style={{ backgroundColor: `var(--event-color-${event.category || 'other'})` }}>{event.category}</span>
                     </div>
-                    <p style={{ color: '#374151' }}>{event.description}</p>
-                    <div style={ {display:'flex', flexDirection: 'column', gap: 6} }>
-                        <div style={ {display: 'flex', gap: 6} }>
-                            <CalendarIcon/>
-                            {event.startAt ? new Date(event.startAt).toLocaleDateString() : ''}
-                            {event.startAt && ` at ${new Date(event.startAt).toLocaleTimeString()} - ${event.endAt ? new Date(event.endAt).toLocaleTimeString() : ''}`}
-                        </div>
-                        <div style={ {display: 'flex', gap: 6} }> <PoiIcon/> <div style={ { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'} }> {event.location.address} </div> </div> 
+
+                    <div>
+                        <span className="eventOrganizer" >{event.organizer.username}</span>
                     </div>
+
+                    <div style={ {display:'flex', flexDirection: 'row', gap: 6} }>
+
+                        <div style={ {width: '180%', display:'flex', flexDirection: 'column', gap: 6, marginRight: 8} }>
+                            <p style={{ color: '#374151' }}>{event.description}</p>
+                            <div style={ {display: 'flex', gap: 6} }>
+                                <CalendarIcon/>
+                                {event.startAt ? new Date(event.startAt).toLocaleDateString() : ''}
+                                {event.startAt && ` at ${new Date(event.startAt).toLocaleTimeString()} - ${event.endAt ? new Date(event.endAt).toLocaleTimeString() : ''}`}
+                            </div>
+                            <div style={ {display: 'flex', gap: 6} }> <PoiIcon/> <div style={ { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'} }> {event.location.address} </div> </div> 
+                        </div>
+
+                        <EventMapWidget lat={event.location.coordinates.lat} lng={event.location.coordinates.lng}/>
+                    </div>
+
                 </div>
             </div>
+
 
             <div className="reviewContainer container" style={{ marginTop: 20 }}>
                 <h3 className="indent">Reviews</h3>

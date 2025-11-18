@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
-import { get_event, update_event } from "../utils/requests/event";
+import { get_event, update_event, create_event } from "../utils/requests/event";
 import { useNotifications } from './ui/Notifications';
 import EventMapWidget from "./ui/event-map-widget";
 import { getCurrentUser } from "../utils/requests/user";
+import { uploadEventImage } from "../utils/requests/storage";
 
 // Props: eventId (string), user (object), onSaved (fn), onCancel (fn)
 export const EventEditPage = ({ eventId, onSaved, onCancel }) => {
-    const [ user, setUser ] = useState(null);
+
+    const [user, setUser] = useState(null);
     
     const fileInputRef = useRef(null);
     const [title, setTitle] = useState("");
@@ -19,7 +21,10 @@ export const EventEditPage = ({ eventId, onSaved, onCancel }) => {
     const [lng, setLng] = useState("");
     const [category, setCategory] = useState("social");
     const [repeat, setRepeat] = useState('none');
-
+    const [imageFile, setImageFile] = useState(null);
+    const [image, setImage] = useState("");
+    const [localObjectUrl, setLocalObjectUrl] = useState(null);
+    
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
@@ -29,7 +34,16 @@ export const EventEditPage = ({ eventId, onSaved, onCancel }) => {
         const selectedFile = event.target.files[0];
         if (selectedFile) {
         console.log("Selected image:", selectedFile);
-            // TODO
+            // create a preview URL so the user sees the new image immediately
+            try {
+                if (localObjectUrl) {
+                    URL.revokeObjectURL(localObjectUrl);
+                }
+            } catch (e) { /* ignore */ }
+            const url = URL.createObjectURL(selectedFile);
+            setLocalObjectUrl(url);
+            setImage(url);
+            setImageFile(selectedFile);
         }
     };
 
@@ -105,6 +119,7 @@ export const EventEditPage = ({ eventId, onSaved, onCancel }) => {
                 setLng(ev.location?.coordinates?.lng ? String(ev.location.coordinates.lng) : "");
                 setCategory(ev.category || 'social');
                 setRepeat(ev.repeat || 'none');
+                setImage(ev.image || '')
             } catch (err) {
                 console.warn('Failed to load event for editing', err);
             }
@@ -112,6 +127,15 @@ export const EventEditPage = ({ eventId, onSaved, onCancel }) => {
 
         return () => { mounted = false; };
     }, [eventId]);
+
+    // Cleanup any locally-created object URL when the component unmounts or when a new one is set
+    useEffect(() => {
+        return () => {
+            try {
+                if (localObjectUrl) URL.revokeObjectURL(localObjectUrl);
+            } catch (e) { /* ignore */ }
+        };
+    }, [localObjectUrl]);
 
     const toISOStringFromDateAndTime = (d, t) => {
         if (!d || !t) return null;
@@ -154,19 +178,50 @@ export const EventEditPage = ({ eventId, onSaved, onCancel }) => {
             isPublic: true,
         };
 
-        if (!eventId) {
-            setError('No event selected to edit');
-            return;
-        }
-
         setLoading(true);
         try {
-            await update_event(eventId, payload);
-            setSuccess('Event updated');
-            notify.push({ type: 'success', message: 'Event updated' });
-            if (onSaved) onSaved();
+            if (eventId) {
+                // Edit existing event
+                await update_event(eventId, payload);
+
+                if (imageFile) {
+                    try {
+                        const imgUrl = await uploadEventImage(imageFile, eventId);
+                        setImage(imgUrl || '');
+                        if (localObjectUrl) {
+                            try { URL.revokeObjectURL(localObjectUrl); } catch (e) {}
+                            setLocalObjectUrl(null);
+                        }
+                    } catch (imgErr) {
+                        console.warn('Image upload failed', imgErr);
+                        notify.push({ type: 'error', message: `Event saved but image upload failed: ${imgErr.message || ''}` });
+                    }
+                }
+
+                setSuccess('Event updated');
+                notify.push({ type: 'success', message: 'Event updated' });
+                if (onSaved) onSaved();
+            } else {
+                // Create new event
+                const created = await create_event(payload);
+                if (imageFile && created?._id) {
+                    try {
+                        const imgUrl = await uploadEventImage(imageFile, created._id);
+                        setImage(imgUrl || '');
+                    } catch (imgErr) {
+                        console.warn('Image upload failed', imgErr);
+                        notify.push({ type: 'error', message: `Event created but image upload failed: ${imgErr.message || ''}` });
+                    }
+                }
+
+                setSuccess('Event created');
+                notify.push({ type: 'success', message: 'Event created' });
+                // clear form
+                setTitle(''); setDescription(''); setDate(''); setStartTime(''); setEndTime(''); setAddress(''); setLat(''); setLng(''); setRepeat('none'); setImageFile(null);
+                if (onSaved) onSaved();
+            }
         } catch (err) {
-            const msg = err.message || 'Failed to update event';
+            const msg = err.message || 'Failed to save event';
             setError(msg);
             notify.push({ type: 'error', message: msg });
         } finally {
@@ -182,6 +237,16 @@ export const EventEditPage = ({ eventId, onSaved, onCancel }) => {
 
                 <form onSubmit={handleSubmit} className="formGrid" aria-label="Create event form">
 
+                    <div className="eventImage">
+                        { image ? (
+                            <img src={image} className="eventBanner" />
+                        ) : (
+                            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f3f4f6', borderRadius: 8 }}>
+                                <span style={{ color: '#9ca3af' }}>No Image</span>
+                            </div>
+                        ) }
+                    </div>
+
                     <input
                         type="file"
                         accept="image/*"
@@ -189,7 +254,7 @@ export const EventEditPage = ({ eventId, onSaved, onCancel }) => {
                         onChange={handleImageSelect}
                         style={{ display: 'none' }}
                     />
-                    <button onClick={handleButtonClick}>
+                    <button type="button" onClick={handleButtonClick}>
                         Update Image
                     </button>
 

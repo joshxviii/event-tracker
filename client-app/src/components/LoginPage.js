@@ -89,7 +89,7 @@ export function LoginPage({ onLogin }) {
 									value={firstName}
 									onChange={(e) => setFirstName(e.target.value)}
 									placeholder="First Name"
-									style={{ padding: 8, fontFamily: 'Cantarell', fontSize: 15}}
+									style={{ padding: 8, fontSize: 15}}
 								/>
 							</label>							
 
@@ -103,7 +103,7 @@ export function LoginPage({ onLogin }) {
 									value={lastName}
 									onChange={(e) => setLastName(e.target.value)}
 									placeholder="Last Name"
-									style={{ padding: 8, fontFamily: 'Cantarell', fontSize: 15}}
+									style={{ padding: 8, fontSize: 15}}
 								/>
 							</label>
 						</div>
@@ -117,7 +117,7 @@ export function LoginPage({ onLogin }) {
 									value={username}
 									onChange={(e) => setUsername(e.target.value)}
 									placeholder="Username"
-									style={{ padding: 8, fontFamily: 'Cantarell', fontSize: 15}}
+									style={{ padding: 8, fontSize: 15}}
 								/>
 							</label>
 						</div>
@@ -131,7 +131,7 @@ export function LoginPage({ onLogin }) {
 									value={email}
 									onChange={(e) => setEmail(e.target.value)}
 									placeholder="Email"
-									style={{ padding: 8, fontFamily: 'Cantarell', fontSize: 15}}
+									style={{ padding: 8, fontSize: 15}}
 								/>
 							</label>
 						</div>
@@ -145,7 +145,7 @@ export function LoginPage({ onLogin }) {
 									value={password}
 									onChange={(e) => setPassword(e.target.value)}
 									placeholder="Password"
-									style={{ padding: 8, fontFamily: 'Cantarell', fontSize: 15}}
+									style={{ padding: 8, fontSize: 15}}
 								/>
 							</label>
 						</div>
@@ -181,7 +181,7 @@ export function LoginPage({ onLogin }) {
 									value={emailOrUsername}
 									onChange={(e) => setEmailOrUsername(e.target.value)}
 									placeholder="Email or Username"
-									style={{ padding: 8, fontFamily: 'Cantarell', fontSize: 15}}
+									style={{ padding: 8, fontSize: 15}}
 								/>
 							</label>
 
@@ -196,7 +196,7 @@ export function LoginPage({ onLogin }) {
 									value={password}
 									onChange={(e) => setPassword(e.target.value)}
 									placeholder="Password"
-									style={{ padding: 8, fontFamily: 'Cantarell', fontSize: 15}}
+									style={{ padding: 8, fontSize: 15}}
 								/>
 							</label>
 
@@ -207,13 +207,13 @@ export function LoginPage({ onLogin }) {
 								{error}
 							</div>
 						)}
-
-						<div style={{ display: "flex", gap: 120 }}>
-							<button type="submit" className="buttonStyle" style={{padding: "8px 12px" }}>
+    
+						<div style={{ display: "flex", gap: 100, justifyContent: 'center' }}>
+							<button type="submit" className="buttonStyle" >
 								Log In
 							</button>
 
-							<button type="button" className="buttonStyle" onClick={fillDemo} style={{ padding: "8px 12px" }}>
+							<button type="button" className="buttonStyle" onClick={fillDemo} >
 								Fill demo
 							</button>
 						</div>

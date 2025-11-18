@@ -28,6 +28,15 @@ router.post('/upload-event-image', requireAuth, upload.single('image'), async (r
       return res.status(403).send('Forbidden');
     }
 
+    // Delete previous image blob if present
+    if (event.image) {
+      try {
+        await deleteBlobFromUrl(event.image);
+      } catch (e) {
+        console.warn('Failed to delete old event image blob:', e?.message || e);
+      }
+    }
+
     event.image = imageUrl;
     await event.save();
 
@@ -52,6 +61,15 @@ router.post('/upload-profile-images', requireAuth, upload.single('image'), async
 
     const user = await User.findById(userId);
     if (!user) return res.status(404).send('User not found.');
+
+    // Delete previous profile blob if present
+    if (user.profilePicture) {
+      try {
+        await deleteBlobFromUrl(user.profilePicture);
+      } catch (e) {
+        console.warn('Failed to delete old profile image blob:', e?.message || e);
+      }
+    }
 
     user.profilePicture = imageUrl;
     await user.save();
@@ -83,6 +101,28 @@ async function uploadToContainer(file, containerName) {
 
   // Get the public URL
   return blockBlobClient.url;
+}
+
+async function deleteBlobFromUrl(url) {
+  if (!url) return;
+  try {
+    // parse blob URL to get container and blob name
+    const parsed = new URL(url);
+    // pathname format: /<containerName>/<blobPath>
+    const parts = parsed.pathname.split('/').filter(Boolean);
+    if (parts.length < 2) return; // unexpected format
+    const containerName = parts[0];
+    const blobName = parts.slice(1).join('/');
+
+    const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.STORAGE);
+    const containerClient = blobServiceClient.getContainerClient(containerName);
+    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+
+    await blockBlobClient.deleteIfExists();
+  } catch (e) {
+    // don't fail the overall request for failures in cleanup
+    console.warn('deleteBlobFromUrl failed:', e?.message || e);
+  }
 }
 
 

@@ -21,6 +21,7 @@ export const HomePage = ({ onEventClick }) => {
     const [timeEndFilter, setTimeEndFilter] = useState(""); // HH:MM
     
     const [displayCount, setDisplayCount] = useState(20);
+    const [showPastEvents, setShowPastEvents] = useState(false);
     const listRef = useRef(null);
     const PAGE_SIZE = 5;
 
@@ -88,6 +89,8 @@ export const HomePage = ({ onEventClick }) => {
             return `${y}-${m}-${day}`;
         };
 
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         return events.filter((e) => {
             // text filter
             if (text) {
@@ -119,7 +122,17 @@ export const HomePage = ({ onEventClick }) => {
                 if (evEndMin <= rangeStart || evStartMin >= rangeEnd) return false;
             }
 
-            // TODO distance filter
+            // Upcoming/past event filter
+            const evEnd = new Date(e.endAt);
+            if (isNaN(evEnd.getTime())) return false;
+            if (!showPastEvents && evEnd < today) {
+                return false;
+            }
+            if (showPastEvents && evEnd >= today) {
+                return false;
+            }
+
+            // Distance filter
             if (mapViewport && mapViewport.center) {
                 const lat1 = Number(mapViewport.center.lat);
                 const lng1 = Number(mapViewport.center.lng);
@@ -142,13 +155,13 @@ export const HomePage = ({ onEventClick }) => {
 
             return true;
         });
-    }, [events, searchText, activeFilters, dateFilter, timeStartFilter, timeEndFilter]);
+    }, [events, searchText, activeFilters, dateFilter, timeStartFilter, timeEndFilter, showPastEvents]);
 
     // Reset display count when filters or search change
     useEffect(() => {
         setDisplayCount(PAGE_SIZE);
         if (listRef.current) listRef.current.scrollTop = 0;
-    }, [searchText, activeFilters, dateFilter, timeStartFilter, timeEndFilter]);
+    }, [searchText, activeFilters, dateFilter, timeStartFilter, timeEndFilter, showPastEvents]);
 
     const displayedEvents = useMemo(
         () => filteredEvents.slice(0, displayCount),
@@ -236,6 +249,12 @@ export const HomePage = ({ onEventClick }) => {
                                     <input type="time" className="input" value={timeEndFilter} onChange={(e) => setTimeEndFilter(e.target.value)} />
                                 </label>
                             </label>
+                            <button
+                                onClick={() => setShowPastEvents((prev) => !prev)}
+                                style={{marginTop: 'auto', width: '120px', borderRadius: 8, background: showPastEvents ? '#888' : undefined, color: showPastEvents ? '#fff' : undefined}}
+                            >
+                                {showPastEvents ? 'View Upcoming Events' : 'View Past Events'}
+                            </button>
                         </div>
 
                         <div

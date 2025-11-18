@@ -122,9 +122,21 @@ export function EventPage( { eventId, onBack } ) {
                         <span className="eventLabel" style={{ backgroundColor: `var(--event-color-${event.category || 'other'})` }}>{event.category}</span>
                     </div>
 
-                    <div>
-                        <span className="eventOrganizer" >{event.organizer.username}</span>
-                    </div>
+                    {event.organizer && (
+                        <div className="eventOrganizer">
+                            <h4 style={{marginBlockEnd: 10}}>Organizer: </h4>
+                            <div style={{display: 'inline-flex', alignItems: 'center', gap: 8}}>
+                                {event.organizer.profilePicture ? (
+                                    <img className="profilePicture" src={event.organizer.profilePicture}/>
+                                ) : (
+                                    <div aria-hidden className="nullPicture"> {event.organizer.username.charAt(0).toUpperCase()} </div>
+                                )}
+                                {event.organizer.username}
+                            </div>
+                        </div>
+                    )}
+
+
 
                     <div style={ {display:'flex', flexDirection: 'row', gap: 6} }>
 

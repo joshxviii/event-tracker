@@ -32,8 +32,8 @@ router.get('/', async (req, res) => {
   try {
     await dbConnect();
     const events = await Event.find()
-      .populate('organizer', 'username firstName lastName')
-      .populate('attendees', 'username firstName lastName')
+      .populate('organizer', 'username firstName lastName profilePicture')
+      .populate('attendees', 'username firstName lastName profilePicture')
       .sort({ startAt: 1 });
     res.json(events);
   } catch (error) {
@@ -46,8 +46,8 @@ router.get('/organizer/:userId', async (req, res) => {
   try {
     await dbConnect();
     const events = await Event.find({ organizer: req.params.userId })
-      .populate('organizer', 'username firstName lastName')
-      .populate('attendees', 'username firstName lastName')
+      .populate('organizer', 'username firstName lastName profilePicture')
+      .populate('attendees', 'username firstName lastName profilePicture')
       .sort({ startAt: 1 });
 
     res.json(events);
@@ -61,8 +61,8 @@ router.get('/:id', async (req, res) => {
   try {
     await dbConnect();
     const event = await Event.findById(req.params.id)
-      .populate('organizer', 'username firstName lastName')
-      .populate('attendees', 'username firstName lastName');
+      .populate('organizer', 'username firstName lastName profilePicture')
+      .populate('attendees', 'username firstName lastName profilePicture');
     
     if (!event) {
       return res.status(404).json({ message: 'Event not found' });

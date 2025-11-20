@@ -6,6 +6,7 @@ import { PoiInfoWidget } from "./ui/poi-info-widget";
 import CalendarPanel from "./ui/CalendarPanel";
 import { useMap } from "@vis.gl/react-google-maps";
 import { Loading } from "./ui/loading";
+import FriendSidebar from "./ui/FriendSidebar";
 
 export const HomePage = ({ onEventClick }) => {
     const [events, setEvents] = useState(null);
@@ -178,115 +179,180 @@ export const HomePage = ({ onEventClick }) => {
     };
 
     return (
-        <div>
-            <h2 className="indent blueColor">Discover Events Near You</h2>
-            <label className="indent labelStyle">
-                Find and join community events happening in your neighborhood
-            </label>
+        <div
+            className="homepage-layout"
+            style={{
+                display: "flex",
+                alignItems: "flex-start",
+                justifyContent: "center",
+                gap: "1.5rem",
+                maxWidth: "1600px",
+                margin: "0 auto",
+                paddingRight: "1rem",
+                paddingLeft: "1rem"
+            }}
+        >
+            {/* LEFT: all existing home content (map, calendar, event list) */}
+            <div className="homepage-main" style={{ flex: 3 }}>
+                <h2 className="indent blueColor">Discover Events Near You</h2>
+                <label className="indent labelStyle">
+                    Find and join community events happening in your neighborhood
+                </label>
 
-            <div className="mainContent">
-                <div className="mapContainer container" style={{ backgroundColor: '#ffffffff' }}>
-                    <div>
-                        <MapWidget focusedEventId={selectedEventId} events={!loading ? filteredEvents : []} onPoiClick={handlePoiClick} />
-                    </div>
-                    <PoiInfoWidget
-                        eventId={selectedEventId}
-                        onClick={onEventClick}
-                    />
-                </div>
-
-                <div>
-                    <div className="eventList" style={{ marginBottom: 16 }}>
-                        <CalendarPanel />
-                    </div>
-
-                    {loading && <div>Loading event data...</div>}
-                    <div className="eventList">
-
-                        <div className="eventSearch">
-                            <input
-                                className="input"
-                                type="text"
-                                placeholder="Search events..."
-                                value={searchText}
-                                onChange={(e) => setSearchText(e.target.value)}
+                <div className="mainContent">
+                    <div
+                        className="mapContainer container"
+                        style={{ backgroundColor: "#ffffffff" }}
+                    >
+                        <div>
+                            <MapWidget
+                                focusedEventId={selectedEventId}
+                                events={!loading ? filteredEvents : []}
+                                onPoiClick={handlePoiClick}
                             />
                         </div>
+                        <PoiInfoWidget
+                            eventId={selectedEventId}
+                            onClick={onEventClick}
+                        />
+                    </div>
 
-                        <div className="filterCatagory">
-                            {["volunteer", "social", "market", "other"].map((cat) => (
+                    <div>
+                        <div className="eventList" style={{ marginBottom: 16 }}>
+                            <CalendarPanel />
+                        </div>
+
+                        {loading && <div>Loading event data...</div>}
+                        <div className="eventList">
+                            <div className="eventSearch">
+                                <input
+                                    className="input"
+                                    type="text"
+                                    placeholder="Search events..."
+                                    value={searchText}
+                                    onChange={(e) => setSearchText(e.target.value)}
+                                />
+                            </div>
+
+                            <div className="filterCatagory">
+                                {["volunteer", "social", "market", "other"].map((cat) => (
+                                    <button
+                                        key={cat}
+                                        className={
+                                            "filterBtn " + (activeFilters.has(cat) ? "active" : "")
+                                        }
+                                        style={{
+                                            backgroundColor: `var(--event-color-${cat || "other"})`,
+                                        }}
+                                        onClick={() => toggleCatFilter(cat)}
+                                    >
+                                        {cat}
+                                    </button>
+                                ))}
                                 <button
-                                    key={cat}
-                                    className={"filterBtn " + (activeFilters.has(cat) ? "active" : "")}
-                                    style={{ backgroundColor: `var(--event-color-${cat || 'other'})` }}
-                                    onClick={() => toggleCatFilter(cat)}
+                                    className="filterBtn clear"
+                                    onClick={() => {
+                                        setActiveFilters(new Set());
+                                        setSearchText("");
+                                        setDateFilter("");
+                                        setTimeStartFilter("");
+                                        setTimeEndFilter("");
+                                    }}
                                 >
-                                    {cat}
+                                    Clear Filters
                                 </button>
-                            ))}
-                            <button
-                                className="filterBtn clear"
-                                onClick={() => {
-                                    setActiveFilters(new Set()); setSearchText(""); setDateFilter(''); setTimeStartFilter(''); setTimeEndFilter(''); 
-                                }}
-                            >
-                                Clear Filters
-                            </button>
-                        </div>
+                            </div>
 
-                        <div className="filterDate">
-                            <label style={{display: 'flex', gap: '4px'}}>
-                                <label style={{ fontSize: 12 }}>Date:
-                                    <input type="date" className="input" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} />
-                                </label>
-                                <label style={{ fontSize: 12 }}>From: 
-                                    <input type="time" className="input" value={timeStartFilter} onChange={(e) => setTimeStartFilter(e.target.value)} />
-                                </label>
-                                <label style={{ fontSize: 12 }}>To:
-                                    <input type="time" className="input" value={timeEndFilter} onChange={(e) => setTimeEndFilter(e.target.value)} />
-                                </label>
-                            </label>
-                            <button
-                                onClick={() => setShowPastEvents((prev) => !prev)}
-                                style={{marginTop: 'auto', width: '120px', borderRadius: 8, background: showPastEvents ? '#888' : undefined, color: showPastEvents ? '#fff' : undefined}}
-                            >
-                                {showPastEvents ? 'View Upcoming Events' : 'View Past Events'}
-                            </button>
-                        </div>
-
-                        <div
-                            className="eventContainer container"
-                            ref={listRef}
-                            onScroll={handleScroll}
-                        >
-                            {!loading && error && (
-                                <div className="error">Could not load event data: {error}</div>
-                            )}
-
-                            {!loading ? (
-                                displayedEvents.length > 0 ? (
-                                    displayedEvents.map((e, i) => (
-                                        <EventWidget
-                                            key={e._id || i}
-                                            event={e}
-                                            onViewDetails={onEventClick}
-                                            onClick={handlePoiClick}
-                                            isSelected={selectedEventId === e._id}
+                            <div className="filterDate">
+                                <label style={{ display: "flex", gap: "4px" }}>
+                                    <label style={{ fontSize: 12 }}>
+                                        Date:
+                                        <input
+                                            type="date"
+                                            className="input"
+                                            value={dateFilter}
+                                            onChange={(e) => setDateFilter(e.target.value)}
                                         />
-                                    ))
-                                ) : (
-                                    <p style={{textAlign: 'center'}}>No Results Found.</p>
-                                )
-                            ) : (
-                                <Loading/>
-                            )}
+                                    </label>
+                                    <label style={{ fontSize: 12 }}>
+                                        From:
+                                        <input
+                                            type="time"
+                                            className="input"
+                                            value={timeStartFilter}
+                                            onChange={(e) => setTimeStartFilter(e.target.value)}
+                                        />
+                                    </label>
+                                    <label style={{ fontSize: 12 }}>
+                                        To:
+                                        <input
+                                            type="time"
+                                            className="input"
+                                            value={timeEndFilter}
+                                            onChange={(e) => setTimeEndFilter(e.target.value)}
+                                        />
+                                    </label>
+                                </label>
+                                <button
+                                    onClick={() => setShowPastEvents((prev) => !prev)}
+                                    style={{
+                                        marginTop: "auto",
+                                        width: "120px",
+                                        borderRadius: 8,
+                                        background: showPastEvents ? "#888" : undefined,
+                                        color: showPastEvents ? "#fff" : undefined,
+                                    }}
+                                >
+                                    {showPastEvents ? "View Upcoming Events" : "View Past Events"}
+                                </button>
+                            </div>
 
-                            {displayCount < filteredEvents.length && (
-                                <div style={{ padding: 12, textAlign: "center" }}>Loading more...</div>
-                            )}
+                            <div
+                                className="eventContainer container"
+                                ref={listRef}
+                                onScroll={handleScroll}
+                            >
+                                {!loading && error && (
+                                    <div className="error">
+                                        Could not load event data: {error}
+                                    </div>
+                                )}
+
+                                {!loading ? (
+                                    displayedEvents.length > 0 ? (
+                                        displayedEvents.map((e, i) => (
+                                            <EventWidget
+                                                key={e._id || i}
+                                                event={e}
+                                                onViewDetails={onEventClick}
+                                                onClick={handlePoiClick}
+                                                isSelected={selectedEventId === e._id}
+                                            />
+                                        ))
+                                    ) : (
+                                        <p style={{ textAlign: "center" }}>No Results Found.</p>
+                                    )
+                                ) : (
+                                    <Loading />
+                                )}
+
+                                {displayCount < filteredEvents.length && (
+                                    <div style={{ padding: 12, textAlign: "center" }}>
+                                        Loading more...
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
+
+            {/* RIGHT: friend sidebar column */}
+            <div
+                className="homepage-friends"
+                style={{ flex: 1.2, minWidth: 280, maxWidth: 360 }}
+            >
+                <FriendSidebar />
             </div>
         </div>
     );

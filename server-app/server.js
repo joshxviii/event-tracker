@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config({ path: '.env.local' });
 const { dbConnect } = require('./middleware/mongoose');
+const friendsRouter = require('./routes/friends');
 
 const authRouter = require('./routes/auth');
 const eventsRouter = require('./routes/events');
@@ -22,6 +23,8 @@ app.use('/api/auth', authRouter);
 app.use('/api/events', eventsRouter);
 app.use('/api/events/:id/reviews', reviewsRouter);
 app.use('/api/storage', storageRouter);
+app.use('/api/friends', friendsRouter);
+
 
 app.get('/api/health', async (req, res) => {
     await dbConnect();

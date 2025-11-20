@@ -9,7 +9,7 @@ const eventsRouter = require('./routes/events');
 const reviewsRouter = require('./routes/reviews');
 const storageRouter = require('./routes/storage');
 const friendsRouter = require('./routes/friends');
-const userRouter = require('./routes/user');
+const usersRouter = require('./routes/users');
 
 const app = express();
 
@@ -25,7 +25,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/events', eventsRouter);
 app.use('/api/events/:id/reviews', reviewsRouter);
 app.use('/api/storage', storageRouter);
-app.use('/api/user', userRouter);
+app.use('/api/users', usersRouter);
 app.use('/api/friends', friendsRouter);
 
 

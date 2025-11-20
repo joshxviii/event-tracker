@@ -1,5 +1,6 @@
 import { apiRequest } from '../api-request.js';
 
+/* Auth Routes */
 const getCurrentUser = async () => {
     const currentUser = await apiRequest('/api/auth/me', { requireAuth: true });
     return currentUser;
@@ -23,6 +24,8 @@ const signup = async (firstName, lastName, username, email, password) => {
     return data;
 };
 
-// TODO update_user route and profile picture uploading
 
-export { login, signup, getCurrentUser, updateCurrentUser };
+/* User Routes */
+const getUser = async (userId) => await apiRequest(`/api/users/${userId}`);
+
+export { login, signup, getCurrentUser, updateCurrentUser, getUser };

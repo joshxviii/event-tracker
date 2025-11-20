@@ -190,6 +190,8 @@ router.get('/requests', async (req, res) => {
 router.get('/search', async (req, res) => {
     try {
         await dbConnect();
+        
+        const meId = req.user.userId;
         const q = req.query.q || '';
 
         const users = await User.find({

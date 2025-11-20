@@ -2,8 +2,16 @@ import { apiRequest } from '../api-request.js';
 
 /* Auth Routes */
 const getCurrentUser = async () => {
-    const currentUser = await apiRequest('/api/auth/me', { requireAuth: true });
-    return currentUser;
+    const isLogged = typeof localStorage !== 'undefined' && localStorage.getItem('isLoggedIn') === '1';
+    if (!isLogged) return null;
+
+    try {
+        const currentUser = await apiRequest('/api/auth/me', { requireAuth: true });
+        return currentUser;
+    } catch (err) {
+        localStorage.removeItem('isLoggedIn');
+        return null;
+    }
 }
 
 const updateCurrentUser = async (userDetails) => {

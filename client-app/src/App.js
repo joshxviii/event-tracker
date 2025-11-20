@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LoginPage } from './components/LoginPage';
 import { HomePage } from './components/HomePage';
 import { AccountPage } from './components/AccountPage';
@@ -7,86 +7,93 @@ import { NavigationBar } from './components/NavigationBar';
 import { EventCreationPage } from './components/EventCreationPage';
 import { EventManagementPage } from './components/EventManagementPage';
 import { EventEditPage } from './components/EventEditPage';
+import { UserPage } from './components/UserPage';
+import { Routes, Route, Navigate, useNavigate, useParams } from 'react-router-dom';
+import { getCurrentUser } from './utils/requests/user';
+import { Loading } from './components/ui/loading';
 
 export function App() {
-    /* 
-    the 'states' for the app.
-    depending on the combination of these states the app will show different pages.
-    */
-    const [isLoggedIn, setLoggedIn] = useState(false)
-    const [currentPage, setCurrentPage] = useState('home') // 'home', 'account', 'event'
-    const [selectedEventId, setSelectedEventId] = useState(null)
-    
+    const [isLoggedIn, setLoggedIn] = useState(false);
+    const [authChecked, setAuthChecked] = useState(false);
+    const navigate = useNavigate();
+
     const handleLogin = (user) => {
-        setLoggedIn(true)
-    }
+        setLoggedIn(true);
+        // persist a lightweight flag to allow quick client-side checks (optional)
+        try { localStorage.setItem('isLoggedIn', '1'); } catch (e) {}
+        navigate('/home');
+    };
     const handleLogout = () => {
-        setLoggedIn(false)
-        setCurrentPage('home')
-    }
-    const handlePageChange = (page) => {
-        setCurrentPage(page)
-        setSelectedEventId(null)
-    }
+        setLoggedIn(false);
+        try { localStorage.removeItem('isLoggedIn'); } catch (e) {}
+        navigate('/');
+    };
+    // On mount, verify session with server. This keeps the user logged in across refresh/navigation
+    useEffect(() => {
+        let mounted = true;
+        (async () => {
+            try {
+                const user = await getCurrentUser();
+                if (!mounted) return;
+                if (user) setLoggedIn(true);
+                else setLoggedIn(false);
+            } catch (err) {
+                setLoggedIn(false);
+            } finally {
+                if (mounted) setAuthChecked(true);
+            }
+        })();
+
+        return () => { mounted = false; };
+    }, []);
+
+    // helper passed into components that expect an onEventClick callback
     const handleEventClick = (eventId) => {
-        console.log('Event clicked:', eventId)
-        setCurrentPage('event')
-        setSelectedEventId(eventId)
+        navigate(`/event/${eventId}`);
+    };
+
+    // wrapper components to map route params into existing page props
+    function EventPageRoute() {
+        const { eventId } = useParams();
+        return <EventPage eventId={eventId} onBack={() => navigate('/home')} />;
     }
 
+    function UserPageRoute() {
+        const { userId } = useParams();
+        return <UserPage userId={userId} />;
+    }
+
+    function EventEditRoute() {
+        const { eventId } = useParams();
+        return (
+            <EventEditPage
+                eventId={eventId}
+                onSaved={() => navigate('/event-management')}
+                onCancel={() => navigate('/event-management')}
+            />
+        );
+    }
 
     // if the user is not logged in display login page.
-    if(!isLoggedIn) return (
-        <LoginPage
-            onLogin={handleLogin}
-        />
-    )
-    // display other pages otherwise.
-    else return (
+    if (!authChecked) return <Loading />;
+    if (!isLoggedIn) return <LoginPage onLogin={handleLogin} />;
+
+    return (
         <div>
-            <NavigationBar
-                currentPage={currentPage}
-                onPageChange = {handlePageChange}
-                onLogout={handleLogout}
-                onEventCreationClick={() => handlePageChange('event-creation')}
-                onEventManageClick={() => handlePageChange('event-management')}
-            />
+            <NavigationBar onLogout={handleLogout} />
 
-            {currentPage === 'home' && (
-                <HomePage 
-                    onEventClick={handleEventClick}
-                />
-            )}
-
-            {currentPage === 'account' && (
-                <AccountPage />
-            )}
-
-            {currentPage === 'event' && selectedEventId && (
-                <EventPage
-                    eventId={selectedEventId}
-                    onBack={() => handlePageChange('home')}
-                />
-            )}
-
-            {currentPage === 'event-creation' && (
-                <EventCreationPage />
-            )}
-
-            {currentPage === 'event-management' && (
-                <EventManagementPage 
-                    onEditEvent={(id) => { setSelectedEventId(id); setCurrentPage('event-edit'); }}
-                />
-            )}
-
-            {currentPage === 'event-edit' && selectedEventId && (
-                <EventEditPage
-                    eventId={selectedEventId}
-                    onSaved={() => setCurrentPage('event-management')}
-                    onCancel={() => setCurrentPage('event-management')}
-                />
-            )}
-
+            <Routes>
+                <Route path="/" element={<Navigate to="/home" replace />} />
+                <Route path="/home" element={<HomePage onEventClick={handleEventClick} />} />
+                <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+                <Route path="/account" element={<AccountPage />} />
+                <Route path="/event/:eventId" element={<EventPageRoute />} />
+                <Route path="/event-creation" element={<EventCreationPage />} />
+                <Route path="/event-management" element={<EventManagementPage onEditEvent={(id) => navigate(`/event-edit/${id}`)} />} />
+                <Route path="/event-edit/:eventId" element={<EventEditRoute />} />
+                <Route path="/user/:userId" element={<UserPageRoute />} />
+                <Route path="*" element={<div>404 - Page not found</div>} />
+            </Routes>
         </div>
     );
 }

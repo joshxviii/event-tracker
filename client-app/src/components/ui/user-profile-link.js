@@ -1,10 +1,12 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export const UserProfileLink = ( {user} ) => {
-
+    const navigate = useNavigate();
+    
     return (
         <span
-            onClick={{/** TODO: Navigate to user page */}}
+            onClick={() => navigate(`/user/${user._id}`)}
             style={{cursor: "pointer", display: "flex", alignItems: "center", gap: 8}}
         >
             {user.profilePicture ? (

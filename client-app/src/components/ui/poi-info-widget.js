@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { get_event } from '../../utils/requests/event';
 import { Loading } from './loading';
+import {ReactComponent as PoiIcon} from '../../assets/poi.svg';
+import {ReactComponent as CalendarIcon} from '../../assets/calendar.svg';
 
 export function PoiInfoWidget({ eventId, onClick }) {
     const [event, setEvent] = useState(null);
@@ -45,28 +47,33 @@ export function PoiInfoWidget({ eventId, onClick }) {
             {!loading && !event && !error && <div>No event selected</div>}
             {!loading && error && <div style={{ color: 'red' }}>{error}</div>}
             {!loading && event && (
-                <div>
+                <div style={{display: 'flex', gap: 8, flexDirection: 'column',}}>
+                    
                     <h1>{event.title}</h1>
-                    <p>{event.description}</p>
-                    {event.location && event.location.address && <div>{event.location.address}</div>}
-                    <div>
-                        <small>
-                            {event.startAt && `Date: ${new Date(event.startAt).toLocaleDateString()}`}
-                        </small>
-                        <br />
-                        <small>
-                            {event.startAt && `Start: ${new Date(event.startAt).toLocaleTimeString()}`}
-                        </small>
-                        <br />
-                        <small>
-                            {event.endAt && `End: ${new Date(event.endAt).toLocaleTimeString()}`}
-                        </small>
-                        <br />
-                        <small>
-                            {event.repeat && event.repeat !== 'none' && `Repeats: ${event.repeat}`}
-                        </small>
+                    
+                    <div className='eventImage'>
+                        {event.image ? (
+                            <img src={event.image} alt={event.title} className="eventBanner" />
+                        ) : (
+                            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f3f4f6', borderRadius: 8 }}>
+                                <span style={{ color: '#9ca3af' }}>No Image</span>
+                            </div>
+                        )}
                     </div>
-                    <button onClick={ () => onClick(eventId) }>View Details</button>
+
+                    <p style={{ color: '#374151' }}>{event.description}</p>
+                    <div style={ {width: '180%', display:'flex', flexDirection: 'column', gap: 6, marginRight: 8} }>
+                        <div style={ {display: 'flex', gap: 6} }>
+                            <CalendarIcon/>
+                            {event.startAt ? new Date(event.startAt).toLocaleDateString() : ''}
+                            {event.startAt && ` at ${new Date(event.startAt).toLocaleTimeString()} - ${event.endAt ? new Date(event.endAt).toLocaleTimeString() : ''}`}
+                        </div>
+                        <div style={ {display: 'flex', gap: 6} }> <PoiIcon/> <div style={ { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'} }> {event.location.address} </div> </div> 
+                    </div>
+
+                    <button className="viewDetailsBtn" style={{marginBlockStart: 16}} onClick={ () => onClick(eventId) }>
+                        View Details
+                    </button>
                 </div>
             )}
         </div>

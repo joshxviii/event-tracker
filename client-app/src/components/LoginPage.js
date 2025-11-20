@@ -212,10 +212,6 @@ export function LoginPage({ onLogin }) {
 							<button type="submit" className="buttonStyle" >
 								Log In
 							</button>
-
-							<button type="button" className="buttonStyle" onClick={fillDemo} >
-								Fill demo
-							</button>
 						</div>
 					</form>
 

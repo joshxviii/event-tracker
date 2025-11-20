@@ -108,7 +108,7 @@ const FriendSidebar = () => {
                         <img
                             src={user.profilePicture}
                             alt={name}
-                            className="friend-avatar"
+                            className="profilePicture"
                         />
                     )}
                     <div className="friend-text">

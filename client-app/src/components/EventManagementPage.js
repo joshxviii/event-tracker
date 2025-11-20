@@ -46,7 +46,7 @@ export const EventManagementPage = ({ onEditEvent }) => {
 
             {loading && <div className="indent"> <Loading/> Loading your events...</div>}
             {!loading && (
-                <div>
+                <div style={{fontFamily:"sans-serif"}}>
                     {error && <div className="error">Could not load event data: {error}</div>}
                     {!error && (
                         <div>

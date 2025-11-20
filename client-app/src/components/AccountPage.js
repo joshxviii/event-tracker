@@ -89,8 +89,8 @@ export const AccountPage = () => {
                         )}
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                        <label style={{ display: 'flex', flexDirection: 'column' }}>
-                            Profile picture
+                        <label style={{ display: 'flex', flexDirection: 'column', fontFamily:"sans-serif"}}>
+                            Profile Picture
                             <input type="file" accept="image/*" onChange={handleFileChange} />
                         </label>
                         <div style={{ fontSize: 12, color: '#666' }}>Max 5MB. JPEG/PNG.</div>

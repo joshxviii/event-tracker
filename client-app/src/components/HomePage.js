@@ -309,6 +309,7 @@ export const HomePage = ({ onEventClick }) => {
 
                             <div
                                 className="eventContainer container"
+                                style={{fontFamily:"sans-serif"}}
                                 ref={listRef}
                                 onScroll={handleScroll}
                             >

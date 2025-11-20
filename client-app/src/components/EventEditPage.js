@@ -300,17 +300,17 @@ export const EventEditPage = ({ eventId, onSaved, onCancel }) => {
                                 <option value="other">Other</option>
                             </select>
                         </label>
-
-                        <div style={{ flex: 1 }}>
-                            <div style={{ fontSize: 14, marginBottom: 6 }}>Repeat</div>
-                            <select className="input" value={repeat} onChange={(e) => setRepeat(e.target.value)}>
-                                <option value="none">Does not repeat</option>
-                                <option value="weekly">Weekly</option>
-                                <option value="monthly">Monthly</option>
-                                <option value="annual">Annually</option>
-                            </select>
-                        </div>
                     </div>
+
+                    <label className="labelStyle" style={{ flex: 1 }}>
+                        <div style={{ fontSize: 14, marginBottom: 6 }}>Repeat</div>
+                        <select className="input" value={repeat} onChange={(e) => setRepeat(e.target.value)}>
+                            <option value="none">Does not repeat</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="annual">Annually</option>
+                        </select>
+                    </label>
 
                     <label className="labelStyle">
                         <div style={{ width: '100%' }}>

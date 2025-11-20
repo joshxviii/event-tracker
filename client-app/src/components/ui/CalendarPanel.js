@@ -103,7 +103,7 @@ export default function CalendarPanel() {
     return (
         <div className="calendarBox">
             <div className="calendarHeader">
-                <h3>My Google Calendar</h3>
+                <h3 style={{fontFamily:"sans-serif"}}>My Google Calendar</h3>
                 <div className="calendarActions">
                     {!accessToken ? (
                         <button onClick={handleAuthorize}>Sign in with Google</button>
@@ -116,7 +116,7 @@ export default function CalendarPanel() {
             </div>
 
             {!accessToken ? (
-                <p style={{ marginTop: 8 }}>
+                <p style={{ marginTop: 8, fontFamily:"sans-serif"}}>
                     Connect your Google account to display your next 30 days of events.
                 </p>
             ) : (

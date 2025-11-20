@@ -4,6 +4,16 @@ html, body, #root {
   margin: 0;
 }
 
+/* Make sizing predictable and prevent horizontal overflow */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  max-width: 100%;
+  overflow-x: hidden; /* prevent occasional horizontal scroll from components slightly larger than viewport */
+}
+
 #root > * {
   height: 100%;
 }
@@ -75,34 +85,156 @@ button {
   gap: 16px;
   border-bottom: 1px #e5e7eb solid;
   background-color: #ffffff;
-  display: inline-flex;
-  width: 100%;
+  display: flex;
   align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 50;
+}
+
+/* Mobile nav: hide full menu by default and show hamburger */
+.hamburger {
+  display: none;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.navMenu {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
+
+
+@media (max-width: 750px) {
+  #nav-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .hamburger { display: inline-flex; }
+
+  /* Collapse the menu by default on small screens */
+  .navMenu {
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .navMenu.open {
+    display: flex;
+  }
+
+  .navMenu .buttonGroup {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #navTitle { margin-left: 0; }
+}
+
+/* Home page responsive layout */
+@media (max-width: 750px) {
+  .homepage-layout {
+    display: block;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .homepage-main {
+    width: 100%;
+  }
+
+  .mainContent {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .mapContainer {
+    width: 100%;
+    min-height: 240px;
+    margin: 0;
+    padding: 12px;
+  }
+
+  .eventList {
+    width: 100%;
+    margin: 0;
+    padding: 12px;
+  }
+
+  .eventContainer {
+    height: 60vh;
+  }
+}
+
+/* Desktop tweaks */
+@media (min-width: 751px) {
+  .homepage-layout { display: flex; }
+  /* Force two-column layout: map left, rightColumn (calendar + events) right */
+  .mainContent { display: flex; flex-direction: row; flex-wrap: nowrap; gap: 12px; }
+  .mapContainer { flex: 0 0 50%; max-width: 50%; }
+  .rightColumn { flex: 0 0 50%; max-width: 50%; }
 }
 
 .mainContent {
   display: flex;
   flex-direction: row;
+  gap: 12px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  padding: 0;
 }
 
 .mapContainer {
-  width: 50em;
+  /* Use flex-basis instead of fixed width + float so layout is responsive */
   min-height: 2em;
   padding: 20px;
-  margin: 10px;
-  float: left;
   border-radius: 12px;
   box-shadow: 2px 2px 3px #00000057;
+  box-sizing: border-box;
 }
 
 .eventList {
-  padding: 1px 8px;
-  margin: 8px;
-  min-width: 30em;
-  max-width: 30em;
   background-color: #ffffff;
+  padding: 20px;
   border-radius: 12px;
   box-shadow: 2px 2px 3px #00000057;
+  box-sizing: border-box;
+}
+
+/* Right column that stacks calendar above event list on desktop */
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1 1 50rem;
+  min-width: 0; /* allow children to shrink inside flex layout */
+}
+
+.rightColumn .eventList {
+  width: 100%;
+  min-width: 0;
+}
+
+/* Ensure widgets, images and embeds scale down within containers */
+.eventWidget, .reviewPanel, .formContainer, .eventPageContainer {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+img, svg, iframe, canvas {
+  max-width: 100%;
+  height: auto;
 }
 
 .filterCatagory, .filterDate {
@@ -522,4 +654,34 @@ textarea {
   object-fit: cover;
   display: block;
   border: 1px solid #548aff;
+}
+
+/* Strong desktop overrides placed near the end to ensure they win over earlier defaults */
+@media (min-width: 901px) {
+  .homepage-main .mainContent {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap !important;
+    gap: 12px;
+  }
+
+  .homepage-main .mainContent .mapContainer {
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
+    min-width: 0 !important;
+  }
+
+  .homepage-main .mainContent .rightColumn {
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
+    min-width: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* Ensure event lists and calendar can shrink inside the right column */
+  .rightColumn .eventList, .rightColumn .calendarPanel, .rightColumn .eventsPanel {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
 }

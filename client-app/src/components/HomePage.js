@@ -217,13 +217,14 @@ export const HomePage = ({ onEventClick }) => {
                         />
                     </div>
 
-                    <div>
-                        <div className="eventList" style={{ marginBottom: 16 }}>
+                    <div className="rightColumn">
+                        <div className="eventList calendarPanel">
                             <CalendarPanel />
                         </div>
 
                         {loading && <div>Loading event data...</div>}
-                        <div className="eventList">
+
+                        <div className="eventList eventsPanel">
                             <div className="eventSearch">
                                 <input
                                     className="input"
@@ -344,15 +345,8 @@ export const HomePage = ({ onEventClick }) => {
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            {/* RIGHT: friend sidebar column */}
-            <div
-                className="homepage-friends"
-                style={{ flex: 1.2, minWidth: 280, maxWidth: 360 }}
-            >
-                <FriendSidebar />
+                </div>
             </div>
         </div>
     );

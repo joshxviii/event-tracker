@@ -9,6 +9,7 @@ import { getCurrentUser } from "../utils/requests/user";
 export function NavigationBar( { onLogout } ) {
     const navigate = useNavigate();
     const [user, setUser ] = useState(null);
+    const [menuOpen, setMenuOpen] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -18,40 +19,56 @@ export function NavigationBar( { onLogout } ) {
 
     return (
         <nav id='nav-bar' style={{ backgroundColor: '#cee7ffff' }}>
-            <h3 id="navTitle"> Event Tracker </h3>
-            <div className="buttonGroup">
-                <button onClick={() => navigate('/home')}>
-                    <HomeIcon />
-                    Home
+            <div style={{ display: 'flex', padding: '4px 8px', alignItems: 'center', width: '100%', gap: 8 }}>
+                <h3 id="navTitle"> Event Tracker </h3>
+
+                <button
+                    className="hamburger"
+                    aria-label="Toggle navigation"
+                    aria-expanded={menuOpen}
+                    onClick={() => setMenuOpen((s) => !s)}
+                >
+                    ☰
                 </button>
 
-                <button onClick={() => navigate('/account')}>
-                    <AccountIcon />
-                    Account
-                </button>
-            </div>
+                <div className={`navMenu ${menuOpen ? 'open' : ''}`}>
+                    <div className="buttonGroup">
+                        <button onClick={() => { setMenuOpen(false); navigate('/home'); }}>
+                            <HomeIcon />
+                            Home
+                        </button>
 
-            <h2 className="indent">
-                <div className="buttonGroup">
-                    <button onClick={() => navigate('/event-creation')}>Create New Event</button>
-                    <button onClick={() => navigate('/event-management')}>Manage My Events</button>
+                        <button onClick={() => { setMenuOpen(false); navigate('/account'); }}>
+                            <AccountIcon />
+                            Account
+                        </button>
+                    </div>
+
+                    <div style={{ marginLeft: 8 }}>
+                        <div className="buttonGroup">
+                            <button onClick={() => { setMenuOpen(false); navigate('/event-creation'); }}>Create New Event</button>
+                            <button onClick={() => { setMenuOpen(false); navigate('/event-management'); }}>Manage My Events</button>
+                        </div>
+                    </div>
                 </div>
-            </h2>
 
-            <button
-                style={{marginLeft: 'auto', marginRight: '16px', backgroundColor: 'transparent', color: '#155dfc', fontWeight: 600}}
-                onClick={ onLogout }
-            >
-            {user && (
-                user.profilePicture ? (
-                    <img className="profilePicture" src={user?.profilePicture}/>
-                ) : (
-                    <div aria-hidden className="nullPicture"> {user?.username.charAt(0).toUpperCase()} </div>
-                )
-            )}
-                <LogOutIcon />
-                Sign Out
-            </button>
+                <div style={{ marginLeft: 'auto', marginRight: 16 }}>
+                    <button
+                        style={{ backgroundColor: 'transparent', color: '#155dfc', fontWeight: 600 }}
+                        onClick={ onLogout }
+                    >
+                    {user && (
+                        user.profilePicture ? (
+                            <img className="profilePicture" src={user?.profilePicture}/>
+                        ) : (
+                            <div aria-hidden className="nullPicture"> {user?.username?.charAt(0).toUpperCase()} </div>
+                        )
+                    )}
+                        <LogOutIcon />
+                        Sign Out
+                    </button>
+                </div>
+            </div>
         </nav>
     );
 }

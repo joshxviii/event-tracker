@@ -82,7 +82,7 @@ export default function MapWidget( { focusedEventId, events, onPoiClick } ) {
                 <Map
                     disableDefaultUI={true}
                     controlled={false}
-                    style={{ width: '50em', height: '30em' }}
+                    style={{ height: '30em' }}
                     defaultZoom={11}
                     defaultCenter={0}
                     // onCameraChanged={(ev) => {

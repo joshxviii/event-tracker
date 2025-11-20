@@ -193,6 +193,7 @@ router.get('/search', async (req, res) => {
         const q = req.query.q || '';
 
         const users = await User.find({
+            _id: { $ne: meId }, //excludes yourself
             username: { $regex: q, $options: 'i' },
         }).select('username firstName lastName profilePicture');
 

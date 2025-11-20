@@ -10,7 +10,7 @@ const { dbConnect } = require('../middleware/mongoose');
 // Create event (authenticated)
 router.post('/', requireAuth, async (req, res) => {
   try {
-    await dbConnect;
+    await dbConnect();
     const eventData = { ...req.body };
     eventData.organizer = req.user.userId;
 

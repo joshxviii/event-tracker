@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {ReactComponent as DeleteIcon} from '../../assets/delete.svg';
 import { getCurrentUser } from "../../utils/requests/user";
+import { UserProfileLink } from "./user-profile-link";
 
 export default function Review({ review, onDelete }) {
     const [currentUser, setCurrentUser] = useState(null);
@@ -23,18 +24,9 @@ export default function Review({ review, onDelete }) {
 
     console.log(review.author)
 
-    const username = review.author?.username || 'Anonymous';
-
     return (
         <div className="reviewPanel" >
-            <span style={{display: "flex", alignItems: "center", gap: 8}}>
-                {review.author?.profilePicture ? (
-                    <img className="profilePicture" src={review.author.profilePicture}/>
-                ) : (
-                    <div aria-hidden className="nullPicture"> {username.charAt(0).toUpperCase()} </div>
-                )}
-                <p style={{margin: 0}}>{username}</p>
-            </span>
+            <UserProfileLink user={review.author} />
             <span className="stars" style={{fontSize: 20, color: '#f5b401ff'}}>{'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}</span>
             
             <p style={{margin: 0}}>{review.text}</p>

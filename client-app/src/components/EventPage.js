@@ -12,6 +12,7 @@ import {ReactComponent as CalendarIcon} from '../assets/calendar.svg';
 import { getCurrentUser } from "../utils/requests/user";
 import { Loading } from "./ui/loading";
 import EventMapWidget from "./ui/event-map-widget";
+import { UserProfileLink } from "./ui/user-profile-link";
 
 export function EventPage( { eventId, onBack } ) {
 
@@ -125,14 +126,7 @@ export function EventPage( { eventId, onBack } ) {
                     {event.organizer && (
                         <div className="eventOrganizer">
                             <h4 style={{marginBlockEnd: 10}}>Organizer: </h4>
-                            <div style={{display: 'inline-flex', alignItems: 'center', gap: 8}}>
-                                {event.organizer.profilePicture ? (
-                                    <img className="profilePicture" src={event.organizer.profilePicture}/>
-                                ) : (
-                                    <div aria-hidden className="nullPicture"> {event.organizer.username.charAt(0).toUpperCase()} </div>
-                                )}
-                                {event.organizer.username}
-                            </div>
+                            <UserProfileLink user={event.organizer} />
                         </div>
                     )}
 

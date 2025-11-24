@@ -109,9 +109,8 @@ button {
 }
 
 
-
-
-@media (max-width: 750px) {
+/* Home page responsive layout */
+@media (max-width: 900px) {
   #nav-bar {
     display: flex;
     flex-direction: column;
@@ -139,10 +138,7 @@ button {
   }
 
   #navTitle { margin-left: 0; }
-}
 
-/* Home page responsive layout */
-@media (max-width: 750px) {
   .homepage-layout {
     display: block;
     padding-left: 12px;
@@ -178,12 +174,32 @@ button {
 }
 
 /* Desktop tweaks */
-@media (min-width: 751px) {
-  .homepage-layout { display: flex; }
-  /* Force two-column layout: map left, rightColumn (calendar + events) right */
-  .mainContent { display: flex; flex-direction: row; flex-wrap: nowrap; gap: 12px; }
-  .mapContainer { flex: 0 0 50%; max-width: 50%; }
-  .rightColumn { flex: 0 0 50%; max-width: 50%; }
+@media (min-width: 901px) {
+  .homepage-main .mainContent {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap !important;
+    gap: 12px;
+  }
+
+  .homepage-main .mainContent .mapContainer {
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
+    min-width: 0 !important;
+  }
+
+  .homepage-main .mainContent .rightColumn {
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
+    min-width: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .rightColumn .eventList, .rightColumn .calendarPanel, .rightColumn .eventsPanel {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
 }
 
 .mainContent {
@@ -228,7 +244,6 @@ button {
 
 /* Ensure widgets, images and embeds scale down within containers */
 .eventWidget, .reviewPanel, .formContainer, .eventPageContainer {
-  width: 100%;
   box-sizing: border-box;
 }
 
@@ -242,6 +257,7 @@ img, svg, iframe, canvas {
   gap: 8px;
   padding: 8px 12px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .filterBtn {
@@ -403,6 +419,21 @@ img, svg, iframe, canvas {
   white-space: normal;
   text-overflow: ellipsis;
   overflow: hidden;
+}
+
+.poiInfoText {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.poiInfoText div {
+  margin-top: 0;
+  display: inline-flex;
+  gap: 8px;
+}
+svg {
+  min-width: 24px;
 }
 
 /* Event Creation Page */
@@ -654,34 +685,4 @@ textarea {
   object-fit: cover;
   display: block;
   border: 1px solid #548aff;
-}
-
-/* Strong desktop overrides placed near the end to ensure they win over earlier defaults */
-@media (min-width: 901px) {
-  .homepage-main .mainContent {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap !important;
-    gap: 12px;
-  }
-
-  .homepage-main .mainContent .mapContainer {
-    flex: 0 0 50% !important;
-    max-width: 50% !important;
-    min-width: 0 !important;
-  }
-
-  .homepage-main .mainContent .rightColumn {
-    flex: 0 0 50% !important;
-    max-width: 50% !important;
-    min-width: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-  }
-
-  /* Ensure event lists and calendar can shrink inside the right column */
-  .rightColumn .eventList, .rightColumn .calendarPanel, .rightColumn .eventsPanel {
-    min-width: 0 !important;
-    width: 100% !important;
-  }
 }

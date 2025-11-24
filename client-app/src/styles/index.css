@@ -508,6 +508,7 @@ textarea {
 }
 
 .eventImage {
+  position: relative;
   display: flex;
   justify-content: flex-end;
   width: 100%;
@@ -562,6 +563,8 @@ textarea {
 }
 
 .loginInput {
+  padding: 16px;
+  font-size: 15px;
   display: flex;
   align-items: center;
   margin: auto;
@@ -630,7 +633,7 @@ textarea {
 }
 .notification {
   margin: 12px;
-  height: 20px;
+  height: 32px;
   background: #222;
   color: white;
   border-radius: 6px;

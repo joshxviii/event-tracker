@@ -13,6 +13,7 @@ import { getCurrentUser } from "../utils/requests/user";
 import { Loading } from "./ui/loading";
 import EventMapWidget from "./ui/event-map-widget";
 import { UserProfileLink } from "./ui/user-profile-link";
+import { useNotifications } from "./ui/Notifications";
 
 export function EventPage( { eventId, onBack } ) {
 
@@ -24,6 +25,8 @@ export function EventPage( { eventId, onBack } ) {
     const [error, setError] = useState(null);
     const [isToggling, setIsToggling] = useState(false);
     const [isFavorited, setIsFavorited] = useState(false);
+
+    const notify = useNotifications();
 
     const reloadReviews = async () => {
         try {
@@ -106,7 +109,14 @@ export function EventPage( { eventId, onBack } ) {
                         >
                             {isFavorited ? <HeartFilledIcon style={{color: "#e84343ff"}}/> : <HeartIcon />}
                         </button>
-                        <button onClick={()=>{}}><ShareIcon/></button>
+                        <button onClick={async ()=>{
+                            try {
+                                await navigator.clipboard.writeText(window.location.href);
+                                notify.push({ type: 'success', message: 'Event Copied to Clipboard!' })
+                            } catch (err) {
+                                notify.push({ type: 'error', message: err })
+                            }
+                        }}><ShareIcon/></button>
                     </div>
                     {event.image ? (
                         <img src={event.image} alt={event.title} className="eventBanner" />

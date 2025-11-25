@@ -700,7 +700,7 @@ textarea {
   align-items: center;
   margin: auto;
   margin-top: 100px;
-  width: 600px;
+  max-width: 600px;
   background: #cee7ff;
   padding-bottom: 30px;
   box-shadow: 2px 2px 3px #00000057;
@@ -712,7 +712,6 @@ textarea {
   align-items: center;
   height: 100vh;
   max-width: 100%;
-  padding: 24px;
 }
 
 .buttonStyle {

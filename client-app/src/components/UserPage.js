@@ -105,7 +105,7 @@ export function UserPage({ userId: propUserId }) {
 
     return (
         <div className="eventPageContainer container">
-            <div className="eventMeta" style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+            <div className="userMeta" style={{  }}>
                 {targetUser.profilePicture ? (
                     <img src={targetUser.profilePicture} alt={targetUser.username} className="profilePicture big" />
                 ) : (
@@ -116,7 +116,6 @@ export function UserPage({ userId: propUserId }) {
                     <h2 className="eventHeader">{targetUser.firstName} {targetUser.lastName}</h2>
                     <div style={{ color: '#666' }}>@{targetUser.username}</div>
                     {targetUser.email && <div style={{ marginTop: 8 }}>{targetUser.email}</div>}
-                    {targetUser.role && <div style={{ marginTop: 8 }}>Role: {targetUser.role}</div>}
                 </div>
 
                 <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>

@@ -8,6 +8,7 @@ import {ReactComponent as HeartFilledIcon} from '../assets/heart-filled.svg';
 import {ReactComponent as ShareIcon} from '../assets/share.svg';
 import {ReactComponent as BackIcon} from '../assets/back.svg';
 import {ReactComponent as PoiIcon} from '../assets/poi.svg';
+import {ReactComponent as ClockIcon} from '../assets/time.svg';
 import {ReactComponent as CalendarIcon} from '../assets/calendar.svg';
 import { getCurrentUser } from "../utils/requests/user";
 import { Loading } from "./ui/loading";
@@ -140,21 +141,24 @@ export function EventPage( { eventId, onBack } ) {
                         </div>
                     )}
 
-
-
-                    <div style={ {display:'flex', flexDirection: 'row', gap: 6} }>
-
-                        <div style={ {width: '180%', display:'flex', flexDirection: 'column', gap: 6, marginRight: 8} }>
-                            <p style={{ color: '#374151' }}>{event.description}</p>
-                            <div style={ {display: 'flex', gap: 6} }>
+                    <div style={ {display:'flex', flexDirection: 'row', gap: 16} }>
+                        <div className="poiInfoText" style={{flex: 1}} >
+                            <p style={{ color: '#374151' }}>{event.description}</p> 
+                            <div>
                                 <CalendarIcon/>
                                 {event.startAt ? new Date(event.startAt).toLocaleDateString() : ''}
-                                {event.startAt && ` at ${new Date(event.startAt).toLocaleTimeString()} - ${event.endAt ? new Date(event.endAt).toLocaleTimeString() : ''}`}
                             </div>
-                            <div style={ {display: 'flex', gap: 6} }> <PoiIcon/> <div style={ { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'} }> {event.location.address} </div> </div> 
+                            <div>
+                                <ClockIcon/>
+                                {event.startAt && `${new Date(event.startAt).toLocaleTimeString()} - ${event.endAt ? new Date(event.endAt).toLocaleTimeString() : ''}`}
+                            </div>
+                            <div>
+                                <PoiIcon/>
+                                {event.location.address}
+                            </div> 
                         </div>
 
-                        <EventMapWidget lat={event.location.coordinates.lat} lng={event.location.coordinates.lng}/>
+                        <EventMapWidget style={{width: '50%', height: '100%'}} lat={event.location.coordinates.lat} lng={event.location.coordinates.lng}/>
                     </div>
 
                 </div>

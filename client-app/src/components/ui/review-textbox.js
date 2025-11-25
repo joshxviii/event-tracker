@@ -54,7 +54,7 @@ export default function ReviewTextbox({ eventId, onReviewSubmitted }) {
                     value={text}
                     maxLength={250}
                     onChange={(e) => setText(e.target.value)}
-                    style={{ width: '50%', padding: 8 }}
+                    style={{ padding: 8 }}
                     placeholder="Write your review..."
                 />
             </div>

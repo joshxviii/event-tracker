@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { get_event } from '../../utils/requests/event';
 import { Loading } from './loading';
 import {ReactComponent as PoiIcon} from '../../assets/poi.svg';
+import {ReactComponent as ClockIcon} from '../../assets/time.svg';
 import {ReactComponent as CalendarIcon} from '../../assets/calendar.svg';
 
 export function PoiInfoWidget({ eventId, onClick }) {
@@ -62,13 +63,19 @@ export function PoiInfoWidget({ eventId, onClick }) {
                     </div>
 
                     <p style={{ color: '#374151' }}>{event.description}</p>
-                    <div style={ {width: '180%', display:'flex', flexDirection: 'column', gap: 6, marginRight: 8} }>
-                        <div style={ {display: 'flex', gap: 6} }>
+                    <div className="poiInfoText" >
+                        <div>
                             <CalendarIcon/>
                             {event.startAt ? new Date(event.startAt).toLocaleDateString() : ''}
-                            {event.startAt && ` at ${new Date(event.startAt).toLocaleTimeString()} - ${event.endAt ? new Date(event.endAt).toLocaleTimeString() : ''}`}
                         </div>
-                        <div style={ {display: 'flex', gap: 6} }> <PoiIcon/> <div style={ { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'} }> {event.location.address} </div> </div> 
+                        <div>
+                            <ClockIcon/>
+                            {event.startAt && `${new Date(event.startAt).toLocaleTimeString()} - ${event.endAt ? new Date(event.endAt).toLocaleTimeString() : ''}`}
+                        </div>
+                        <div>
+                            <PoiIcon/>
+                            {event.location.address}
+                        </div> 
                     </div>
 
                     <button className="viewDetailsBtn" style={{marginBlockStart: 16}} onClick={ () => onClick(eventId) }>

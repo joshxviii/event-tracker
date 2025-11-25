@@ -4,6 +4,7 @@ import { useNotifications } from './ui/Notifications';
 import EventMapWidget from "./ui/event-map-widget";
 import { getCurrentUser } from "../utils/requests/user";
 import { uploadEventImage } from "../utils/requests/storage";
+import { useNavigate } from "react-router-dom";
 
 // Props: eventId (string), user (object), onSaved (fn), onCancel (fn)
 export const EventEditPage = ({ eventId, onSaved, onCancel }) => {
@@ -28,7 +29,9 @@ export const EventEditPage = ({ eventId, onSaved, onCancel }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
+
     const notify = useNotifications();
+    const navigate = useNavigate();
 
     const handleImageSelect = (event) => {
         const selectedFile = event.target.files[0];
@@ -226,6 +229,7 @@ export const EventEditPage = ({ eventId, onSaved, onCancel }) => {
             notify.push({ type: 'error', message: msg });
         } finally {
             setLoading(false);
+            navigate(-2);
         }
     };
 

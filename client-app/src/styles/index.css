@@ -4,6 +4,16 @@ html, body, #root {
   margin: 0;
 }
 
+/* Make sizing predictable and prevent horizontal overflow */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  max-width: 100%;
+  overflow-x: hidden; /* prevent occasional horizontal scroll from components slightly larger than viewport */
+}
+
 #root > * {
   height: 100%;
 }
@@ -75,34 +85,172 @@ button {
   gap: 16px;
   border-bottom: 1px #e5e7eb solid;
   background-color: #ffffff;
-  display: inline-flex;
-  width: 100%;
+  display: flex;
   align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 50;
+}
+
+/* Mobile nav: hide full menu by default and show hamburger */
+.hamburger {
+  display: none;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  padding: 8px;
+  cursor: pointer;
+  color: #155dfc;
+}
+
+.navMenu {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
+/* Home page responsive layout */
+@media (max-width: 900px) {
+  #nav-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .hamburger { display: inline-flex; }
+
+  /* Collapse the menu by default on small screens */
+  .navMenu {
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .navMenu.open {
+    display: flex;
+  }
+
+  .navMenu .buttonGroup {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #navTitle { margin-left: 0; }
+
+  .homepage-layout {
+    display: block;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .homepage-main {
+    width: 100%;
+  }
+
+  .mainContent {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .mapContainer {
+    width: 100%;
+    min-height: 240px;
+    margin: 0;
+    padding: 12px;
+  }
+
+  .eventList {
+    width: 100%;
+    margin: 0;
+    padding: 12px;
+  }
+
+  .eventContainer {
+    height: 60vh;
+  }
+}
+
+/* Desktop tweaks */
+@media (min-width: 901px) {
+  .homepage-main .mainContent {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap !important;
+    gap: 12px;
+  }
+
+  .homepage-main .mainContent .mapContainer {
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
+    min-width: 0 !important;
+  }
+
+  .homepage-main .mainContent .rightColumn {
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
+    min-width: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .rightColumn .eventList, .rightColumn .calendarPanel, .rightColumn .eventsPanel {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
 }
 
 .mainContent {
   display: flex;
   flex-direction: row;
+  gap: 12px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  padding: 0;
 }
 
 .mapContainer {
-  width: 50em;
+  /* Use flex-basis instead of fixed width + float so layout is responsive */
   min-height: 2em;
   padding: 20px;
-  margin: 10px;
-  float: left;
   border-radius: 12px;
   box-shadow: 2px 2px 3px #00000057;
+  box-sizing: border-box;
 }
 
 .eventList {
-  padding: 1px 8px;
-  margin: 8px;
-  min-width: 30em;
-  max-width: 30em;
   background-color: #ffffff;
+  padding: 20px;
   border-radius: 12px;
   box-shadow: 2px 2px 3px #00000057;
+  box-sizing: border-box;
+}
+
+/* Right column that stacks calendar above event list on desktop */
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1 1 50rem;
+  min-width: 0; /* allow children to shrink inside flex layout */
+}
+
+.rightColumn .eventList {
+  width: 100%;
+  min-width: 0;
+}
+
+/* Ensure widgets, images and embeds scale down within containers */
+.eventWidget, .reviewPanel, .formContainer, .eventPageContainer {
+  box-sizing: border-box;
+}
+
+img, svg, iframe, canvas {
+  max-width: 100%;
+  height: auto;
 }
 
 .filterCatagory, .filterDate {
@@ -110,6 +258,7 @@ button {
   gap: 8px;
   padding: 8px 12px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .filterBtn {
@@ -147,6 +296,105 @@ button {
 
 .eventWidget.selected {
   box-shadow: 0 0 0 3px #6598ff;
+}
+
+/* Event Management widget tweaks */
+.eventManagementWidget {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px;
+}
+
+.eventThumb {
+  flex: 0 0 126px;
+  height: 126px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eventThumbImg {
+  width: 126px;
+  height: 126px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.eventContent {
+  flex: 1 1 auto;
+}
+
+/* Allow the content column to shrink inside flex layouts so long text doesn't push the action column */
+.eventManagementWidget .eventContent {
+  min-width: 0;
+}
+
+/* Management widget: keep a fixed narrow action column so buttons are never pushed off-screen */
+.eventManagementWidget .buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 0 0 120px; /* fixed width column for buttons */
+}
+
+/* Modern/clean button styles for edit/delete in management widgets */
+.eventManagementWidget .buttonGroup button {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #e6eefc;
+  background: transparent;
+  color: #223;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: box-shadow 140ms ease, transform 120ms ease;
+}
+.eventManagementWidget .buttonGroup button:first-child {
+  background: #f3f7ff;
+  border-color: #d7e7ff;
+  color: #155dfc;
+}
+.eventManagementWidget .buttonGroup button:last-child {
+  background: #fff5f6;
+  border-color: #ffd9da;
+  color: #c72b2b;
+}
+
+/* Override the global one-line behavior for headers/paragraphs inside the management widget
+   so long descriptions wrap but are clamped to a few lines to avoid huge widgets */
+.eventManagementWidget .eventHeader {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0 0 6px 0;
+  overflow: hidden;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  white-space: normal;
+}
+.eventManagementWidget p {
+  margin: 0 0 8px 0;
+  color: #555;
+  overflow: hidden;
+  display: -webkit-box;
+  line-clamp: 3;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  white-space: normal;
+}
+
+/* Place the event label inline in the right column (was absolutely positioned globally) */
+.eventManagementWidget .eventLabel {
+  position: static;
+  top: auto;
+  right: auto;
+  margin-bottom: 8px;
+  align-self: flex-end;
 }
 
 /* Cut off title and other text */
@@ -273,6 +521,22 @@ button {
   overflow: hidden;
 }
 
+.poiInfoText {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-block-end: 64px;
+}
+
+.poiInfoText div {
+  margin-top: 0;
+  display: inline-flex;
+  gap: 8px;
+}
+svg {
+  min-width: 24px;
+}
+
 /* Event Creation Page */
 .formContainer {
   max-width: 720px;
@@ -345,6 +609,7 @@ textarea {
 }
 
 .eventImage {
+  position: relative;
   display: flex;
   justify-content: flex-end;
   width: 100%;
@@ -383,6 +648,24 @@ textarea {
   position: relative;
 }
 
+.userMeta {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 16px;
+  border-radius: 12px;
+  padding: 10px 10px;
+  background-color: #ffffff;
+  box-shadow: 2px 2px 3px #00000057;
+  overflow: hidden;
+}
+
+@media (max-width: 510px) {
+  .userMeta {
+    flex-direction: column;
+  }
+}
+
 .loginText {
   color: #043fc0;
   font-size: 48px;
@@ -399,6 +682,8 @@ textarea {
 }
 
 .loginInput {
+  padding: 16px;
+  font-size: 15px;
   display: flex;
   align-items: center;
   margin: auto;
@@ -415,7 +700,7 @@ textarea {
   align-items: center;
   margin: auto;
   margin-top: 100px;
-  width: 600px;
+  max-width: 600px;
   background: #cee7ff;
   padding-bottom: 30px;
   box-shadow: 2px 2px 3px #00000057;
@@ -427,7 +712,6 @@ textarea {
   align-items: center;
   height: 100vh;
   max-width: 100%;
-  padding: 24px;
 }
 
 .buttonStyle {
@@ -467,7 +751,7 @@ textarea {
 }
 .notification {
   margin: 12px;
-  height: 20px;
+  height: 32px;
   background: #222;
   color: white;
   border-radius: 6px;
@@ -511,6 +795,8 @@ textarea {
 .nullPicture.big, .profilePicture.big {
   width: 126px;
   height: 126px;
+  min-width: 126px;
+  min-height: 126px;
   font-weight: 700;
   font-size: 45px;
 }

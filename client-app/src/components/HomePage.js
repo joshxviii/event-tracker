@@ -182,10 +182,7 @@ export const HomePage = ({ onEventClick }) => {
         <div
             className="homepage-layout"
             style={{
-                display: "flex",
                 alignItems: "flex-start",
-                justifyContent: "center",
-                gap: "1.5rem",
                 maxWidth: "1600px",
                 margin: "0 auto",
                 paddingRight: "1rem",
@@ -217,13 +214,14 @@ export const HomePage = ({ onEventClick }) => {
                         />
                     </div>
 
-                    <div>
-                        <div className="eventList" style={{ marginBottom: 16 }}>
+                    <div className="rightColumn">
+                        <div className="eventList calendarPanel">
                             <CalendarPanel />
                         </div>
 
                         {loading && <div>Loading event data...</div>}
-                        <div className="eventList">
+
+                        <div className="eventList eventsPanel">
                             <div className="eventSearch">
                                 <input
                                     className="input"
@@ -264,7 +262,7 @@ export const HomePage = ({ onEventClick }) => {
                             </div>
 
                             <div className="filterDate">
-                                <label style={{ display: "flex", gap: "4px" }}>
+                                <label style={{ display: "flex", flexFlow: "wrap", gap: "4px" }}>
                                     <label style={{ fontSize: 12 }}>
                                         Date:
                                         <input
@@ -296,7 +294,7 @@ export const HomePage = ({ onEventClick }) => {
                                 <button
                                     onClick={() => setShowPastEvents((prev) => !prev)}
                                     style={{
-                                        marginTop: "auto",
+                                        marginLeft: "auto",
                                         width: "120px",
                                         borderRadius: 8,
                                         background: showPastEvents ? "#888" : undefined,
@@ -345,15 +343,8 @@ export const HomePage = ({ onEventClick }) => {
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            {/* RIGHT: friend sidebar column */}
-            <div
-                className="homepage-friends"
-                style={{ flex: 1.2, minWidth: 280, maxWidth: 360 }}
-            >
-                <FriendSidebar />
+                </div>
             </div>
         </div>
     );

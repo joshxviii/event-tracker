@@ -8,11 +8,13 @@ import {ReactComponent as HeartFilledIcon} from '../assets/heart-filled.svg';
 import {ReactComponent as ShareIcon} from '../assets/share.svg';
 import {ReactComponent as BackIcon} from '../assets/back.svg';
 import {ReactComponent as PoiIcon} from '../assets/poi.svg';
+import {ReactComponent as ClockIcon} from '../assets/time.svg';
 import {ReactComponent as CalendarIcon} from '../assets/calendar.svg';
 import { getCurrentUser } from "../utils/requests/user";
 import { Loading } from "./ui/loading";
 import EventMapWidget from "./ui/event-map-widget";
 import { UserProfileLink } from "./ui/user-profile-link";
+import { useNotifications } from "./ui/Notifications";
 
 export function EventPage( { eventId, onBack } ) {
 
@@ -24,6 +26,8 @@ export function EventPage( { eventId, onBack } ) {
     const [error, setError] = useState(null);
     const [isToggling, setIsToggling] = useState(false);
     const [isFavorited, setIsFavorited] = useState(false);
+
+    const notify = useNotifications();
 
     const reloadReviews = async () => {
         try {
@@ -106,7 +110,14 @@ export function EventPage( { eventId, onBack } ) {
                         >
                             {isFavorited ? <HeartFilledIcon style={{color: "#e84343ff"}}/> : <HeartIcon />}
                         </button>
-                        <button onClick={()=>{}}><ShareIcon/></button>
+                        <button onClick={async ()=>{
+                            try {
+                                await navigator.clipboard.writeText(window.location.href);
+                                notify.push({ type: 'success', message: 'Event Copied to Clipboard!' })
+                            } catch (err) {
+                                notify.push({ type: 'error', message: err })
+                            }
+                        }}><ShareIcon/></button>
                     </div>
                     {event.image ? (
                         <img src={event.image} alt={event.title} className="eventBanner" />
@@ -130,21 +141,24 @@ export function EventPage( { eventId, onBack } ) {
                         </div>
                     )}
 
-
-
-                    <div style={ {display:'flex', flexDirection: 'row', gap: 6} }>
-
-                        <div style={ {width: '180%', display:'flex', flexDirection: 'column', gap: 6, marginRight: 8} }>
-                            <p style={{ color: '#374151' }}>{event.description}</p>
-                            <div style={ {display: 'flex', gap: 6} }>
+                    <div style={ {display:'flex', flexDirection: 'row', gap: 16} }>
+                        <div className="poiInfoText" style={{flex: 1}} >
+                            <p style={{ color: '#374151' }}>{event.description}</p> 
+                            <div>
                                 <CalendarIcon/>
                                 {event.startAt ? new Date(event.startAt).toLocaleDateString() : ''}
-                                {event.startAt && ` at ${new Date(event.startAt).toLocaleTimeString()} - ${event.endAt ? new Date(event.endAt).toLocaleTimeString() : ''}`}
                             </div>
-                            <div style={ {display: 'flex', gap: 6} }> <PoiIcon/> <div style={ { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'} }> {event.location.address} </div> </div> 
+                            <div>
+                                <ClockIcon/>
+                                {event.startAt && `${new Date(event.startAt).toLocaleTimeString()} - ${event.endAt ? new Date(event.endAt).toLocaleTimeString() : ''}`}
+                            </div>
+                            <div>
+                                <PoiIcon/>
+                                {event.location.address}
+                            </div> 
                         </div>
 
-                        <EventMapWidget lat={event.location.coordinates.lat} lng={event.location.coordinates.lng}/>
+                        <EventMapWidget style={{width: '50%', height: '100%'}} lat={event.location.coordinates.lat} lng={event.location.coordinates.lng}/>
                     </div>
 
                 </div>

@@ -7,31 +7,55 @@ import { useNotifications } from './Notifications';
 export function EventManagementWidget( {event, onEdit, onDelete} ) {
   const notify = useNotifications();
 
-  return (
-    <div className="eventWidget">
-        <h1> { event.title } </h1>
-        <p> { event.description } </p>
-        <p> Event ID: { event._id } </p>
-        <p> Start: { event.startAt ? new Date(event.startAt).toLocaleString() : 'N/A' } </p>
-        <p> End: { event.endAt ? new Date(event.endAt).toLocaleString() : 'N/A' } </p>
-        <p> Location: { event.location?.address } </p>
-        <p> Category: { event.category } </p>
+  const handleDelete = async () => {
+    if (!window.confirm(`Delete '${event.title}'?\nThis can not be undone.`)) return;
+    try {
+      await delete_event(event._id);
+      if (notify && notify.push) notify.push({ type: 'success', message: `Deleted: ${event.title}` });
+      if (typeof onDelete === 'function') onDelete(event._id);
+    } catch (err) {
+      console.error('Failed to delete event', err);
+      if (notify && notify.push) notify.push({ type: 'error', message: `Failed to delete: ${err.message || 'unknown error'}` });
+      else alert('Failed to delete event: ' + (err.message || 'unknown error'));
+    }
+  };
 
-        <div className="buttonGroup">
-          <button onClick={() => onEdit ? onEdit(event._id) : null}><EditIcon/> Edit Event</button>
-          <button onClick={async () => {
-            if (!window.confirm(`Delete '${event.title}'?\nThis can not be undone.`)) return;
-            try {
-              await delete_event(event._id);
-              if (notify && notify.push) notify.push({ type: 'success', message: `Deleted: ${event.title}` });
-              if (typeof onDelete === 'function') onDelete(event._id);
-            } catch (err) {
-              console.error('Failed to delete event', err);
-              if (notify && notify.push) notify.push({ type: 'error', message: `Failed to delete: ${err.message || 'unknown error'}` });
-              else alert('Failed to delete event: ' + (err.message || 'unknown error'));
-            }
-          }}><DeleteIcon /> Delete Event </button>
+  const thumbUrl = event.imageUrl || event.image || event.banner || event.eventImage || null;
+
+  return (
+    <div className="eventWidget eventManagementWidget">
+      <div className="eventThumb">
+        {thumbUrl ? (
+          <img src={thumbUrl} alt={event.title} className="eventThumbImg" />
+        ) : (
+          <div className="nullPicture" style={{ width: 96, height: 72, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{(event.title || '').charAt(0).toUpperCase()}</div>
+        )}
+      </div>
+
+      <div className="eventContent">
+        <div style={{ display: 'flex', gap: 8}}>
+          
+          <div style={{ flex: 1, overflow: 'hidden' }}>
+            <h3 className="eventHeader">{event.title}</h3>
+            <p style={{ marginTop: 6, marginBottom: 6, color: '#555', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{event.description}</p>
+
+            <div style={{ display: 'flex', flexDirection:'column', gap: 12, fontSize: 13, color: '#666' }}>
+              <div>Start: { event.startAt ? new Date(event.startAt).toLocaleString() : 'N/A' }</div>
+              <div>End: { event.endAt ? new Date(event.endAt).toLocaleString() : 'N/A' }</div>
+              <div>{ event.location?.address || '' }</div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-end' }}>
+            <div className="eventLabel" style={{ backgroundColor: 'var(--event-color-' + (event.category || 'other') + ')' }}>{event.category || 'other'}</div>
+            <div className="buttonGroup" style={{ flexDirection: 'column' }}>
+              <button onClick={() => onEdit ? onEdit(event._id) : null}><EditIcon/> Edit</button>
+              <button onClick={handleDelete}><DeleteIcon/> Delete</button>
+            </div>
+          </div>
+
         </div>
+      </div>
     </div>
   );
 }

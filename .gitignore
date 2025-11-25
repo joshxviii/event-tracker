@@ -24,3 +24,4 @@ yarn-error.log*
 /client-app/node_modules
 /server-app/node_modules
 server-app/.env.local
+/client-app/.well-known/appspecific

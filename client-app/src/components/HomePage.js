@@ -180,7 +180,7 @@ export const HomePage = ({ onEventClick }) => {
 
     return (
         <div
-            className="homepage-layout"
+            className="homepage-layout lightmodehome"
             style={{
                 alignItems: "flex-start",
                 maxWidth: "1600px",

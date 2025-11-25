@@ -3,13 +3,17 @@ import { useNavigate, NavLink } from 'react-router-dom';
 import {ReactComponent as HomeIcon} from '../assets/home.svg';
 import {ReactComponent as AccountIcon} from '../assets/account.svg';
 import {ReactComponent as LogOutIcon} from '../assets/log-out.svg';
+import {ReactComponent as DarkModeIcon} from '../assets/dark-mode.svg';
+import {ReactComponent as LightModeIcon} from '../assets/light-mode.svg';
 import { getCurrentUser } from "../utils/requests/user";
+//import useDarkMode from "";  //currently an error, need to fix
 
 
 export function NavigationBar( { onLogout } ) {
     const navigate = useNavigate();
     const [user, setUser ] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
+    //const [darkmode, setDarkmode] = useDarkMode();
 
     useEffect(() => {
         (async () => {
@@ -18,7 +22,7 @@ export function NavigationBar( { onLogout } ) {
     }, []);
 
     return (
-        <nav id='nav-bar' style={{ backgroundColor: '#cee7ffff' }}>
+        <nav id='nav-bar' className = "lightmodenavbar" >
             <div style={{ display: 'flex', padding: '4px 8px', alignItems: 'center', width: '100%', gap: 8 }}>
                 <h3 id="navTitle"> Event Tracker </h3>
 
@@ -53,6 +57,19 @@ export function NavigationBar( { onLogout } ) {
                 </div>
 
                 <div style={{ marginLeft: 'auto', marginRight: 16 }}>
+                    <div className="buttonGroup">
+                        <button 
+                        id="theme-switch"
+                        style={{ backgroundColor: 'transparent'}} 
+                        onClick={() => {
+                            setMenuOpen(false);
+                            //setDarkmode(!darkmode);
+                            navigate("/home");
+                        }}
+                        >
+                            <DarkModeIcon />
+                            <LightModeIcon/>
+                        </button>
                     <button
                         style={{ backgroundColor: 'transparent', color: '#155dfc', fontWeight: 600 }}
                         onClick={ onLogout }
@@ -67,6 +84,7 @@ export function NavigationBar( { onLogout } ) {
                         <LogOutIcon />
                         Sign Out
                     </button>
+                    </div>
                 </div>
             </div>
         </nav>

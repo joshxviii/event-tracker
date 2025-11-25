@@ -26,7 +26,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f1f8ffff;
+  /*background-color: #f1f8ffff;*/
   
 }
 
@@ -84,7 +84,7 @@ button {
 #nav-bar {
   gap: 16px;
   border-bottom: 1px #e5e7eb solid;
-  background-color: #ffffff;
+  /*background-color: #ffffff;*/
   display: flex;
   align-items: center;
   width: 100%;
@@ -808,4 +808,32 @@ textarea {
   object-fit: cover;
   display: block;
   border: 1px solid #548aff;
+}
+
+.darkmodehome {
+  background-color: #15141C;
+}
+
+.lightmodehome {
+  background-color: #f1f8ffff;
+}
+
+.darkmodenavbar {
+  background-color: #0E0D12;
+}
+
+.lightmodenavbar {
+  background-color: #cee7ffff;
+}
+
+#theme-switch svg:last-child {
+  display: none;
+}
+
+.darkmodenavbar #theme-switch svg:first-child{
+  display: none;
+}
+
+.darkmodenavbar #theme-switch svg:last-child{
+  display: block;
 }

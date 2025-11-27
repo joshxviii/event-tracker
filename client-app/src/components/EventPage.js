@@ -135,7 +135,7 @@ export function EventPage( { eventId, onBack } ) {
                     </div>
 
                     {event.organizer && (
-                        <div className="eventOrganizer">
+                        <div className="eventOrganizer" style={{color: 'var(--text-color)'}}>
                             <h4 style={{marginBlockEnd: 10}}>Organizer: </h4>
                             <UserProfileLink user={event.organizer} />
                         </div>
@@ -143,7 +143,7 @@ export function EventPage( { eventId, onBack } ) {
 
                     <div style={ {display:'flex', flexDirection: 'row', gap: 16} }>
                         <div className="poiInfoText" style={{flex: 1}} >
-                            <p style={{ color: '#374151' }}>{event.description}</p> 
+                            <p style={{ color: 'var(--text-color-2)' }}>{event.description}</p> 
                             <div>
                                 <CalendarIcon/>
                                 {event.startAt ? new Date(event.startAt).toLocaleDateString() : ''}
@@ -167,18 +167,18 @@ export function EventPage( { eventId, onBack } ) {
 
             <div className="reviewContainer container" style={{ marginTop: 20 }}>
                 <h3 className="indent">Reviews</h3>
-                <div>
+                <div style={{color: 'var(--text-color)'}}>
                     {reviews && reviews.length > 0 ? (
                         reviews.map((review) => (
                             <Review
                                 review={review}
-                                onDelete={deleteReview}
+                                onDelete={deleteReview}                                        
                             />
                         ))
                     ) : (<div className="indent">No reviews yet</div>)}
                 </div>
 
-                <div style={{ marginTop: 12 }}>
+                <div style={{ marginTop: 12}}>
                     <ReviewTextbox
                         eventId={event._id}
                         onReviewSubmitted={reloadReviews}
@@ -191,7 +191,7 @@ export function EventPage( { eventId, onBack } ) {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 40 }}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
                 <Loading/>
-                <div style={{ color: '#374151' }}>Loading event...</div>
+                <div style={{ color: 'var(--text-color)' }}>Loading event...</div>
             </div>
         </div>
     )

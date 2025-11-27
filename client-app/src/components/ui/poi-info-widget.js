@@ -45,7 +45,7 @@ export function PoiInfoWidget({ eventId, onClick }) {
     return (
         <div className="poiInfoWidget" style={{margin: 10}}>
             {loading && <Loading/>}
-            {!loading && !event && !error && <div style={{color: 'var(--text-color)'}}>No event selected</div>}
+            {!loading && !event && !error && <div className = 'labelStyle' style={{color: 'var(--text-color)'}}>No event selected</div>}
             {!loading && error && <div style={{ color: 'red' }}>{error}</div>}
             {!loading && event && (
                 <div style={{display: 'flex', gap: 8, flexDirection: 'column',}}>

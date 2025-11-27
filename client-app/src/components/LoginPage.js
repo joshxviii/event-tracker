@@ -158,7 +158,8 @@ export function LoginPage({ onLogin }) {
 						
 					</form>
 
-					<p>Already have an account? <a style={{cursor: "pointer", color: "blue"}} onClick={ () => setIsSignUp(false)}>Log In</a></p>
+					<p style={{color: 'var(--text-color)'}}>Already have an account? 
+						<a style={{cursor: "pointer", color: "var(--login-text)"}} onClick={ () => setIsSignUp(false)}> Log In</a></p>
 
 				</div>
 			) : (
@@ -196,7 +197,7 @@ export function LoginPage({ onLogin }) {
 						</div>
 
 						{error && (
-							<div role="alert" style={{ color: "#b00020", marginBottom: 12 }}>
+							<div role="alert" style={{ color: "#e6002bff", marginBottom: 12 }}>
 								{error}
 							</div>
 						)}
@@ -208,7 +209,8 @@ export function LoginPage({ onLogin }) {
 						</div>
 					</form>
 
-					<p>Don't have an account? <a style={{cursor: "pointer", color: "blue"}} onClick={ () => setIsSignUp(true)}>Create an account</a></p>
+					<p style={{color: 'var(--text-color)'}}>Don't have an account? 
+						<a style={{cursor: "pointer", color: "var(--login-text)"}} onClick={ () => setIsSignUp(true)}> Create an account</a></p>
 
 				</div>
 			)}

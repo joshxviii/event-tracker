@@ -219,6 +219,7 @@ button {
   border-radius: 12px;
   box-shadow: 2px 2px 3px #00000057;
   box-sizing: border-box;
+  color: var(--event-list-color);
 }
 
 .eventList {
@@ -354,13 +355,13 @@ img, svg, iframe, canvas {
   transition: box-shadow 140ms ease, transform 120ms ease;
 }
 .eventManagementWidget .buttonGroup button:first-child {
-  background: #f3f7ff;
-  border-color: #d7e7ff;
+  background: var(--button-color);
+  border-color: #155dfc;
   color: #155dfc;
 }
 .eventManagementWidget .buttonGroup button:last-child {
-  background: #fff5f6;
-  border-color: #ffd9da;
+  background: var(--button-color-2);
+  border-color: #c72b2b;
   color: #c72b2b;
 }
 
@@ -439,7 +440,7 @@ img, svg, iframe, canvas {
   min-width: 20em;
   border-radius: 12px;
   padding: 16px 32px;
-  background-color: #ffffff;
+  background-color: var(--event-list-color);
   box-shadow: 2px 2px 3px #00000057;
   position: relative;
   display: 'flex';
@@ -670,7 +671,7 @@ textarea {
 }
 
 .loginText {
-  color: #043fc0;
+  color: var(--login-text);
   font-size: 48px;
   font-weight: 700px;
 }
@@ -704,7 +705,7 @@ textarea {
   margin: auto;
   margin-top: 100px;
   max-width: 600px;
-  background: #cee7ff;
+  background: var(--login-color);
   padding-bottom: 30px;
   box-shadow: 2px 2px 3px #00000057;
 }

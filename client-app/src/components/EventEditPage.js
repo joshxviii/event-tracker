@@ -265,31 +265,36 @@ export const EventEditPage = ({ eventId, onSaved, onCancel }) => {
                     <label className="labelStyle">
                         <div style={{ width: '100%' }}>
                             <div style={{ fontSize: 14, marginBottom: 6 }}>Title</div>
-                            <input className="input" id="title" value={title} maxLength={80} onChange={(e) => setTitle(e.target.value)} placeholder="Event title" />
+                            <input className="input" id="title" style={{color: 'var(--text-color)'}}
+                            value={title} maxLength={80} onChange={(e) => setTitle(e.target.value)} placeholder="Event title" />
                         </div>
                     </label>
 
                     <label className="labelStyle">
                         <div style={{ width: '100%' }}>
                             <div style={{ fontSize: 14, marginBottom: 6 }}>Description</div>
-                            <textarea className="input" id="description" value={description} maxLength={800} onChange={(e) => setDescription(e.target.value)} placeholder="Describe the event..." />
+                            <textarea className="input" id="description" style={{color: 'var(--text-color)'}}
+                            value={description} maxLength={800} onChange={(e) => setDescription(e.target.value)} placeholder="Describe the event..." />
                         </div>
                     </label>
 
                     <div className="twoCols">
                         <label className="labelStyle" style={{ flex: 1 }}>
                             <div style={{ fontSize: 14, marginBottom: 6 }}>Date</div>
-                            <input className="input" type="date" id="date" value={date} onChange={(e) => setDate(e.target.value)} />
+                            <input className="input" type="date" style={{color: 'var(--text-color)'}}
+                            id="date" value={date} onChange={(e) => setDate(e.target.value)} />
                         </label>
 
                         <div style={{ flex: 1, display: 'flex', gap: 8 }}>
                             <label className="labelStyle" style={{ flex: 1 }}>
                                 <div style={{ fontSize: 14, marginBottom: 6 }}>Start</div>
-                                <input className="input" type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
+                                <input className="input" type="time" style={{color: 'var(--text-color)'}}
+                                value={startTime} onChange={(e) => setStartTime(e.target.value)} />
                             </label>
                             <label className="labelStyle" style={{ flex: 1 }}>
                                 <div style={{ fontSize: 14, marginBottom: 6 }}>End</div>
-                                <input className="input" type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
+                                <input className="input" type="time" style={{color: 'var(--text-color)'}}
+                                value={endTime} onChange={(e) => setEndTime(e.target.value)} />
                             </label>
                         </div>
                     </div>
@@ -297,7 +302,8 @@ export const EventEditPage = ({ eventId, onSaved, onCancel }) => {
                     <div className="twoCols">
                         <label className="labelStyle" style={{ flex: 1 }}>
                             <div style={{ fontSize: 14, marginBottom: 6 }}>Category</div>
-                            <select className="input" value={category} onChange={(e) => setCategory(e.target.value)}>
+                            <select className="input" value={category} style={{color: 'var(--text-color)'}}
+                            onChange={(e) => setCategory(e.target.value)}>
                                 <option value="social">Social</option>
                                 <option value="volunteer">Volunteer</option>
                                 <option value="market">Market</option>
@@ -308,7 +314,8 @@ export const EventEditPage = ({ eventId, onSaved, onCancel }) => {
 
                     <label className="labelStyle" style={{ flex: 1 }}>
                         <div style={{ fontSize: 14, marginBottom: 6 }}>Repeat</div>
-                        <select className="input" value={repeat} onChange={(e) => setRepeat(e.target.value)}>
+                        <select className="input" value={repeat} style={{color: 'var(--text-color)'}} 
+                        onChange={(e) => setRepeat(e.target.value)}>
                             <option value="none">Does not repeat</option>
                             <option value="weekly">Weekly</option>
                             <option value="monthly">Monthly</option>
@@ -319,7 +326,8 @@ export const EventEditPage = ({ eventId, onSaved, onCancel }) => {
                     <label className="labelStyle">
                         <div style={{ width: '100%' }}>
                             <div style={{ fontSize: 14, marginBottom: 6 }}>Address</div>
-                            <input className="input" id="address" value={address} maxLength={200} onChange={(e) => setAddress(e.target.value)} placeholder="Street, city, state" />
+                            <input className="input" id="address" style={{color: 'var(--text-color)'}}
+                            value={address} maxLength={200} onChange={(e) => setAddress(e.target.value)} placeholder="Street, city, state" />
                         </div>
                     </label>
 

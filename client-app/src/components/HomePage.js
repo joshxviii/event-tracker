@@ -198,8 +198,7 @@ export const HomePage = ({ onEventClick }) => {
 
                 <div className="mainContent">
                     <div
-                        className="mapContainer container"
-                        
+                        className="mapContainer container"                                               
                     >
                         <div>
                             <MapWidget
@@ -219,14 +218,15 @@ export const HomePage = ({ onEventClick }) => {
                             <CalendarPanel />
                         </div>
 
-                        {loading && <div>Loading event data...</div>}
+                        {loading && <div style={{color: 'var(--text-color)'}}>Loading event data...</div>}
 
                         <div className="eventList eventsPanel">
                             <div className="eventSearch">
                                 <input
                                     className="input"
-                                    type="text"
+                                    type="text"                                
                                     placeholder="Search events..."
+                                    style={{color: 'var(--text-color)'}}
                                     value={searchText}
                                     onChange={(e) => setSearchText(e.target.value)}
                                 />
@@ -249,6 +249,9 @@ export const HomePage = ({ onEventClick }) => {
                                 ))}
                                 <button
                                     className="filterBtn clear"
+                                    style={{
+                                        color: 'var(--text-color)'
+                                    }}
                                     onClick={() => {
                                         setActiveFilters(new Set());
                                         setSearchText("");
@@ -263,28 +266,31 @@ export const HomePage = ({ onEventClick }) => {
 
                             <div className="filterDate">
                                 <label style={{ display: "flex", flexFlow: "wrap", gap: "4px" }}>
-                                    <label style={{ fontSize: 12 }}>
+                                    <label style={{ fontSize: 12, color: 'var(--text-color)'}}>
                                         Date:
                                         <input
                                             type="date"
+                                            style={{color: 'var(--text-color)'}}
                                             className="input"
                                             value={dateFilter}
                                             onChange={(e) => setDateFilter(e.target.value)}
                                         />
                                     </label>
-                                    <label style={{ fontSize: 12 }}>
+                                    <label style={{ fontSize: 12, color: 'var(--text-color)'}}>
                                         From:
                                         <input
                                             type="time"
+                                            style={{color: 'var(--text-color)'}}
                                             className="input"
                                             value={timeStartFilter}
                                             onChange={(e) => setTimeStartFilter(e.target.value)}
                                         />
                                     </label>
-                                    <label style={{ fontSize: 12 }}>
+                                    <label style={{ fontSize: 12, color: 'var(--text-color)'}}>
                                         To:
                                         <input
                                             type="time"
+                                            style={{color: 'var(--text-color)'}}
                                             className="input"
                                             value={timeEndFilter}
                                             onChange={(e) => setTimeEndFilter(e.target.value)}

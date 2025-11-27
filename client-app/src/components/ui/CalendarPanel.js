@@ -120,7 +120,7 @@ export default function CalendarPanel() {
                     Connect your Google account to display your next 30 days of events.
                 </p>
             ) : (
-                <div className="calendarContainer">
+                <div className="calendarContainer" style={{color: 'var(--text-color)'}}>
                     <FullCalendar
                         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                         initialView="dayGridMonth"

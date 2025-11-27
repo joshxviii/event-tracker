@@ -5,6 +5,10 @@
   --text-color: black;
   --text-color-2: #4A5A5C;
   --input-bar-color: white;
+  --button-color: #f3f7ff;
+  --button-color-2: #fff5f6;
+  --login-color: #cee7ff;
+  --login-text: #043fc0;
 }
 
 .dark {
@@ -12,8 +16,12 @@
   --nav-bar-color: #070B1E;
   --event-list-color: #070B1E;
   --text-color: white;
-  --text-color-2: #92abae;
-  --input-bar-color: #101840;
+  --text-color-2: #b4bfce;
+  --input-bar-color: #162053;
+  --button-color: #0c1230;
+  --button-color-2: #231315;
+  --login-color: #1d2a6d;
+  --login-text: #0051ff;
 }
 
 #theme-switch svg:last-child {

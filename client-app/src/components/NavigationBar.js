@@ -6,14 +6,14 @@ import {ReactComponent as LogOutIcon} from '../assets/log-out.svg';
 import {ReactComponent as DarkModeIcon} from '../assets/dark-mode.svg';
 import {ReactComponent as LightModeIcon} from '../assets/light-mode.svg';
 import { getCurrentUser } from "../utils/requests/user";
-//import useDarkMode from "";  //currently an error, need to fix
+import useDarkMode from "./ui/useDarkMode";
 
 
 export function NavigationBar( { onLogout } ) {
+    const { isDark, toggleDarkMode } = useDarkMode();
     const navigate = useNavigate();
     const [user, setUser ] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
-    //const [darkmode, setDarkmode] = useDarkMode();
 
     useEffect(() => {
         (async () => {
@@ -22,7 +22,7 @@ export function NavigationBar( { onLogout } ) {
     }, []);
 
     return (
-        <nav id='nav-bar' className = "lightmodenavbar" >
+        <nav id='nav-bar'>
             <div style={{ display: 'flex', padding: '4px 8px', alignItems: 'center', width: '100%', gap: 8 }}>
                 <h3 id="navTitle"> Event Tracker </h3>
 
@@ -60,15 +60,11 @@ export function NavigationBar( { onLogout } ) {
                     <div className="buttonGroup">
                         <button 
                         id="theme-switch"
+                        onClick={toggleDarkMode}
                         style={{ backgroundColor: 'transparent'}} 
-                        onClick={() => {
-                            setMenuOpen(false);
-                            //setDarkmode(!darkmode);
-                            navigate("/home");
-                        }}
                         >
                             <DarkModeIcon />
-                            <LightModeIcon/>
+                            <LightModeIcon />
                         </button>
                     <button
                         style={{ backgroundColor: 'transparent', color: '#155dfc', fontWeight: 600 }}

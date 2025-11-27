@@ -180,7 +180,7 @@ export const HomePage = ({ onEventClick }) => {
 
     return (
         <div
-            className="homepage-layout lightmodehome"
+            className="homepage-layout"
             style={{
                 alignItems: "flex-start",
                 maxWidth: "1600px",
@@ -199,7 +199,7 @@ export const HomePage = ({ onEventClick }) => {
                 <div className="mainContent">
                     <div
                         className="mapContainer container"
-                        style={{ backgroundColor: "#ffffffff" }}
+                        
                     >
                         <div>
                             <MapWidget

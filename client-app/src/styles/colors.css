@@ -1,0 +1,29 @@
+:root {
+  --background-color: #f1f8ffff;
+  --nav-bar-color: #cee7ffff;
+  --event-list-color: white;
+  --text-color: black;
+  --text-color-2: #4A5A5C;
+  --input-bar-color: white;
+}
+
+.dark {
+  --background-color: #101425;
+  --nav-bar-color: #070B1E;
+  --event-list-color: #070B1E;
+  --text-color: white;
+  --text-color-2: #92abae;
+  --input-bar-color: #101840;
+}
+
+#theme-switch svg:last-child {
+  display: none;
+}
+
+.dark #theme-switch svg:first-child{
+  display: none;
+}
+
+.dark #theme-switch svg:last-child{
+  display: block;
+}

@@ -116,7 +116,7 @@ export default function CalendarPanel() {
             </div>
 
             {!accessToken ? (
-                <p style={{ marginTop: 8, fontFamily:"sans-serif"}}>
+                <p style={{ marginTop: 8, fontFamily:"sans-serif", color:'var(--text-color)'}}>
                     Connect your Google account to display your next 30 days of events.
                 </p>
             ) : (

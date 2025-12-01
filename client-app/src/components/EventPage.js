@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Review from "./ui/review-panel";
-import { get_event, favorite_event } from "../utils/requests/event";
+import { get_event, favorite_event, rsvp_event, unrsvp_event } from "../utils/requests/event";
 import { delete_review, get_reviews } from "../utils/requests/review";
 import ReviewTextbox from "./ui/review-textbox";
 import {ReactComponent as HeartIcon} from '../assets/heart.svg';
@@ -10,6 +10,7 @@ import {ReactComponent as BackIcon} from '../assets/back.svg';
 import {ReactComponent as PoiIcon} from '../assets/poi.svg';
 import {ReactComponent as ClockIcon} from '../assets/time.svg';
 import {ReactComponent as CalendarIcon} from '../assets/calendar.svg';
+import {ReactComponent as PersonIcon} from '../assets/account.svg';
 import { getCurrentUser } from "../utils/requests/user";
 import { Loading } from "./ui/loading";
 import EventMapWidget from "./ui/event-map-widget";
@@ -26,6 +27,8 @@ export function EventPage( { eventId, onBack } ) {
     const [error, setError] = useState(null);
     const [isToggling, setIsToggling] = useState(false);
     const [isFavorited, setIsFavorited] = useState(false);
+    const [isRsvped, setIsRsvped] = useState(false);
+    const [isRsvpToggling, setIsRsvpToggling] = useState(false);
 
     const notify = useNotifications();
 
@@ -57,9 +60,11 @@ export function EventPage( { eventId, onBack } ) {
                 const currentUser = await getCurrentUser()
                 setUser(currentUser);
                 setReviews(await get_reviews(eventId) || []);
-                setEvent(await get_event(eventId) || {});
+                const fetchedEvent = await get_event(eventId) || {};
+                setEvent(fetchedEvent);
                 console.log('User favorite events:', currentUser);
                 setIsFavorited(currentUser?.favoriteEvents?.includes(eventId) ?? false);
+                setIsRsvped(fetchedEvent.attendees?.some(a => a._id === currentUser?._id) ?? false);
             } catch (e) {
                 if (!mounted) return;
                 setError(e.message || String(e));
@@ -86,6 +91,30 @@ export function EventPage( { eventId, onBack } ) {
             setError(error.message || 'Failed to toggle favorite');
         } finally {
             setIsToggling(false);
+        }
+    };
+
+    const toggleRsvp = async () => {
+        if (isRsvpToggling || !user) return;
+        
+        setIsRsvpToggling(true);
+        try {
+            if (isRsvped) {
+                await unrsvp_event(eventId);
+                setIsRsvped(false);
+                notify.push({ type: 'success', message: 'You have un-RSVP\'d from this event' });
+            } else {
+                await rsvp_event(eventId);
+                setIsRsvped(true);
+                notify.push({ type: 'success', message: 'You have RSVP\'d to this event!' });
+            }
+            // Refresh event to get updated attendee list
+            const updatedEvent = await get_event(eventId);
+            setEvent(updatedEvent);
+        } catch (error) {
+            notify.push({ type: 'error', message: error.message || 'Failed to RSVP' });
+        } finally {
+            setIsRsvpToggling(false);
         }
     };
 
@@ -130,9 +159,8 @@ export function EventPage( { eventId, onBack } ) {
 
                 <div className="eventMeta">
                     <h1 className="eventHeader">{event.title}</h1>
-                    <div style={{ marginBottom: 8 }}>
-                        <span className="eventLabel" style={{ backgroundColor: `var(--event-color-${event.category || 'other'})` }}>{event.category}</span>
-                    </div>
+
+                    <span className="eventLabel" style={{ backgroundColor: `var(--event-color-${event.category || 'other'})` }}>{event.category}</span>
 
                     {event.organizer && (
                         <div className="eventOrganizer">
@@ -155,11 +183,31 @@ export function EventPage( { eventId, onBack } ) {
                             <div>
                                 <PoiIcon/>
                                 {event.location.address}
-                            </div> 
+                            </div>
+
+                            <div>
+                                <PersonIcon />
+                                <strong>{event.attendees?.length ?? 0}</strong> {event.attendees?.length === 1 ? 'attendee' : 'attendees'}
+                            </div>
                         </div>
 
                         <EventMapWidget style={{width: '50%', height: '100%'}} lat={event.location.coordinates.lat} lng={event.location.coordinates.lng}/>
                     </div>
+
+                    {(<button
+                        onClick={toggleRsvp}
+                        disabled={isRsvpToggling || !user}
+                        style={{
+                            cursor: (isRsvpToggling || !user) ? 'not-allowed' : 'pointer',
+                            backgroundColor: user ? '#155dfc' : '#9ca3af',
+                            padding: '12px 48px',
+                            fontSize: '18px',
+                            marginTop: '8px',
+                            marginLeft: 'auto',
+                        }}
+                    >
+                        {isRsvped ? 'Unattend Event': user ? 'Attend Event': 'Log in to RSVP'}
+                    </button>)}
 
                 </div>
             </div>

@@ -11,6 +11,8 @@ export function NavigationBar( { onLogout } ) {
     const [user, setUser ] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
 
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+
     useEffect(() => {
         (async () => {
             setUser(await getCurrentUser());
@@ -38,35 +40,48 @@ export function NavigationBar( { onLogout } ) {
                             Home
                         </button>
 
-                        <button onClick={() => { setMenuOpen(false); navigate('/account'); }}>
+                        {isLoggedIn && (<button onClick={() => { setMenuOpen(false); navigate('/account'); }}>
                             <AccountIcon />
                             Account
-                        </button>
+                        </button> )}
                     </div>
 
-                    <div style={{ marginLeft: 8 }}>
-                        <div className="buttonGroup">
-                            <button onClick={() => { setMenuOpen(false); navigate('/event-creation'); }}>Create New Event</button>
-                            <button onClick={() => { setMenuOpen(false); navigate('/event-management'); }}>Manage My Events</button>
+                    {isLoggedIn && (
+                        <div style={{ marginLeft: 8 }}>
+                            <div className="buttonGroup">
+                                <button onClick={() => { setMenuOpen(false); navigate('/event-creation'); }}>Create New Event</button>
+                                <button onClick={() => { setMenuOpen(false); navigate('/event-management'); }}>Manage My Events</button>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
 
                 <div style={{ marginLeft: 'auto', marginRight: 16 }}>
-                    <button
-                        style={{ backgroundColor: 'transparent', color: '#155dfc', fontWeight: 600 }}
-                        onClick={ onLogout }
-                    >
-                    {user && (
-                        user.profilePicture ? (
-                            <img className="profilePicture" src={user?.profilePicture}/>
-                        ) : (
-                            <div aria-hidden className="nullPicture"> {user?.username?.charAt(0).toUpperCase()} </div>
-                        )
+                    {isLoggedIn && (
+                        <button
+                            style={{ backgroundColor: 'transparent', color: '#155dfc', fontWeight: 600 }}
+                            onClick={ onLogout }
+                        >
+                        {user && (
+                            user.profilePicture ? (
+                                <img className="profilePicture" src={user?.profilePicture}/>
+                            ) : (
+                                <div aria-hidden className="nullPicture"> {user?.username?.charAt(0).toUpperCase()} </div>
+                            )
+                        )}
+                            <LogOutIcon />
+                            Sign Out
+                        </button>
                     )}
-                        <LogOutIcon />
-                        Sign Out
-                    </button>
+                    {!isLoggedIn && (
+                        <button
+                            style={{ backgroundColor: 'transparent', color: '#155dfc', fontWeight: 600 }}
+                            onClick={ () => navigate('/login') }
+                        >
+                            <LogOutIcon />
+                            Log In
+                        </button>
+                    )}
                 </div>
             </div>
         </nav>

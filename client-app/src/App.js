@@ -76,14 +76,12 @@ export function App() {
 
     // if the user is not logged in display login page.
     if (!authChecked) return <Loading />;
-    if (!isLoggedIn) return <LoginPage onLogin={handleLogin} />;
 
     return (
         <div>
             <NavigationBar onLogout={handleLogout} />
-
             <Routes>
-                <Route path="/" element={<Navigate to="/home" replace />} />
+                <Route path="/" element={<Navigate to={ isLoggedIn?'/home':'/login' } replace />} />
                 <Route path="/home" element={<HomePage onEventClick={handleEventClick} />} />
                 <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
                 <Route path="/account" element={<AccountPage />} />

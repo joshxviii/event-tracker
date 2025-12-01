@@ -8,7 +8,7 @@ import { useMap } from "@vis.gl/react-google-maps";
 import { Loading } from "./ui/loading";
 import FriendSidebar from "./ui/FriendSidebar";
 
-export const HomePage = ({ onEventClick }) => {
+export const HomePage = ({}) => {
     const [events, setEvents] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -210,7 +210,6 @@ export const HomePage = ({ onEventClick }) => {
                         </div>
                         <PoiInfoWidget
                             eventId={selectedEventId}
-                            onClick={onEventClick}
                         />
                     </div>
 
@@ -322,7 +321,6 @@ export const HomePage = ({ onEventClick }) => {
                                             <EventWidget
                                                 key={e._id || i}
                                                 event={e}
-                                                onViewDetails={onEventClick}
                                                 onClick={handlePoiClick}
                                                 isSelected={selectedEventId === e._id}
                                             />

@@ -16,6 +16,7 @@ import { Loading } from "./ui/loading";
 import EventMapWidget from "./ui/event-map-widget";
 import { UserProfileLink } from "./ui/user-profile-link";
 import { useNotifications } from "./ui/Notifications";
+import { AttendeeWidget } from "./ui/attendee-widget";
 
 export function EventPage( { eventId, onBack } ) {
 
@@ -187,7 +188,7 @@ export function EventPage( { eventId, onBack } ) {
 
                             <div>
                                 <PersonIcon />
-                                <strong>{event.attendees?.length ?? 0}</strong> {event.attendees?.length === 1 ? 'attendee' : 'attendees'}
+                                <AttendeeWidget attendees={event.attendees || []} />
                             </div>
                         </div>
 
@@ -215,7 +216,7 @@ export function EventPage( { eventId, onBack } ) {
 
             <div className="reviewContainer container" style={{ marginTop: 20 }}>
                 <h3 className="indent">Reviews</h3>
-                <div>
+                <div className="reviewList" style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 12 }}>
                     {reviews && reviews.length > 0 ? (
                         reviews.map((review) => (
                             <Review

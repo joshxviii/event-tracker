@@ -3,6 +3,9 @@ import { useNavigate, NavLink } from 'react-router-dom';
 import {ReactComponent as HomeIcon} from '../assets/home.svg';
 import {ReactComponent as AccountIcon} from '../assets/account.svg';
 import {ReactComponent as LogOutIcon} from '../assets/log-out.svg';
+import {ReactComponent as HeartIcon} from '../assets/heart.svg';
+import {ReactComponent as EditIcon} from '../assets/edit.svg';
+import {ReactComponent as CreateIcon} from '../assets/add.svg';
 import { getCurrentUser } from "../utils/requests/user";
 
 
@@ -22,7 +25,7 @@ export function NavigationBar( { onLogout } ) {
     return (
         <nav id='nav-bar' style={{ backgroundColor: '#cee7ffff' }}>
             <div style={{ display: 'flex', padding: '4px 8px', alignItems: 'center', width: '100%', gap: 8 }}>
-                <h3 id="navTitle"> Event Tracker </h3>
+                <h3 id="navTitle" style={{cursor: 'pointer'}} onClick={() => {setMenuOpen(false); navigate('/home');}} > Event Tracker </h3>
 
                 <button
                     className="hamburger"
@@ -34,46 +37,52 @@ export function NavigationBar( { onLogout } ) {
                 </button>
 
                 <div className={`navMenu ${menuOpen ? 'open' : ''}`}>
-                    <div className="buttonGroup">
+                    {isLoggedIn && 
+                    (<div className="buttonGroup">
+                        <button onClick={() => { setMenuOpen(false); navigate('/home'); }}>
+                            <HomeIcon />
+                            Home</button>
+                        <button onClick={() => { setMenuOpen(false); navigate('/account'); }}>
+                            <AccountIcon />
+                            Account</button>
+                        <button onClick={() => { setMenuOpen(false); navigate('/event-creation'); }}>
+                            <CreateIcon />
+                            Create New Event</button>
+                        <button onClick={() => { setMenuOpen(false); navigate('/event-management'); }}>
+                            <EditIcon />
+                            Manage My Events</button>
+                        <button onClick={() => { setMenuOpen(false); navigate('/event-favorites'); }}>
+                            <HeartIcon />
+                            View Saved Events</button>
+                    </div>)}
+
+                    {!isLoggedIn && 
+                    (<div className="buttonGroup">
                         <button onClick={() => { setMenuOpen(false); navigate('/home'); }}>
                             <HomeIcon />
                             Home
                         </button>
-
-                        {isLoggedIn && (<button onClick={() => { setMenuOpen(false); navigate('/account'); }}>
-                            <AccountIcon />
-                            Account
-                        </button> )}
-                    </div>
-
-                    {isLoggedIn && (
-                        <div style={{ marginLeft: 8 }}>
-                            <div className="buttonGroup">
-                                <button onClick={() => { setMenuOpen(false); navigate('/event-creation'); }}>Create New Event</button>
-                                <button onClick={() => { setMenuOpen(false); navigate('/event-management'); }}>Manage My Events</button>
-                            </div>
-                        </div>
-                    )}
+                    </div>)}
+                    
                 </div>
 
+
+
                 <div style={{ marginLeft: 'auto', marginRight: 16 }}>
-                    {isLoggedIn && (
+                   {isLoggedIn ? (
                         <button
                             style={{ backgroundColor: 'transparent', color: '#155dfc', fontWeight: 600 }}
                             onClick={ onLogout }
                         >
-                        {user && (
-                            user.profilePicture ? (
-                                <img className="profilePicture" src={user?.profilePicture}/>
+                            {user && (user.profilePicture ? (
+                                <img className="profilePicture" src={user.profilePicture}/>
                             ) : (
-                                <div aria-hidden className="nullPicture"> {user?.username?.charAt(0).toUpperCase()} </div>
-                            )
-                        )}
+                                <div aria-hidden className="nullPicture"> {user.username.charAt(0).toUpperCase()} </div>
+                            ))}
                             <LogOutIcon />
                             Sign Out
                         </button>
-                    )}
-                    {!isLoggedIn && (
+                    ) : (
                         <button
                             style={{ backgroundColor: 'transparent', color: '#155dfc', fontWeight: 600 }}
                             onClick={ () => navigate('/login') }

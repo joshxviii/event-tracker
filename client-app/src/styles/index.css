@@ -72,7 +72,7 @@ button {
 
 .buttonGroup {
   display: flex;
-  gap: 8px;
+  gap: 4px;
 }
 
 #navTitle {
@@ -358,7 +358,7 @@ img, svg, iframe, canvas {
   border-color: #d7e7ff;
   color: #155dfc;
 }
-.eventManagementWidget .buttonGroup button:last-child {
+.eventManagementWidget .buttonGroup button:nth-last-child(2) {
   background: #fff5f6;
   border-color: #ffd9da;
   color: #c72b2b;

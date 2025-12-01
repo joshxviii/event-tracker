@@ -158,21 +158,17 @@ router.post('/:id/rsvp', requireAuth, async (req, res) => {
       return res.status(404).json({ message: 'Event not found' });
     }
 
-    // Check if user already attending
     if (event.attendees.includes(userId)) {
       return res.status(400).json({ message: 'Already attending event' });
     }
 
-    // Check max attendees limit if set
     if (event.maxAttendees && event.attendees.length >= event.maxAttendees) {
       return res.status(400).json({ message: 'Event is full' });
     }
 
-    // Add to attendees
     event.attendees.push(userId);
     await event.save();
 
-    // Add to user's attended events
     await User.findByIdAndUpdate(userId, {
       $addToSet: { attendedEvents: id }
     });

@@ -4,8 +4,11 @@ import { Loading } from './loading';
 import {ReactComponent as PoiIcon} from '../../assets/poi.svg';
 import {ReactComponent as ClockIcon} from '../../assets/time.svg';
 import {ReactComponent as CalendarIcon} from '../../assets/calendar.svg';
+import { useNavigate } from 'react-router-dom';
 
-export function PoiInfoWidget({ eventId, onClick }) {
+export function PoiInfoWidget({ eventId }) {
+    const navigate = useNavigate();
+
     const [event, setEvent] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -78,7 +81,7 @@ export function PoiInfoWidget({ eventId, onClick }) {
                         </div> 
                     </div>
 
-                    <button className="viewDetailsBtn" style={{marginBlockStart: 16}} onClick={ () => onClick(eventId) }>
+                    <button className="viewDetailsBtn" style={{marginBlockStart: 16}} onClick={ () => navigate(`/event/${event._id}`) }>
                         View Details
                     </button>
                 </div>

@@ -11,6 +11,8 @@ import { UserPage } from './components/UserPage';
 import { Routes, Route, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { getCurrentUser } from './utils/requests/user';
 import { Loading } from './components/ui/loading';
+import { ErrorNotFoundPage } from './components/ErrorNotFoundPage';
+import { SavedEventsPage } from './components/SavedEventsPage';
 
 export function App() {
     const [isLoggedIn, setLoggedIn] = useState(false);
@@ -47,11 +49,6 @@ export function App() {
         return () => { mounted = false; };
     }, []);
 
-    // helper passed into components that expect an onEventClick callback
-    const handleEventClick = (eventId) => {
-        navigate(`/event/${eventId}`);
-    };
-
     // wrapper components to map route params into existing page props
     function EventPageRoute() {
         const { eventId } = useParams();
@@ -82,15 +79,18 @@ export function App() {
             <NavigationBar onLogout={handleLogout} />
             <Routes>
                 <Route path="/" element={<Navigate to={ isLoggedIn?'/home':'/login' } replace />} />
-                <Route path="/home" element={<HomePage onEventClick={handleEventClick} />} />
-                <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+                <Route path="/login" element={
+                    isLoggedIn ? <Navigate to={'/home'} replace />
+                    : <LoginPage onLogin={handleLogin} />} />
+                <Route path="/home" element={<HomePage />} />
                 <Route path="/account" element={<AccountPage />} />
                 <Route path="/event/:eventId" element={<EventPageRoute />} />
                 <Route path="/event-creation" element={<EventCreationPage />} />
                 <Route path="/event-management" element={<EventManagementPage onEditEvent={(id) => navigate(`/event-edit/${id}`)} />} />
+                <Route path="/event-favorites" element={<SavedEventsPage />} />
                 <Route path="/event-edit/:eventId" element={<EventEditRoute />} />
                 <Route path="/user/:userId" element={<UserPageRoute />} />
-                <Route path="*" element={<div>404 - Page not found</div>} />
+                <Route path="*" element={<ErrorNotFoundPage />} />
             </Routes>
         </div>
     );

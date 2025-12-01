@@ -183,7 +183,7 @@ export function EventPage( { eventId, onBack } ) {
                             </div>
                             <div>
                                 <PoiIcon/>
-                                {event.location.address}
+                                {event.location?.address}
                             </div>
 
                             <div>
@@ -192,7 +192,7 @@ export function EventPage( { eventId, onBack } ) {
                             </div>
                         </div>
 
-                        <EventMapWidget style={{width: '50%', height: '100%'}} lat={event.location.coordinates.lat} lng={event.location.coordinates.lng}/>
+                        <EventMapWidget style={{width: '50%', height: '100%'}} lat={event.location?.coordinates.lat} lng={event.location?.coordinates.lng}/>
                     </div>
 
                     {(<button

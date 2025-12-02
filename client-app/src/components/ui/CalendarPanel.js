@@ -3,28 +3,62 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import { getCurrentUser } from "../../utils/requests/user";
+import { get_event } from "../../utils/requests/event";
+import { useNavigate } from "react-router-dom";
 
 /**
  * CalendarPanel
  * - Click "Sign in with Google" to authorize Calendar read access
  * - Lists the next 30 days of events from the user's primary calendar
- * - Renders them on FullCalendar (month/week/day views)
+ * - Also displays user's attended and favorite events
+ * - Click any event to navigate to the event page
  */
 export default function CalendarPanel() {
     const [accessToken, setAccessToken] = useState(null);
     const [events, setEvents] = useState([]);
     const tokenClientRef = useRef(null);
     const [loading, setLoading] = useState(false);
+    const [gisReady, setGisReady] = useState(false);
+    const navigate = useNavigate();
 
-    // Load Google Identity Services
+    // Load Google Identity Services and restore saved token if available
     useEffect(() => {
         const id = "gis-script";
-        if (document.getElementById(id)) return; // already loaded
+        const existingScript = document.getElementById(id);
+        
+        if (existingScript) {
+            // Script already loaded, set ready and restore token
+            setGisReady(true);
+            try {
+                const savedToken = localStorage.getItem('googleAccessToken');
+                if (savedToken) {
+                    setAccessToken(savedToken);
+                }
+            } catch (e) {
+                console.warn('Failed to restore Google token from storage:', e);
+            }
+            return;
+        }
+        
+        // Create and load the script
         const s = document.createElement("script");
         s.id = id;
         s.src = "https://accounts.google.com/gsi/client";
         s.async = true;
         s.defer = true;
+        s.onload = () => {
+            setGisReady(true);
+            // After GIS loads, try to restore saved token
+            try {
+                const savedToken = localStorage.getItem('googleAccessToken');
+                if (savedToken) {
+                    setAccessToken(savedToken);
+                }
+            } catch (e) {
+                console.warn('Failed to restore Google token from storage:', e);
+            }
+        };
         document.body.appendChild(s);
         return () => {
             // don't remove script to avoid reloading during hot-reload
@@ -46,6 +80,12 @@ export default function CalendarPanel() {
                 callback: (resp) => {
                     if (resp && resp.access_token) {
                         setAccessToken(resp.access_token);
+                        // Save token to localStorage for next time
+                        try {
+                            localStorage.setItem('googleAccessToken', resp.access_token);
+                        } catch (e) {
+                            console.warn('Failed to save Google token:', e);
+                        }
                     }
                 }
             });
@@ -79,14 +119,46 @@ export default function CalendarPanel() {
             );
             const data = await res.json();
 
-            const fcEvents = (data.items || []).map((e) => ({
+            const googleEvents = (data.items || []).map((e) => ({
                 id: e.id,
                 title: e.summary || "(no title)",
                 start: e.start?.dateTime || e.start?.date, // all-day if date
-                end: e.end?.dateTime || e.end?.date
+                end: e.end?.dateTime || e.end?.date,
+                source: 'google'
             }));
 
-            setEvents(fcEvents);
+            // Fetch user's attended and favorite events
+            const currentUser = await getCurrentUser();
+            const userEvents = [];
+
+            if (currentUser) {
+                const attendedIds = Array.isArray(currentUser.attendedEvents) ? currentUser.attendedEvents : [];
+                const favIds = Array.isArray(currentUser.favoriteEvents) ? currentUser.favoriteEvents : [];
+                const allUserEventIds = [...new Set([...attendedIds, ...favIds])]; // deduplicate
+
+                for (const eventId of allUserEventIds) {
+                    try {
+                        const event = await get_event(eventId);
+                        if (event && event.startAt && event.endAt) {
+                            userEvents.push({
+                                id: event._id,
+                                title: event.title || "(no title)",
+                                start: event.startAt,
+                                end: event.endAt,
+                                source: 'app',
+                                backgroundColor: '#155dfc',
+                                borderColor: '#0d47a1',
+                                textColor: '#ffffff'
+                            });
+                        }
+                    } catch (err) {
+                        console.warn(`Failed to fetch event ${eventId}:`, err);
+                    }
+                }
+            }
+
+            // Combine Google Calendar events and user's app events
+            setEvents([...googleEvents, ...userEvents]);
         } catch (err) {
             console.error("Calendar fetch error:", err);
             alert("Failed to load Google Calendar events. See console for details.");
@@ -95,10 +167,19 @@ export default function CalendarPanel() {
         }
     };
 
+    // Handle event click to navigate to event page
+    const handleEventClick = (info) => {
+        const event = info.event;
+        // Only navigate if it's an app event (has _id or source is 'app')
+        if (event.extendedProps?.source === 'app') {
+            navigate(`/event/${event.id}`);
+        }
+    };
+
     useEffect(() => {
-        if (accessToken) fetchEvents();
+        if (accessToken && gisReady) fetchEvents();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [accessToken]);
+    }, [accessToken, gisReady]);
 
     return (
         <div className="calendarBox">
@@ -129,8 +210,9 @@ export default function CalendarPanel() {
                             center: "title",
                             right: "dayGridMonth,timeGridWeek,timeGridDay"
                         }}
-                        height="60vh"
+                        height="27em"
                         events={events}
+                        eventClick={handleEventClick}
                     />
                 </div>
             )}

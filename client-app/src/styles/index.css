@@ -347,7 +347,7 @@ img, svg, iframe, canvas {
   border-radius: 8px;
   border: 1px solid #e6eefc;
   background: transparent;
-  color: #223;
+  color: var(--text-color);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -652,6 +652,14 @@ textarea {
   position: relative;
 }
 
+.stat-number {
+  color: var(--text-color)
+}
+
+.stat-label {
+  color: var(--text-color);
+}
+
 .userMeta {
   display: flex;
   align-items: center;
@@ -659,7 +667,7 @@ textarea {
   gap: 16px;
   border-radius: 12px;
   padding: 10px 10px;
-  background-color: #ffffff;
+  background-color: var(--event-list-color);
   box-shadow: 2px 2px 3px #00000057;
   overflow: hidden;
 }

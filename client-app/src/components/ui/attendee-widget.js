@@ -6,7 +6,7 @@ export function AttendeeWidget( { attendees } ) {
 
     return (
         <div style={{ display: 'flex', alignItems: 'center', gap: 12}}>
-            <div style={{ fontSize: 13, color: '#666' }}> {attendees.length} {attendees.length === 1 ? 'attendee' : 'attendees'}</div>
+            <div style={{ fontSize: 13, color: 'var(--text-color)' }}> {attendees.length} {attendees.length === 1 ? 'attendee' : 'attendees'}</div>
             
             <div style={{ display: 'flex', gap: 8, alignItems: 'center', overflow: 'hidden' }}>
             {attendees.slice(0, maxAvatars).map((a, idx) => {
@@ -24,7 +24,7 @@ export function AttendeeWidget( { attendees } ) {
                 );
             })}
             {attendees.length > maxAvatars && (
-                <div style={{ fontSize: 13, color: '#666' }}>+{attendees.length - maxAvatars}</div>
+                <div style={{ fontSize: 13, color: 'var(--text-color)' }}>+{attendees.length - maxAvatars}</div>
             )}
             </div>
         </div>

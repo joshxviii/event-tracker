@@ -73,36 +73,39 @@ export function NavigationBar( { onLogout } ) {
 
 
                 <div style={{ marginLeft: 'auto', marginRight: 16 }}>
-                    <button 
-                        id="theme-switch"
-                        onClick={toggleDarkMode}
-                        style={{ backgroundColor: 'transparent'}} 
-                        >
-                            <DarkModeIcon />
-                            <LightModeIcon />
-                    </button>
-                   {isLoggedIn ? (
-                        <button
-                            style={{ backgroundColor: 'transparent', color: '#155dfc', fontWeight: 600 }}
-                            onClick={ onLogout }
-                        >
-                            {user && (user.profilePicture ? (
-                                <img className="profilePicture" src={user.profilePicture}/>
-                            ) : (
-                                <div aria-hidden className="nullPicture"> {user.username.charAt(0).toUpperCase()} </div>
-                            ))}
-                            <LogOutIcon />
-                            Sign Out
+                    <div class="buttonGroup">
+                        <button 
+                            id="theme-switch"
+                            onClick={toggleDarkMode}
+                            style={{ backgroundColor: 'transparent'}} 
+                            >
+                                <DarkModeIcon />
+                                <LightModeIcon />
                         </button>
-                    ) : (
-                        <button
-                            style={{ backgroundColor: 'transparent', color: '#155dfc', fontWeight: 600 }}
-                            onClick={ () => navigate('/login') }
-                        >
-                            <LogOutIcon />
-                            Log In
-                        </button>
-                    )}
+
+                        {isLoggedIn ? (
+                            <button
+                                style={{ backgroundColor: 'transparent', color: '#155dfc', fontWeight: 600 }}
+                                onClick={ onLogout }
+                            >
+                                {user && (user.profilePicture ? (
+                                    <img className="profilePicture" src={user.profilePicture}/>
+                                ) : (
+                                    <div aria-hidden className="nullPicture"> {user.username.charAt(0).toUpperCase()} </div>
+                                ))}
+                                <LogOutIcon />
+                                Sign Out
+                            </button>
+                        ) : (
+                            <button
+                                style={{ backgroundColor: 'transparent', color: '#155dfc', fontWeight: 600 }}
+                                onClick={ () => navigate('/login') }
+                            >
+                                <LogOutIcon />
+                                Log In
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
         </nav>

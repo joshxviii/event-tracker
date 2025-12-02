@@ -811,6 +811,7 @@ textarea {
   min-height: 126px;
   font-weight: 700;
   font-size: 45px;
+  border-color: #548aff;
 }
 
 .profilePicture {
@@ -819,7 +820,8 @@ textarea {
   border-radius: 50%;
   object-fit: cover;
   display: block;
-  border: 1px solid #548aff;
+  border: 1px solid;
+  border-color: #548aff;
 }
 
 div {

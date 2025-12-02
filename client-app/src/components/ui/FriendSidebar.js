@@ -1,25 +1,13 @@
 import React, { useEffect, useState } from "react";
-
-// Helper to send authenticated requests.
-// Adjust the token retrieval if your app stores it differently.
-async function authFetch(url, options = {}) {
-    const token = localStorage.getItem("token");
-    const headers = {
-        "Content-Type": "application/json",
-        ...(options.headers || {}),
-    };
-    if (token) {
-        headers["Authorization"] = `Bearer ${token}`;
-    }
-
-    const res = await fetch(url, { ...options, headers });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-        const msg = data?.message || res.statusText || "Request failed";
-        throw new Error(msg);
-    }
-    return data;
-}
+import {
+    getFriends,
+    getFriendRequests,
+    searchUsers,
+    sendFriendRequest,
+    acceptFriendRequest,
+    rejectFriendRequest,
+    removeFriend,
+} from "../../utils/requests/friends.js";
 
 export default function FriendSidebar({ isOpen, onClose }) {
     const [friends, setFriends] = useState([]);
@@ -27,7 +15,7 @@ export default function FriendSidebar({ isOpen, onClose }) {
     const [outgoing, setOutgoing] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResults, setSearchResults] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loadingSearch, setLoadingSearch] = useState(false);
     const [initialLoading, setInitialLoading] = useState(false);
     const [error, setError] = useState(null);
     const [statusMsg, setStatusMsg] = useState(null);
@@ -40,22 +28,22 @@ export default function FriendSidebar({ isOpen, onClose }) {
 
     const loadFriends = async () => {
         try {
-            const data = await authFetch("/api/friends"); // GET friend list
+            const data = await getFriends();
             setFriends(Array.isArray(data) ? data : []);
         } catch (err) {
             console.error(err);
-            setError(err.message);
+            setError(err.message || "Failed to load friends");
         }
     };
 
     const loadRequests = async () => {
         try {
-            const data = await authFetch("/api/friends/requests"); // GET incoming/outgoing
+            const data = await getFriendRequests();
             setIncoming(data.incoming || []);
             setOutgoing(data.outgoing || []);
         } catch (err) {
             console.error(err);
-            setError(err.message);
+            setError(err.message || "Failed to load friend requests");
         }
     };
 
@@ -80,16 +68,16 @@ export default function FriendSidebar({ isOpen, onClose }) {
             setSearchResults([]);
             return;
         }
-        setLoading(true);
+        setLoadingSearch(true);
         setError(null);
         try {
-            const data = await authFetch(`/api/friends/search?q=${encodeURIComponent(q)}`);
+            const data = await searchUsers(q);
             setSearchResults(Array.isArray(data) ? data : []);
         } catch (err) {
             console.error(err);
-            setError(err.message);
+            setError(err.message || "Search failed");
         } finally {
-            setLoading(false);
+            setLoadingSearch(false);
         }
     };
 
@@ -97,15 +85,12 @@ export default function FriendSidebar({ isOpen, onClose }) {
         setBusyId(userId);
         setError(null);
         try {
-            await authFetch(`/api/friends/request/${userId}`, {
-                method: "POST",
-            });
+            await sendFriendRequest(userId);
             showStatus("Friend request sent");
-            // Refresh request lists so UI stays in sync
             await loadRequests();
         } catch (err) {
             console.error(err);
-            setError(err.message);
+            setError(err.message || "Failed to send friend request");
         } finally {
             setBusyId(null);
         }
@@ -115,12 +100,12 @@ export default function FriendSidebar({ isOpen, onClose }) {
         setBusyId(fromId);
         setError(null);
         try {
-            await authFetch(`/api/friends/accept/${fromId}`, { method: "POST" });
+            await acceptFriendRequest(fromId);
             showStatus("Friend request accepted");
             await Promise.all([loadFriends(), loadRequests()]);
         } catch (err) {
             console.error(err);
-            setError(err.message);
+            setError(err.message || "Failed to accept friend request");
         } finally {
             setBusyId(null);
         }
@@ -130,12 +115,12 @@ export default function FriendSidebar({ isOpen, onClose }) {
         setBusyId(fromId);
         setError(null);
         try {
-            await authFetch(`/api/friends/reject/${fromId}`, { method: "POST" });
+            await rejectFriendRequest(fromId);
             showStatus("Friend request rejected");
             await loadRequests();
         } catch (err) {
             console.error(err);
-            setError(err.message);
+            setError(err.message || "Failed to reject friend request");
         } finally {
             setBusyId(null);
         }
@@ -145,21 +130,21 @@ export default function FriendSidebar({ isOpen, onClose }) {
         setBusyId(friendId);
         setError(null);
         try {
-            await authFetch(`/api/friends/remove/${friendId}`, {
-                method: "DELETE",
-            });
+            await removeFriend(friendId);
             showStatus("Friend removed");
             await loadFriends();
         } catch (err) {
             console.error(err);
-            setError(err.message);
+            setError(err.message || "Failed to remove friend");
         } finally {
             setBusyId(null);
         }
     };
 
     const renderUserAvatar = (user, big = false) => {
-        const initials = `${user.firstName?.[0] || ""}${user.lastName?.[0] || ""}` || (user.username?.[0] || "?");
+        const initials =
+            `${user.firstName?.[0] || ""}${user.lastName?.[0] || ""}` ||
+            (user.username?.[0] || "?");
         if (user.profilePicture) {
             return (
                 <img
@@ -190,16 +175,8 @@ export default function FriendSidebar({ isOpen, onClose }) {
                     </button>
                 </div>
 
-                {statusMsg && (
-                    <div className="friendSidebarStatus">
-                        {statusMsg}
-                    </div>
-                )}
-                {error && (
-                    <div className="friendSidebarError">
-                        {error}
-                    </div>
-                )}
+                {statusMsg && <div className="friendSidebarStatus">{statusMsg}</div>}
+                {error && <div className="friendSidebarError">{error}</div>}
 
                 {initialLoading ? (
                     <div className="friendSidebarLoading">Loading friends…</div>
@@ -214,17 +191,15 @@ export default function FriendSidebar({ isOpen, onClose }) {
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
-                            <button type="submit" disabled={loading}>
-                                {loading ? "…" : "Search"}
+                            <button type="submit" disabled={loadingSearch}>
+                                {loadingSearch ? "…" : "Search"}
                             </button>
                         </form>
 
                         {/* Search Results */}
                         {searchResults.length > 0 && (
                             <div className="friendSidebarSection">
-                                <div className="friendSidebarSectionTitle">
-                                    Search Results
-                                </div>
+                                <div className="friendSidebarSectionTitle">Search Results</div>
                                 <div className="friendSidebarList">
                                     {searchResults.map((user) => (
                                         <div key={user._id} className="friendSidebarItem">
@@ -256,7 +231,9 @@ export default function FriendSidebar({ isOpen, onClose }) {
                                 Incoming Requests
                             </div>
                             {incoming.length === 0 ? (
-                                <div className="friendSidebarEmpty">No incoming requests.</div>
+                                <div className="friendSidebarEmpty">
+                                    No incoming requests.
+                                </div>
                             ) : (
                                 <div className="friendSidebarList">
                                     {incoming.map((user) => (
@@ -298,7 +275,9 @@ export default function FriendSidebar({ isOpen, onClose }) {
                                 Outgoing Requests
                             </div>
                             {outgoing.length === 0 ? (
-                                <div className="friendSidebarEmpty">No outgoing requests.</div>
+                                <div className="friendSidebarEmpty">
+                                    No outgoing requests.
+                                </div>
                             ) : (
                                 <div className="friendSidebarList">
                                     {outgoing.map((user) => (
@@ -321,9 +300,7 @@ export default function FriendSidebar({ isOpen, onClose }) {
 
                         {/* Friend List */}
                         <div className="friendSidebarSection">
-                            <div className="friendSidebarSectionTitle">
-                                Your Friends
-                            </div>
+                            <div className="friendSidebarSectionTitle">Your Friends</div>
                             {friends.length === 0 ? (
                                 <div className="friendSidebarEmpty">
                                     You don't have any friends added yet.

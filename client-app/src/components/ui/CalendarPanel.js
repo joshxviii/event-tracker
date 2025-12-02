@@ -66,17 +66,16 @@ export default function CalendarPanel() {
     }, []);
 
     const ensureTokenClient = () => {
-        // global `google` comes from GIS script
-        // eslint-disable-next-line no-undef
-        if (!google?.accounts?.oauth2) {
+        // global `google` comes from GIS script; reference via `window` to satisfy lint
+        if (!window.google?.accounts?.oauth2) {
             alert("Google Identity Services not loaded yet. Try again in a moment.");
             return null;
         }
         if (!tokenClientRef.current) {
-            // eslint-disable-next-line no-undef
-            tokenClientRef.current = google.accounts.oauth2.initTokenClient({
+            // Request the events scope so we can create/insert events into the user's calendar
+            tokenClientRef.current = window.google.accounts.oauth2.initTokenClient({
                 client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
-                scope: "https://www.googleapis.com/auth/calendar.readonly",
+                scope: "https://www.googleapis.com/auth/calendar.events",
                 callback: (resp) => {
                     if (resp && resp.access_token) {
                         setAccessToken(resp.access_token);
@@ -97,6 +96,28 @@ export default function CalendarPanel() {
         const tc = ensureTokenClient();
         if (!tc) return;
         tc.requestAccessToken(); // pop-up
+    };
+
+    const handleSignOut = async () => {
+        if (!accessToken) return;
+        try {
+            if (window.google?.accounts?.oauth2?.revoke) {
+                // revoke via GIS helper if available
+                window.google.accounts.oauth2.revoke(accessToken, () => {});
+            } else {
+                // fallback to HTTP revoke endpoint
+                await fetch(`https://oauth2.googleapis.com/revoke?token=${accessToken}`, {
+                    method: 'POST',
+                    headers: { 'Content-type': 'application/x-www-form-urlencoded' }
+                });
+            }
+        } catch (e) {
+            console.warn('Error revoking Google token', e);
+        } finally {
+            try { localStorage.removeItem('googleAccessToken'); } catch (e) {}
+            setAccessToken(null);
+            tokenClientRef.current = null;
+        }
     };
 
     const fetchEvents = async () => {
@@ -189,9 +210,14 @@ export default function CalendarPanel() {
                     {!accessToken ? (
                         <button onClick={handleAuthorize}>Sign in with Google</button>
                     ) : (
-                        <button onClick={fetchEvents} disabled={loading}>
-                            {loading ? "Refreshing..." : "Refresh"}
-                        </button>
+                        <div class="buttonGroup">
+                            <button onClick={fetchEvents} disabled={loading}>
+                                {loading ? "Refreshing..." : "Refresh"}
+                            </button>
+                            <button onClick={handleSignOut} style={{ marginLeft: 8 }}>
+                                Sign out of Google
+                            </button>
+                        </div>
                     )}
                 </div>
             </div>
@@ -211,6 +237,7 @@ export default function CalendarPanel() {
                             right: "dayGridMonth,timeGridWeek,timeGridDay"
                         }}
                         height="27em"
+
                         events={events}
                         eventClick={handleEventClick}
                     />

@@ -1,14 +1,11 @@
 import React from "react"
 import {ReactComponent as CalendarIcon} from '../../assets/calendar.svg';
 import {ReactComponent as PoiIcon} from '../../assets/poi.svg';
+import { useNavigate } from "react-router-dom";
 
-export function EventWidget( {event, onClick, onViewDetails, isSelected} ) {
+export function EventWidget( {event, onClick, isSelected} ) {
+  const navigate = useNavigate();
 
-  // TODO: create a function for fetching event details using the eventId prop
-
-  // const event = findEventById(eventId)
-
-  // Determine if event is past
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const evEnd = new Date(event.endAt);
@@ -50,7 +47,7 @@ export function EventWidget( {event, onClick, onViewDetails, isSelected} ) {
             {event.location.address}
           </div>
         </div>
-        <button className="viewDetailsBtn" onClick={() => onViewDetails(event._id)}>
+        <button className="viewDetailsBtn" onClick={() => navigate(`/event/${event._id}`)}>
           View Details
         </button>
       </div>

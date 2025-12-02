@@ -3,9 +3,12 @@ import {ReactComponent as DeleteIcon} from '../../assets/delete.svg';
 import {ReactComponent as EditIcon} from '../../assets/edit.svg';
 import { delete_event } from "../../utils/requests/event";
 import { useNotifications } from './Notifications';
+import { AttendeeWidget } from "./attendee-widget";
+import { useNavigate } from "react-router-dom";
 
 export function EventManagementWidget( {event, onEdit, onDelete} ) {
   const notify = useNotifications();
+  const navigate = useNavigate();
 
   const handleDelete = async () => {
     if (!window.confirm(`Delete '${event.title}'?\nThis can not be undone.`)) return;
@@ -44,6 +47,10 @@ export function EventManagementWidget( {event, onEdit, onDelete} ) {
               <div>End: { event.endAt ? new Date(event.endAt).toLocaleString() : 'N/A' }</div>
               <div>{ event.location?.address || '' }</div>
             </div>
+
+            <br/>
+            <AttendeeWidget attendees={event.attendees || []} />
+
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-end' }}>
@@ -51,6 +58,7 @@ export function EventManagementWidget( {event, onEdit, onDelete} ) {
             <div className="buttonGroup" style={{ flexDirection: 'column'}}>
               <button onClick={() => onEdit ? onEdit(event._id) : null}><EditIcon/> Edit</button>
               <button onClick={handleDelete}><DeleteIcon/> Delete</button>
+              <button onClick={() => navigate(`/event/${event._id}`)}>View Event</button>
             </div>
           </div>
 

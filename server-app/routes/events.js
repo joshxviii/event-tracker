@@ -146,4 +146,64 @@ router.post('/:id/favorite', requireAuth, async (req, res) => {
   res.json({ isFavorite: !isFav });
 });
 
+// RSVP to event (add as attendee)
+router.post('/:id/rsvp', requireAuth, async (req, res) => {
+  try {
+    await dbConnect();
+    const { id } = req.params;
+    const userId = req.user.userId;
+
+    const event = await Event.findById(id);
+    if (!event) {
+      return res.status(404).json({ message: 'Event not found' });
+    }
+
+    if (event.attendees.includes(userId)) {
+      return res.status(400).json({ message: 'Already attending event' });
+    }
+
+    if (event.maxAttendees && event.attendees.length >= event.maxAttendees) {
+      return res.status(400).json({ message: 'Event is full' });
+    }
+
+    event.attendees.push(userId);
+    await event.save();
+
+    await User.findByIdAndUpdate(userId, {
+      $addToSet: { attendedEvents: id }
+    });
+
+    res.json({ message: 'RSVP successful', attendeeCount: event.attendees.length });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Un-RSVP from event (remove as attendee)
+router.delete('/:id/rsvp', requireAuth, async (req, res) => {
+  try {
+    await dbConnect();
+    const { id } = req.params;
+    const userId = req.user.userId;
+
+    const event = await Event.findById(id);
+    if (!event) {
+      return res.status(404).json({ message: 'Event not found' });
+    }
+
+    // Remove from attendees
+    event.attendees = event.attendees.filter(aid => !aid.equals(userId));
+    await event.save();
+
+    // Remove from user's attended events
+    await User.findByIdAndUpdate(userId, {
+      $pull: { attendedEvents: id }
+    });
+
+    res.json({ message: 'Un-RSVP successful', attendeeCount: event.attendees.length });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = router;

@@ -30,7 +30,7 @@ export function EventWidget( {event, onClick, isSelected} ) {
         filter: isPast ? 'grayscale(0.7)' : undefined,
         pointerEvents: 'auto',
       }}
-      onClick={onClick}
+      onClick={() => onClick(event._id)}
     >
       <h1> {event.title} </h1>
       <p style={{ color: '#5c5c5cff' }}> {event.description} </p>

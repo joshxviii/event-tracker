@@ -14,8 +14,9 @@ export const EventEditPage = ({ eventId, onSaved, onCancel }) => {
     const fileInputRef = useRef(null);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [date, setDate] = useState(""); // yyyy-mm-dd
+    const [startDate, setStartDate] = useState(""); // yyyy-mm-dd
     const [startTime, setStartTime] = useState(""); // HH:MM
+    const [endDate, setEndDate] = useState(""); // yyyy-mm-dd
     const [endTime, setEndTime] = useState("");
     const [address, setAddress] = useState("");
     const [lat, setLat] = useState("");
@@ -107,13 +108,17 @@ export const EventEditPage = ({ eventId, onSaved, onCancel }) => {
                         const y = s.getFullYear();
                         const m = String(s.getMonth() + 1).padStart(2, '0');
                         const d = String(s.getDate()).padStart(2, '0');
-                        setDate(`${y}-${m}-${d}`);
+                        setStartDate(`${y}-${m}-${d}`);
                         setStartTime(String(s.getHours()).padStart(2,'0') + ':' + String(s.getMinutes()).padStart(2,'0'));
                     }
                 }
                 if (ev.endAt) {
                     const e = new Date(ev.endAt);
                     if (!isNaN(e.getTime())) {
+                        const y = e.getFullYear();
+                        const m = String(e.getMonth() + 1).padStart(2, '0');
+                        const d = String(e.getDate()).padStart(2, '0');
+                        setEndDate(`${y}-${m}-${d}`);
                         setEndTime(String(e.getHours()).padStart(2,'0') + ':' + String(e.getMinutes()).padStart(2,'0'));
                     }
                 }
@@ -153,16 +158,22 @@ export const EventEditPage = ({ eventId, onSaved, onCancel }) => {
         setError(null);
         setSuccess(null);
 
-        if (!title || !date || !startTime || !endTime) {
-            setError('Please fill in title, date, start and end times.');
+        if (!title || !startDate || !startTime || !endDate || !endTime) {
+            setError('Please fill in title, start date, start time, end date, and end time.');
             return;
         }
 
-        const startAtISO = toISOStringFromDateAndTime(date, startTime);
-        const endAtISO = toISOStringFromDateAndTime(date, endTime);
+        const startAtISO = toISOStringFromDateAndTime(startDate, startTime);
+        const endAtISO = toISOStringFromDateAndTime(endDate, endTime);
 
         if (!startAtISO || !endAtISO) {
             setError('Invalid date/time combination.');
+            return;
+        }
+
+        // Validate end date is not before start date
+        if (new Date(endAtISO) < new Date(startAtISO)) {
+            setError('End date/time cannot be before start date/time.');
             return;
         }
 
@@ -220,7 +231,8 @@ export const EventEditPage = ({ eventId, onSaved, onCancel }) => {
                 setSuccess('Event created');
                 notify.push({ type: 'success', message: 'Event created' });
                 // clear form
-                setTitle(''); setDescription(''); setDate(''); setStartTime(''); setEndTime(''); setAddress(''); setLat(''); setLng(''); setRepeat('none'); setImageFile(null);
+                setTitle(''); setDescription(''); setStartDate(''); setStartTime(''); setEndDate(''); setEndTime(''); setAddress(''); setLat(''); setLng(''); setRepeat('none'); setImageFile(null);
+                setTitle(''); setDescription(''); setStartDate(''); setStartTime(''); setEndDate(''); setEndTime(''); setAddress(''); setLat(''); setLng(''); setRepeat('none'); setImageFile(null);
                 if (onSaved) onSaved();
             }
         } catch (err) {
@@ -278,20 +290,30 @@ export const EventEditPage = ({ eventId, onSaved, onCancel }) => {
 
                     <div className="twoCols">
                         <label className="labelStyle" style={{ flex: 1 }}>
-                            <div style={{ fontSize: 14, marginBottom: 6 }}>Date</div>
-                            <input className="input" type="date" id="date" value={date} onChange={(e) => setDate(e.target.value)} />
+                            <div style={{ fontSize: 14, marginBottom: 6 }}>Start Date</div>
+                            <input className="input" type="date" id="date" value={startDate} onChange={(e) => {
+                                setStartDate(e.target.value);
+                                // Auto-fill end date to same date if not already set or if end date is before start date
+                                if (!endDate || e.target.value > endDate) {
+                                    setEndDate(e.target.value);
+                                }
+                            }} />
+                            <input className="input" type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
                         </label>
 
-                        <div style={{ flex: 1, display: 'flex', gap: 8 }}>
-                            <label className="labelStyle" style={{ flex: 1 }}>
-                                <div style={{ fontSize: 14, marginBottom: 6 }}>Start</div>
-                                <input className="input" type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
-                            </label>
-                            <label className="labelStyle" style={{ flex: 1 }}>
-                                <div style={{ fontSize: 14, marginBottom: 6 }}>End</div>
-                                <input className="input" type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
-                            </label>
-                        </div>
+                        <label className="labelStyle" style={{ flex: 1 }}>
+                            <div style={{ fontSize: 14, marginBottom: 6 }}>End Date</div>
+                            <input className="input" type="date" id="date" value={endDate} onChange={(e) => {
+                                // Prevent end date from being before start date
+                                if (startDate && e.target.value < startDate) {
+                                    setError('End date cannot be before start date');
+                                    return;
+                                }
+                                setError(null);
+                                setEndDate(e.target.value);
+                            }} />
+                            <input className="input" type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
+                        </label>
                     </div>
 
                     <div className="twoCols">

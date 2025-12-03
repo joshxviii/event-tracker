@@ -114,7 +114,7 @@ export function UserPage({ userId: propUserId }) {
 
                 <div>
                     <h2 className="eventHeader">{targetUser.firstName} {targetUser.lastName}</h2>
-                    <div style={{ color: '#666' }}>@{targetUser.username}</div>
+                    <div style={{ color: 'var(--text-color-2)' }}>@{targetUser.username}</div>
                     {targetUser.email && <div style={{ marginTop: 8, color: 'var(--text-color)' }}>{targetUser.email}</div>}
                 </div>
 

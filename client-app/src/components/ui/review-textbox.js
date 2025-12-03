@@ -49,7 +49,7 @@ export default function ReviewTextbox({ eventId, onReviewSubmitted }) {
                     justifyContent: 'center',
                     zIndex: 1
                 }}>
-                    <p style={{ fontSize: 16, color: '#666' }}>Please log in to write a review.</p>
+                    <p style={{ fontSize: 16, color: 'var(--text-color-2)' }}>Please log in to write a review.</p>
                 </div>
             )}
             <form onSubmit={submit} style={{ backgroundColor: 'var(--event-list-color)', padding: 12, borderRadius: 6, pointerEvents: user ? 'auto' : 'none', opacity: user ? 1 : 0.6 }}>

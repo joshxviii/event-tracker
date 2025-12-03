@@ -458,7 +458,7 @@ img, svg, iframe, canvas {
   top: 8px;
   right: 8px;
   cursor: pointer;
-  color: #666;
+  color: var(--text-color-2);
 }
 
 :root {

@@ -8,6 +8,7 @@ import {
     rejectFriendRequest,
     removeFriend,
 } from "../../utils/requests/friends.js";
+import {UserProfileLink} from "./user-profile-link";
 
 export default function FriendSidebar({ isOpen, onClose }) {
     const [friends, setFriends] = useState([]);
@@ -142,23 +143,9 @@ export default function FriendSidebar({ isOpen, onClose }) {
     };
 
     const renderUserAvatar = (user, big = false) => {
-        const initials =
-            `${user.firstName?.[0] || ""}${user.lastName?.[0] || ""}` ||
-            (user.username?.[0] || "?");
-        if (user.profilePicture) {
-            return (
-                <img
-                    src={user.profilePicture}
-                    alt={user.username}
-                    className={`profilePicture ${big ? "big" : ""}`}
-                />
-            );
-        }
-        return (
-            <div className={`nullPicture ${big ? "big" : ""}`}>
-                {initials.toUpperCase()}
-            </div>
-        );
+        return <UserProfileLink user={user} showName={false}>
+
+        </UserProfileLink>
     };
 
     return (

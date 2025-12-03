@@ -7,6 +7,7 @@ import CalendarPanel from "./ui/CalendarPanel";
 import { useMap } from "@vis.gl/react-google-maps";
 import { Loading } from "./ui/loading";
 import FriendSidebar from "./ui/FriendSidebar";
+import {ReactComponent as FriendsIcon} from '../assets/friends.svg';
 
 export const HomePage = ({}) => {
     const [events, setEvents] = useState(null);
@@ -174,6 +175,7 @@ export const HomePage = ({}) => {
                         className="friendSidebarToggleBtn"
                         onClick={() => setShowFriends(true)}
                     >
+                        <FriendsIcon/>
                         Friends
                     </button>
                 </div>

@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-export const UserProfileLink = ( {user} ) => {
+export const UserProfileLink = ( {user, showName}) => {
     const navigate = useNavigate();
     
     return (
@@ -14,7 +14,7 @@ export const UserProfileLink = ( {user} ) => {
             ) : (
                 <div aria-hidden className="nullPicture"> {user.username.charAt(0).toUpperCase()} </div>
             )}
-            <p style={{margin: 0}}>{user.username}</p>
+            {showName && (<p style={{margin: 0}}>{user.username}</p>)}
         </span>
     )
 }

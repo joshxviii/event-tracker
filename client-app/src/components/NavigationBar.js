@@ -6,10 +6,14 @@ import {ReactComponent as LogOutIcon} from '../assets/log-out.svg';
 import {ReactComponent as HeartIcon} from '../assets/heart.svg';
 import {ReactComponent as EditIcon} from '../assets/edit.svg';
 import {ReactComponent as CreateIcon} from '../assets/add.svg';
+import {ReactComponent as DarkModeIcon} from '../assets/dark-mode.svg';
+import {ReactComponent as LightModeIcon} from '../assets/light-mode.svg';
 import { getCurrentUser } from "../utils/requests/user";
+import useDarkMode from "./ui/useDarkMode";
 
 
 export function NavigationBar( { onLogout } ) {
+    const { isDark, toggleDarkMode } = useDarkMode();
     const navigate = useNavigate();
     const [user, setUser ] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
@@ -23,7 +27,7 @@ export function NavigationBar( { onLogout } ) {
     }, []);
 
     return (
-        <nav id='nav-bar' style={{ backgroundColor: '#cee7ffff' }}>
+        <nav id='nav-bar'>
             <div style={{ display: 'flex', padding: '4px 8px', alignItems: 'center', width: '100%', gap: 8 }}>
                 <h3 id="navTitle" style={{cursor: 'pointer'}} onClick={() => {setMenuOpen(false); navigate('/home');}} > Event Tracker </h3>
 
@@ -69,28 +73,39 @@ export function NavigationBar( { onLogout } ) {
 
 
                 <div style={{ marginLeft: 'auto', marginRight: 16 }}>
-                    {isLoggedIn ? (
-                        <button
-                            style={{ backgroundColor: 'transparent', color: '#155dfc', fontWeight: 600 }}
-                            onClick={ onLogout }
-                        >
-                            {user && (user.profilePicture ? (
-                                <img className="profilePicture" src={user.profilePicture}/>
-                            ) : (
-                                <div aria-hidden className="nullPicture"> {user.username.charAt(0).toUpperCase()} </div>
-                            ))}
-                            <LogOutIcon />
-                            Sign Out
+                    <div class="buttonGroup">
+                        <button 
+                            id="theme-switch"
+                            onClick={toggleDarkMode}
+                            style={{ backgroundColor: 'transparent'}} 
+                            >
+                                <DarkModeIcon />
+                                <LightModeIcon />
                         </button>
-                    ) : (
-                        <button
-                            style={{ backgroundColor: 'transparent', color: '#155dfc', fontWeight: 600 }}
-                            onClick={ () => navigate('/login') }
-                        >
-                            <LogOutIcon />
-                            Log In
-                        </button>
-                    )}
+
+                        {isLoggedIn ? (
+                            <button
+                                style={{ backgroundColor: 'transparent', color: '#155dfc', fontWeight: 600 }}
+                                onClick={ onLogout }
+                            >
+                                {user && (user.profilePicture ? (
+                                    <img className="profilePicture" src={user.profilePicture}/>
+                                ) : (
+                                    <div aria-hidden className="nullPicture"> {user.username.charAt(0).toUpperCase()} </div>
+                                ))}
+                                <LogOutIcon />
+                                Sign Out
+                            </button>
+                        ) : (
+                            <button
+                                style={{ backgroundColor: 'transparent', color: '#155dfc', fontWeight: 600 }}
+                                onClick={ () => navigate('/login') }
+                            >
+                                <LogOutIcon />
+                                Log In
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
         </nav>

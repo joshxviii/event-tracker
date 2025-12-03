@@ -69,7 +69,7 @@ export const AccountPage = () => {
     };
 
     if (!user) return (
-        <div className="formContainer">
+        <div className="formContainer" style={{color: 'var(--text-color)', fontFamily:"sans-serif", fontWeight: 'bold'}}>
             <Loading/>
             <p>Loading account...</p>
         </div>
@@ -89,32 +89,38 @@ export const AccountPage = () => {
                         )}
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                        <label style={{ display: 'flex', flexDirection: 'column' }}>
-                            Profile picture
+                        <label style={{ display: 'flex', flexDirection: 'column',
+                            color:'var(--text-color)', fontFamily:"sans-serif", fontWeight: 'bold'}}>
+                            Profile Picture
                             <input type="file" accept="image/*" onChange={handleFileChange} />
                         </label>
-                        <div style={{ fontSize: 12, color: '#666' }}>Max 5MB. JPEG/PNG.</div>
+                        <div style={{ fontSize: 12, color: 'var(--text-color-2)',
+                             fontFamily:"sans-serif", fontWeight: 'bold' }}>Max 5MB. JPEG/PNG.</div>
                     </div>
                 </div>
 
                 <label>
-                    <div style={{ fontSize: 12, color: '#666' }}>First name</div>
-                    <input className="input" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                    <div style={{ fontSize: 12, color: 'var(--text-color-2)' }}>First name</div>
+                    <input className="input" style={{color: 'var(--text-color)'}} 
+                    value={firstName} onChange={(e) => setFirstName(e.target.value)} />
                 </label>
 
                 <label>
-                    <div style={{ fontSize: 12, color: '#666' }}>Last name</div>
-                    <input className="input" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                    <div style={{ fontSize: 12, color: 'var(--text-color-2)' }}>Last name</div>
+                    <input className="input" style={{color: 'var(--text-color)'}} 
+                    value={lastName} onChange={(e) => setLastName(e.target.value)} />
                 </label>
 
                 <label>
-                    <div style={{ fontSize: 12, color: '#666' }}>Username</div>
-                    <input className="input" value={username} onChange={(e) => setUsername(e.target.value)} />
+                    <div style={{ fontSize: 12, color: 'var(--text-color-2)' }}>Username</div>
+                    <input className="input" style={{color: 'var(--text-color)'}}
+                    value={username} onChange={(e) => setUsername(e.target.value)} />
                 </label>
 
                 <label>
-                    <div style={{ fontSize: 12, color: '#666' }}>Email</div>
-                    <input className="input" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <div style={{ fontSize: 12, color: 'var(--text-color-2)' }}>Email</div>
+                    <input className="input" style={{color: 'var(--text-color)'}}
+                    value={email} onChange={(e) => setEmail(e.target.value)} />
                 </label>
 
                 <div style={{ display: 'flex', gap: 8 }}>

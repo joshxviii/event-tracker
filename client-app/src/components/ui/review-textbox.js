@@ -52,7 +52,7 @@ export default function ReviewTextbox({ eventId, onReviewSubmitted }) {
                     <p style={{ fontSize: 16, color: '#666' }}>Please log in to write a review.</p>
                 </div>
             )}
-            <form onSubmit={submit} style={{ backgroundColor: '#fff', border: '1px solid #ddd', padding: 12, borderRadius: 6, pointerEvents: user ? 'auto' : 'none', opacity: user ? 1 : 0.6 }}>
+            <form onSubmit={submit} style={{ backgroundColor: 'var(--event-list-color)', padding: 12, borderRadius: 6, pointerEvents: user ? 'auto' : 'none', opacity: user ? 1 : 0.6 }}>
                 <div style={{ marginBottom: 8 }}>
                     <div style={{ display: 'flex'}}>
                     {[1,2,3,4,5].map((s) => (

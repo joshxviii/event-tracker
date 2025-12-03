@@ -1,4 +1,4 @@
-
+@import './colors.css';
 html, body, #root {
   height: 100%;
   margin: 0;
@@ -26,20 +26,19 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f1f8ffff;
-  
-}
-
-.backgroundGradient {
-  background: linear-gradient(#c6b7ff, #d694ff);
+  background-color: var(--background-color);
 }
 
 h1 {
-  color: #000000;
+  color: var(--text-color);
 }
 
 h2 {
-  color: #000000;
+  color: var(--text-color);
+}
+
+h3 {
+  color: var(--text-color);
 }
 
 code {
@@ -83,8 +82,8 @@ button {
 
 #nav-bar {
   gap: 16px;
-  border-bottom: 1px #e5e7eb solid;
-  background-color: #ffffff;
+  border-bottom: 1px #4a86ff solid;
+  background-color: var(--nav-bar-color);
   display: flex;
   align-items: center;
   width: 100%;
@@ -161,6 +160,7 @@ button {
     min-height: 240px;
     margin: 0;
     padding: 12px;
+    color: var(--event-list-color);
   }
 
   .eventList {
@@ -219,10 +219,11 @@ button {
   border-radius: 12px;
   box-shadow: 2px 2px 3px #00000057;
   box-sizing: border-box;
+  color: var(--event-list-color);
 }
 
 .eventList {
-  background-color: #ffffff;
+  background-color: var(--event-list-color);
   padding: 20px;
   border-radius: 12px;
   box-shadow: 2px 2px 3px #00000057;
@@ -264,7 +265,7 @@ img, svg, iframe, canvas {
 .filterBtn {
   padding: 6px 10px;
   border-radius: 6px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #0055ff;
   background: lightgray;
   cursor: pointer;
 }
@@ -288,7 +289,7 @@ img, svg, iframe, canvas {
 .eventWidget {
   padding: 1px 8px;
   margin: 8px;
-  background-color: #ffffff;
+  background-color: var(--event-list-color);
   cursor: pointer;
   border-radius: 12px;
   box-shadow: 2px 2px 3px #00000057;
@@ -346,7 +347,7 @@ img, svg, iframe, canvas {
   border-radius: 8px;
   border: 1px solid #e6eefc;
   background: transparent;
-  color: #223;
+  color: var(--text-color);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -354,13 +355,13 @@ img, svg, iframe, canvas {
   transition: box-shadow 140ms ease, transform 120ms ease;
 }
 .eventManagementWidget .buttonGroup button:first-child {
-  background: #f3f7ff;
-  border-color: #d7e7ff;
+  background: var(--button-color);
+  border-color: #155dfc;
   color: #155dfc;
 }
 .eventManagementWidget .buttonGroup button:nth-last-child(2) {
-  background: #fff5f6;
-  border-color: #ffd9da;
+  background: var(--button-color-2);
+  border-color: #c72b2b;
   color: #c72b2b;
 }
 
@@ -439,7 +440,7 @@ img, svg, iframe, canvas {
   min-width: 20em;
   border-radius: 12px;
   padding: 16px 32px;
-  background-color: #ffffff;
+  background-color: var(--event-list-color);
   box-shadow: 2px 2px 3px #00000057;
   position: relative;
   display: 'flex';
@@ -483,6 +484,7 @@ img, svg, iframe, canvas {
   gap: 5px;
   font-family: sans-serif;
   font-weight: bold;
+  color: var(--text-color);
 }
 
 /* POI marker tooltip */
@@ -526,6 +528,7 @@ img, svg, iframe, canvas {
   flex-direction: column;
   gap: 12px;
   margin-block-end: 64px;
+  color: var(--text-color);
 }
 
 .poiInfoText div {
@@ -542,7 +545,7 @@ svg {
   max-width: 720px;
   margin: 24px auto;
   padding: 20px;
-  background: #ffffff;
+  background: var(--event-list-color);
   border-radius: 12px;
   box-shadow: 2px 6px 18px rgba(0,0,0,0.08);
 }
@@ -563,7 +566,8 @@ svg {
   text-indent: 8px;
   text-align: left;
   border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #003cff;
+  background-color: var(--input-bar-color);
   font-size: 14px;
 }
 
@@ -643,9 +647,17 @@ textarea {
   border-radius: 12px;
   padding: 10px 10px;
   margin-top: 8px;
-  background-color: #ffffff;
+  background-color: var(--event-list-color);
   box-shadow: 2px 2px 3px #00000057;
   position: relative;
+}
+
+.stat-number {
+  color: var(--text-color)
+}
+
+.stat-label {
+  color: var(--text-color);
 }
 
 .userMeta {
@@ -655,7 +667,7 @@ textarea {
   gap: 16px;
   border-radius: 12px;
   padding: 10px 10px;
-  background-color: #ffffff;
+  background-color: var(--event-list-color);
   box-shadow: 2px 2px 3px #00000057;
   overflow: hidden;
 }
@@ -667,7 +679,7 @@ textarea {
 }
 
 .loginText {
-  color: #043fc0;
+  color: var(--login-text);
   font-size: 48px;
   font-weight: 700px;
 }
@@ -701,7 +713,7 @@ textarea {
   margin: auto;
   margin-top: 100px;
   max-width: 600px;
-  background: #cee7ff;
+  background: var(--login-color);
   padding-bottom: 30px;
   box-shadow: 2px 2px 3px #00000057;
 }
@@ -799,6 +811,7 @@ textarea {
   min-height: 126px;
   font-weight: 700;
   font-size: 45px;
+  border-color: #548aff;
 }
 
 .profilePicture {
@@ -807,7 +820,199 @@ textarea {
   border-radius: 50%;
   object-fit: cover;
   display: block;
-  border: 1px solid #548aff;
+  border: 1px solid;
+  border-color: #548aff;
+}
+
+div {
+  color: var(--text-color);
+}
+
+/* Friend sidebar toggle button in homepage header */
+.homepageHeaderRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+
+.friendSidebarToggleBtn {
+    padding: 6px 12px;
+    border-radius: 18px;
+    background: #155dfc;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.friendSidebarToggleBtn:hover {
+    filter: brightness(1.05);
+}
+
+/* Friend sidebar overlay & drawer */
+.friendSidebarOverlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9998;
+    display: flex;
+    justify-content: flex-end;
+    transition: background 0.2s ease;
+}
+.friendSidebarOverlay.open {
+    pointer-events: auto;
+    background: rgba(0,0,0,0.18);
+}
+
+.friendSidebar {
+    width: 320px;
+    max-width: 90vw;
+    background: #ffffff;
+    height: 100vh;
+    box-shadow: -2px 0 16px rgba(0,0,0,0.15);
+    padding: 12px 14px;
+    box-sizing: border-box;
+    transform: translateX(100%);
+    transition: transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.friendSidebarOverlay.open .friendSidebar {
+    transform: translateX(0);
+}
+
+.friendSidebarHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+.friendSidebarHeader h3 {
+    margin: 0;
+    font-size: 18px;
+}
+.friendSidebarCloseBtn {
+    background: transparent;
+    border: none;
+    color: #444;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 4px;
+}
+
+/* Search row */
+.friendSidebarSearchRow {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+.friendSidebarSearchInput {
+    flex: 1;
+}
+
+/* Sections */
+.friendSidebarSection {
+    margin-top: 6px;
+}
+.friendSidebarSectionTitle {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 4px;
+}
+.friendSidebarList {
+    max-height: 160px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+.friendSidebarItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 4px;
+    border-radius: 8px;
+    transition: background 0.12s ease;
+}
+.friendSidebarItem:hover {
+    background: #f3f6ff;
+}
+
+.friendSidebarItemInfo {
+    flex: 1;
+    min-width: 0;
+}
+.friendSidebarName {
+    font-size: 14px;
+    font-weight: 500;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.friendSidebarUsername {
+    font-size: 12px;
+    color: #666;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.friendSidebarActions {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.friendSidebarActions button {
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 999px;
+}
+
+.friendSidebarEmpty {
+    font-size: 12px;
+    color: #777;
+    padding: 4px 2px 0;
+}
+
+.friendSidebarBadge {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: #fff5d9;
+    color: #8a5b00;
+}
+
+/* Status / error text */
+.friendSidebarStatus {
+    font-size: 12px;
+    padding: 4px 6px;
+    border-radius: 6px;
+    background: #e7f7ee;
+    color: #126437;
+}
+.friendSidebarError {
+    font-size: 12px;
+    padding: 4px 6px;
+    border-radius: 6px;
+    background: #ffe5e5;
+    color: #a82b2b;
+}
+
+/* Loading text */
+.friendSidebarLoading {
+    font-size: 13px;
+    padding: 6px 2px;
+}
+
+/* Reuse your existing avatar styles (nullPicture / profilePicture) */
+.friendSidebarItem .nullPicture,
+.friendSidebarItem .profilePicture {
+    flex-shrink: 0;
 }
 
 /* Friend sidebar toggle button in homepage header */

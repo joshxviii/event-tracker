@@ -58,7 +58,7 @@ export function SavedEventsPage() {
 
     const openEvent = (id) => navigate(`/event/${id}`);
 
-    if (loading) return <div style={{ padding: 24 }}><Loading/> Loading saved events...</div>;
+    if (loading) return <div style={{ padding: 24, color: 'var(--text-color)'}}><Loading/> Loading saved events...</div>;
 
     return (
         <div style={{ padding: 16 }}>
@@ -72,24 +72,24 @@ export function SavedEventsPage() {
             {user && (
                 <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
                     <div style={{ flex: 1, minWidth: 320 }}>
-                        <h3>Attending Events</h3>
+                        <h3 className='indent'>Attending Events</h3>
                         {rsvpedEvents.length > 0 ? (
                             rsvpedEvents.map(ev => (
                                 <EventWidget key={ev._id} event={ev} onClick={openEvent} onViewDetails={openEvent} />
                             ))
                         ) : (
-                            <div className="indent">You have not signed up to attend any events.</div>
+                            <div className="indent labelStyle" style={{color: 'var(--text-color)'}}>You have not signed up to attend any events.</div>
                         )}
                     </div>
 
                     <div style={{ flex: 1, minWidth: 320 }}>
-                        <h3>Favorited Events</h3>
+                        <h3 className='indent'>Favorited Events</h3>
                         {favoriteEvents.length > 0 ? (
                             favoriteEvents.map(ev => (
                                 <EventWidget key={ev._id} event={ev} onClick={openEvent} onViewDetails={openEvent} />
                             ))
                         ) : (
-                            <div className="indent">You have not favorited any events.</div>
+                            <div className="indent labelStyle" style={{color: 'var(--text-color)'}}>You have not favorited any events.</div>
                         )}
                     </div>
                 </div>

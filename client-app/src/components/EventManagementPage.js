@@ -44,15 +44,15 @@ export const EventManagementPage = ({ onEditEvent }) => {
         <div>
             <h2 className="indent blueColor">Event Management</h2>
 
-            {loading && <div className="indent"> <Loading/> Loading your events...</div>}
+            {loading && <div className="indent" style={{color: 'var(--text-color)'}}> <Loading/> Loading your events...</div>}
             {!loading && (
-                <div>
-                    {error && <div className="error">Could not load event data: {error}</div>}
+                <div style={{fontFamily:"sans-serif"}}>
+                    {error && <div className="error" style={{color: 'var(--text-color)'}}>Could not load event data: {error}</div>}
                     {!error && (
                         <div>
                             {myEvents.length > 0 ? (
                                 myEvents.map((e, i) => (
-                                    <EventManagementWidget
+                                    <EventManagementWidget                                    
                                         key={e._id || i}
                                         event={e}
                                         onEdit={onEditEvent}
@@ -60,7 +60,7 @@ export const EventManagementPage = ({ onEditEvent }) => {
                                     />
                                 ))
                             ) : (
-                                <div>You have not created any events.</div>
+                                <div style={{color: 'var(--text-color)'}}>You have not created any events.</div>
                             )}
                         </div>
                     )}

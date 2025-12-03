@@ -40,9 +40,9 @@ export function EventManagementWidget( {event, onEdit, onDelete} ) {
           
           <div style={{ flex: 1, overflow: 'hidden' }}>
             <h3 className="eventHeader">{event.title}</h3>
-            <p style={{ marginTop: 6, marginBottom: 6, color: '#555', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{event.description}</p>
+            <p style={{ marginTop: 6, marginBottom: 6, color: 'var(--text-color-2)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{event.description}</p>
 
-            <div style={{ display: 'flex', flexDirection:'column', gap: 12, fontSize: 13, color: '#666' }}>
+            <div style={{ display: 'flex', flexDirection:'column', gap: 12, fontSize: 13, color: 'var(--text-color-2)' }}>
               <div>Start: { event.startAt ? new Date(event.startAt).toLocaleString() : 'N/A' }</div>
               <div>End: { event.endAt ? new Date(event.endAt).toLocaleString() : 'N/A' }</div>
               <div>{ event.location?.address || '' }</div>
@@ -55,7 +55,7 @@ export function EventManagementWidget( {event, onEdit, onDelete} ) {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-end' }}>
             <div className="eventLabel" style={{ backgroundColor: 'var(--event-color-' + (event.category || 'other') + ')' }}>{event.category || 'other'}</div>
-            <div className="buttonGroup" style={{ flexDirection: 'column' }}>
+            <div className="buttonGroup" style={{ flexDirection: 'column'}}>
               <button onClick={() => onEdit ? onEdit(event._id) : null}><EditIcon/> Edit</button>
               <button onClick={handleDelete}><DeleteIcon/> Delete</button>
               <button onClick={() => navigate(`/event/${event._id}`)}>View Event</button>

@@ -30,12 +30,12 @@ export function EventWidget( {event, onClick, isSelected} ) {
         filter: isPast ? 'grayscale(0.7)' : undefined,
         pointerEvents: 'auto',
       }}
-      onClick={onClick}
+      onClick={() => onClick(event._id)}
     >
       <h1> {event.title} </h1>
-      <p style={{ color: '#5c5c5cff' }}> {event.description} </p>
+      <p style={{ color: 'var(--text-color-2)' }}> {event.description} </p>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, color: 'var(--text-color)'}}>
         <div style={{ display: 'flex', gap: 6 }}>
           <CalendarIcon />
           {event.startAt ? new Date(event.startAt).toLocaleDateString() : ''}

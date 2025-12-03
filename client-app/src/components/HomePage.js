@@ -321,15 +321,8 @@ export const HomePage = ({}) => {
                                             <EventWidget
                                                 key={event._id}
                                                 event={event}
-                                                delay={index * 0.05}
-                                                selected={selectedEventId === event._id}
-                                                setSelected={setSelectedEventId}
-                                                onFocusOnMap={() => {
-                                                    setSelectedEventId(event._id);
-                                                    if (event.location?.coords && mapViewport) {
-                                                        // optionally pan map here
-                                                    }
-                                                }}
+                                                onClick={handlePoiClick}
+                                                isSelected={selectedEventId === event._id}
                                             />
                                         ))
                                 ) : (

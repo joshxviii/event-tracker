@@ -142,15 +142,9 @@ export default function FriendSidebar({ isOpen, onClose }) {
         }
     };
 
-    const renderUserAvatar = (user, big = false) => {
-        return <UserProfileLink user={user} showName={false}>
-
-        </UserProfileLink>
-    };
-
     return (
-        <div className={`friendSidebarOverlay ${isOpen ? "open" : ""}`}>
-            <div className="friendSidebar">
+        <div onClick={onClose} className={`friendSidebarOverlay ${isOpen ? "open" : ""}`}>
+            <div onClick={(e) => e.stopPropagation()} className="friendSidebar">
                 <div className="friendSidebarHeader">
                     <h3>Friends</h3>
                     <button
@@ -190,15 +184,7 @@ export default function FriendSidebar({ isOpen, onClose }) {
                                 <div className="friendSidebarList">
                                     {searchResults.map((user) => (
                                         <div key={user._id} className="friendSidebarItem">
-                                            {renderUserAvatar(user)}
-                                            <div className="friendSidebarItemInfo">
-                                                <div className="friendSidebarName">
-                                                    {user.firstName} {user.lastName}
-                                                </div>
-                                                <div className="friendSidebarUsername">
-                                                    @{user.username}
-                                                </div>
-                                            </div>
+                                            <UserProfileLink user={user} style={{flex: 1}} />
                                             <button
                                                 type="button"
                                                 disabled={busyId === user._id}
@@ -225,15 +211,7 @@ export default function FriendSidebar({ isOpen, onClose }) {
                                 <div className="friendSidebarList">
                                     {incoming.map((user) => (
                                         <div key={user._id} className="friendSidebarItem">
-                                            {renderUserAvatar(user)}
-                                            <div className="friendSidebarItemInfo">
-                                                <div className="friendSidebarName">
-                                                    {user.firstName} {user.lastName}
-                                                </div>
-                                                <div className="friendSidebarUsername">
-                                                    @{user.username}
-                                                </div>
-                                            </div>
+                                            <UserProfileLink user={user} style={{flex: 1}} />
                                             <div className="friendSidebarActions">
                                                 <button
                                                     type="button"
@@ -269,15 +247,7 @@ export default function FriendSidebar({ isOpen, onClose }) {
                                 <div className="friendSidebarList">
                                     {outgoing.map((user) => (
                                         <div key={user._id} className="friendSidebarItem">
-                                            {renderUserAvatar(user)}
-                                            <div className="friendSidebarItemInfo">
-                                                <div className="friendSidebarName">
-                                                    {user.firstName} {user.lastName}
-                                                </div>
-                                                <div className="friendSidebarUsername">
-                                                    @{user.username}
-                                                </div>
-                                            </div>
+                                            <UserProfileLink user={user} style={{flex: 1}} />
                                             <span className="friendSidebarBadge">Pending</span>
                                         </div>
                                     ))}
@@ -296,15 +266,7 @@ export default function FriendSidebar({ isOpen, onClose }) {
                                 <div className="friendSidebarList">
                                     {friends.map((user) => (
                                         <div key={user._id} className="friendSidebarItem">
-                                            {renderUserAvatar(user)}
-                                            <div className="friendSidebarItemInfo">
-                                                <div className="friendSidebarName">
-                                                    {user.firstName} {user.lastName}
-                                                </div>
-                                                <div className="friendSidebarUsername">
-                                                    @{user.username}
-                                                </div>
-                                            </div>
+                                            <UserProfileLink user={user} style={{flex: 1}} />
                                             <button
                                                 type="button"
                                                 disabled={busyId === user._id}

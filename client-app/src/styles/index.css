@@ -160,7 +160,6 @@ button {
     min-height: 240px;
     margin: 0;
     padding: 12px;
-    color: var(--event-list-color);
   }
 
   .eventList {
@@ -219,7 +218,7 @@ button {
   border-radius: 12px;
   box-shadow: 2px 2px 3px #00000057;
   box-sizing: border-box;
-  color: var(--event-list-color);
+  background-color: var(--event-list-color);
 }
 
 .eventList {

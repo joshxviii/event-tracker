@@ -24,7 +24,7 @@ export function NavigationBar( { onLogout } ) {
         (async () => {
             setUser(await getCurrentUser());
         })();
-    }, []);
+    }, [isLoggedIn]);
 
     return (
         <nav id='nav-bar'>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Review from "./ui/review-panel";
-import { get_event, favorite_event, rsvp_event, unrsvp_event } from "../utils/requests/event";
+import { get_event, favorite_event, rsvp_event, unrsvp_event, delete_event } from "../utils/requests/event";
 import { delete_review, get_reviews } from "../utils/requests/review";
 import ReviewTextbox from "./ui/review-textbox";
 import {ReactComponent as HeartIcon} from '../assets/heart.svg';
@@ -11,6 +11,8 @@ import {ReactComponent as PoiIcon} from '../assets/poi.svg';
 import {ReactComponent as ClockIcon} from '../assets/time.svg';
 import {ReactComponent as CalendarIcon} from '../assets/calendar.svg';
 import {ReactComponent as PersonIcon} from '../assets/account.svg';
+import {ReactComponent as DeleteIcon} from '../assets/delete.svg';
+import {ReactComponent as SettingsIcon} from '../assets/edit.svg';
 import { getCurrentUser } from "../utils/requests/user";
 import { Loading } from "./ui/loading";
 import EventMapWidget from "./ui/event-map-widget";
@@ -30,6 +32,8 @@ export function EventPage( { eventId, onBack } ) {
     const [isFavorited, setIsFavorited] = useState(false);
     const [isRsvped, setIsRsvped] = useState(false);
     const [isRsvpToggling, setIsRsvpToggling] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [showAdminMenu, setShowAdminMenu] = useState(false);
 
     const notify = useNotifications();
 
@@ -242,6 +246,24 @@ export function EventPage( { eventId, onBack } ) {
         }
     };
 
+    const handleDeleteEvent = async () => {
+        if (!window.confirm(`Are you sure you want to delete "${event.title}"? This action cannot be undone.`)) {
+            return;
+        }
+
+        setIsDeleting(true);
+        try {
+            await delete_event(eventId);
+            notify.push({ type: 'success', message: 'Event deleted successfully' });
+            // Navigate back after a short delay to show the success message
+            setTimeout(() => onBack(), 500);
+        } catch (error) {
+            notify.push({ type: 'error', message: error.message || 'Failed to delete event' });
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
     if (event) return (
         <div className="eventPageContainer">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -336,6 +358,81 @@ export function EventPage( { eventId, onBack } ) {
                 </div>
             </div>
 
+            {/* Floating Admin Menu */}
+            {user?.role === 'admin' && (
+                <div style={{
+                    position: 'fixed',
+                    bottom: '40px',
+                    right: '40px',
+                    zIndex: 1000,
+                }}>
+                    <button
+                        onClick={() => setShowAdminMenu(!showAdminMenu)}
+                        title="Admin Menu"
+                        style={{
+                            width: '56px',
+                            height: '56px',
+                            borderRadius: '50%',
+                            backgroundColor: '#e84343',
+                            border: 'none',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: 'white',
+                            fontSize: '24px',
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                            transition: 'all 0.3s ease',
+                            transform: showAdminMenu ? 'rotate(45deg) scale(1.1)' : 'rotate(0deg) scale(1)',
+                        }}
+                    >
+                        <SettingsIcon style={{ width: '24px', height: '24px' }} />
+                    </button>
+
+                    {showAdminMenu && (
+                        <div style={{
+                            position: 'absolute',
+                            bottom: '70px',
+                            right: '0',
+                            backgroundColor: 'var(--background-color)',
+                            border: '1px solid var(--border-color)',
+                            borderRadius: '8px',
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                            minWidth: '180px',
+                            overflow: 'hidden',
+                        }}>
+                            <button
+                                onClick={() => {
+                                    setShowAdminMenu(false);
+                                    handleDeleteEvent();
+                                }}
+                                disabled={isDeleting}
+                                style={{
+                                    width: '100%',
+                                    padding: '12px 16px',
+                                    backgroundColor: 'transparent',
+                                    border: 'none',
+                                    textAlign: 'left',
+                                    cursor: isDeleting ? 'not-allowed' : 'pointer',
+                                    color: '#e84343',
+                                    fontSize: '14px',
+                                    fontWeight: '500',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    transition: 'background-color 0.2s ease',
+                                    opacity: isDeleting ? 0.6 : 1,
+                                }}
+                                onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--hover-background-color)'}
+                                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                            >
+                                <DeleteIcon style={{ width: '16px', height: '16px' }} />
+                                Delete Event
+                            </button>
+                        </div>
+                    )}
+                </div>
+            )}
 
             <div className="reviewContainer container" style={{ marginTop: 20 }}>
                 <h3 className="indent">Reviews</h3>

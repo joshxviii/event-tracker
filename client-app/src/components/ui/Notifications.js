@@ -40,7 +40,7 @@ function NotificationPanel({ notifications, onDismiss }) {
     <div className="notificationRoot" aria-live="polite">
       {notifications.map((n) => (
         <div key={n.id} className={`notification ${n.type} show`}>
-          <div className="notificationMessage">{n.message}</div>
+          <div className="notificationMessage" style={{color: "#fff"}}>{n.message}</div>
           <button className="notificationClose" onClick={() => onDismiss(n.id)}>✕</button>
         </div>
       ))}

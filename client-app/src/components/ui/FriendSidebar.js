@@ -7,238 +7,281 @@ import {
     acceptFriendRequest,
     rejectFriendRequest,
     removeFriend,
-} from "../../utils/requests/friends";
+} from "../../utils/requests/friends.js";
+import {UserProfileLink} from "./user-profile-link";
 
-const FriendSidebar = () => {
+export default function FriendSidebar({ isOpen, onClose }) {
     const [friends, setFriends] = useState([]);
     const [incoming, setIncoming] = useState([]);
     const [outgoing, setOutgoing] = useState([]);
-    const [searchText, setSearchText] = useState("");
+    const [searchTerm, setSearchTerm] = useState("");
     const [searchResults, setSearchResults] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loadingSearch, setLoadingSearch] = useState(false);
+    const [initialLoading, setInitialLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [statusMsg, setStatusMsg] = useState(null);
+    const [busyId, setBusyId] = useState(null);
 
-    async function refreshAll() {
+    const showStatus = (msg) => {
+        setStatusMsg(msg);
+        setTimeout(() => setStatusMsg(null), 2500);
+    };
+
+    const loadFriends = async () => {
         try {
-            setLoading(true);
-            setError(null);
-
-            const [friendsData, requestsData] = await Promise.all([
-                getFriends(),
-                getFriendRequests(),
-            ]);
-
-            setFriends(friendsData || []);
-            setIncoming(requestsData?.incoming || []);
-            setOutgoing(requestsData?.outgoing || []);
+            const data = await getFriends();
+            setFriends(Array.isArray(data) ? data : []);
         } catch (err) {
-            console.error('Friend search error:', err);
-            // cleaner message instead of "GET /api/.. failed"
-            setError("Could not load friend data.");
-        } finally {
-            setLoading(false);
+            console.error(err);
+            setError(err.message || "Failed to load friends");
         }
-    }
+    };
 
+    const loadRequests = async () => {
+        try {
+            const data = await getFriendRequests();
+            setIncoming(data.incoming || []);
+            setOutgoing(data.outgoing || []);
+        } catch (err) {
+            console.error(err);
+            setError(err.message || "Failed to load friend requests");
+        }
+    };
+
+    // Load data when sidebar is opened
     useEffect(() => {
-        refreshAll();
-    }, []);
+        if (!isOpen) return;
+        setInitialLoading(true);
+        setError(null);
+        (async () => {
+            try {
+                await Promise.all([loadFriends(), loadRequests()]);
+            } finally {
+                setInitialLoading(false);
+            }
+        })();
+    }, [isOpen]);
 
-    async function handleSearch(e) {
+    const handleSearch = async (e) => {
         e.preventDefault();
-        if (!searchText.trim()) {
+        const q = searchTerm.trim();
+        if (!q) {
             setSearchResults([]);
             return;
         }
+        setLoadingSearch(true);
+        setError(null);
         try {
-            const results = await searchUsers(searchText.trim());
-            setSearchResults(results || []);
-            setError(null);
+            const data = await searchUsers(q);
+            setSearchResults(Array.isArray(data) ? data : []);
         } catch (err) {
-            setError("Search failed. Please try again.");
+            console.error(err);
+            setError(err.message || "Search failed");
+        } finally {
+            setLoadingSearch(false);
         }
-    }
+    };
 
-    async function handleSendRequest(userId) {
+    const handleSendRequest = async (userId) => {
+        setBusyId(userId);
+        setError(null);
         try {
             await sendFriendRequest(userId);
-            await refreshAll();
+            showStatus("Friend request sent");
+            await loadRequests();
         } catch (err) {
-            setError("Could not send request.");
-        }
-    }
-
-    async function handleAccept(userId) {
-        try {
-            await acceptFriendRequest(userId);
-        } catch (err) {
-            setError("Could not accept request.");
+            console.error(err);
+            setError(err.message || "Failed to send friend request");
         } finally {
-            await refreshAll();
+            setBusyId(null);
         }
-    }
+    };
 
-    async function handleReject(userId) {
+    const handleAccept = async (fromId) => {
+        setBusyId(fromId);
+        setError(null);
         try {
-            await rejectFriendRequest(userId);
+            await acceptFriendRequest(fromId);
+            showStatus("Friend request accepted");
+            await Promise.all([loadFriends(), loadRequests()]);
         } catch (err) {
-            setError("Could not reject request.");
+            console.error(err);
+            setError(err.message || "Failed to accept friend request");
         } finally {
-            await refreshAll();
+            setBusyId(null);
         }
-    }
+    };
 
-    async function handleRemoveFriend(userId) {
+    const handleReject = async (fromId) => {
+        setBusyId(fromId);
+        setError(null);
         try {
-            await removeFriend(userId);
+            await rejectFriendRequest(fromId);
+            showStatus("Friend request rejected");
+            await loadRequests();
         } catch (err) {
-            setError("Could not remove friend.");
+            console.error(err);
+            setError(err.message || "Failed to reject friend request");
         } finally {
-            await refreshAll();
+            setBusyId(null);
         }
-    }
+    };
 
-    function renderUserLine(user, actions) {
-        const name =
-            `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || user.username;
-        return (
-            <div key={user._id} className="friend-row">
-                <div className="friend-info">
-                    {user.profilePicture && (
-                        <img
-                            src={user.profilePicture}
-                            alt={name}
-                            className="profilePicture"
-                        />
-                    )}
-                    <div className="friend-text">
-                        <div className="friend-name">{name}</div>
-                        <div className="friend-username">@{user.username}</div>
-                    </div>
-                </div>
-                <div className="friend-actions">{actions}</div>
-            </div>
-        );
-    }
+    const handleRemoveFriend = async (friendId) => {
+        setBusyId(friendId);
+        setError(null);
+        try {
+            await removeFriend(friendId);
+            showStatus("Friend removed");
+            await loadFriends();
+        } catch (err) {
+            console.error(err);
+            setError(err.message || "Failed to remove friend");
+        } finally {
+            setBusyId(null);
+        }
+    };
 
     return (
-        // eventList + container to match your other cards
-        <aside className="friend-sidebar eventList">
-            <div className="container">
-                <h2 className="friend-sidebar-title">Friends</h2>
+        <div onClick={onClose} className={`friendSidebarOverlay ${isOpen ? "open" : ""}`}>
+            <div onClick={(e) => e.stopPropagation()} className="friendSidebar">
+                <div className="friendSidebarHeader">
+                    <h3>Friends</h3>
+                    <button
+                        className="friendSidebarCloseBtn"
+                        type="button"
+                        onClick={onClose}
+                    >
+                        ×
+                    </button>
+                </div>
 
-                {error && <div className="friend-error">{error}</div>}
-                {loading && <div className="friend-loading">Loading friend data...</div>}
+                {statusMsg && <div className="friendSidebarStatus">{statusMsg}</div>}
+                {error && <div className="friendSidebarError">{error}</div>}
 
-                {/* Search / Add friends */}
-                <section className="friend-section">
-                    <h3>Find people</h3>
-                    <form onSubmit={handleSearch} className="friend-search-form">
-                        <input
-                            type="text"
-                            placeholder="Search by username"
-                            value={searchText}
-                            onChange={(e) => setSearchText(e.target.value)}
-                            className="friend-search-input"
-                        />
-                        <button type="submit" className="friend-btn small">
-                            Search
-                        </button>
-                    </form>
+                {initialLoading ? (
+                    <div className="friendSidebarLoading">Loading friends…</div>
+                ) : (
+                    <>
+                        {/* Search */}
+                        <form className="friendSidebarSearchRow" onSubmit={handleSearch}>
+                            <input
+                                className="input friendSidebarSearchInput"
+                                type="text"
+                                placeholder="Search users by username…"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                            <button type="submit" disabled={loadingSearch}>
+                                {loadingSearch ? "…" : "Search"}
+                            </button>
+                        </form>
 
-                    {searchResults.length > 0 && (
-                        <div className="friend-list">
-                            {searchResults.map((user) =>
-                                renderUserLine(
-                                    user,
-                                    <button
-                                        className="friend-btn small"
-                                        onClick={() => handleSendRequest(user._id)}
-                                    >
-                                        Add
-                                    </button>
-                                )
+                        {/* Search Results */}
+                        {searchResults.length > 0 && (
+                            <div className="friendSidebarSection">
+                                <div className="friendSidebarSectionTitle">Search Results</div>
+                                <div className="friendSidebarList">
+                                    {searchResults.map((user) => (
+                                        <div key={user._id} className="friendSidebarItem">
+                                            <UserProfileLink user={user} style={{flex: 1}} />
+                                            <button
+                                                type="button"
+                                                disabled={busyId === user._id}
+                                                onClick={() => handleSendRequest(user._id)}
+                                            >
+                                                {busyId === user._id ? "Sending…" : "Add"}
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Incoming Requests */}
+                        <div className="friendSidebarSection">
+                            <div className="friendSidebarSectionTitle">
+                                Incoming Requests
+                            </div>
+                            {incoming.length === 0 ? (
+                                <div className="friendSidebarEmpty">
+                                    No incoming requests.
+                                </div>
+                            ) : (
+                                <div className="friendSidebarList">
+                                    {incoming.map((user) => (
+                                        <div key={user._id} className="friendSidebarItem">
+                                            <UserProfileLink user={user} style={{flex: 1}} />
+                                            <div className="friendSidebarActions">
+                                                <button
+                                                    type="button"
+                                                    disabled={busyId === user._id}
+                                                    onClick={() => handleAccept(user._id)}
+                                                >
+                                                    Accept
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    disabled={busyId === user._id}
+                                                    onClick={() => handleReject(user._id)}
+                                                >
+                                                    Reject
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             )}
                         </div>
-                    )}
-                </section>
 
-                {/* Incoming + outgoing requests */}
-                <section className="friend-section">
-                    <h3>Requests</h3>
-                    {incoming.length === 0 && outgoing.length === 0 && (
-                        <div className="friend-empty">No pending requests</div>
-                    )}
-
-                    {incoming.length > 0 && (
-                        <>
-                            <div className="friend-subtitle">Incoming</div>
-                            <div className="friend-list">
-                                {incoming.map((user) =>
-                                    renderUserLine(
-                                        user,
-                                        <>
-                                            <button
-                                                className="friend-btn small"
-                                                onClick={() => handleAccept(user._id)}
-                                            >
-                                                Accept
-                                            </button>
-                                            <button
-                                                className="friend-btn small secondary"
-                                                onClick={() => handleReject(user._id)}
-                                            >
-                                                Reject
-                                            </button>
-                                        </>
-                                    )
-                                )}
+                        {/* Outgoing Requests */}
+                        <div className="friendSidebarSection">
+                            <div className="friendSidebarSectionTitle">
+                                Outgoing Requests
                             </div>
-                        </>
-                    )}
-
-                    {outgoing.length > 0 && (
-                        <>
-                            <div className="friend-subtitle">Outgoing</div>
-                            <div className="friend-list">
-                                {outgoing.map((user) =>
-                                    renderUserLine(
-                                        user,
-                                        <span className="friend-status">Pending</span>
-                                    )
-                                )}
-                            </div>
-                        </>
-                    )}
-                </section>
-
-                {/* Friend list */}
-                <section className="friend-section">
-                    <h3>Your friends</h3>
-                    {friends.length === 0 && (
-                        <div className="friend-empty">
-                            You don&apos;t have any friends yet 🥲
-                        </div>
-                    )}
-                    {friends.length > 0 && (
-                        <div className="friend-list">
-                            {friends.map((user) =>
-                                renderUserLine(
-                                    user,
-                                    <button
-                                        className="friend-btn small secondary"
-                                        onClick={() => handleRemoveFriend(user._id)}
-                                    >
-                                        Remove
-                                    </button>
-                                )
+                            {outgoing.length === 0 ? (
+                                <div className="friendSidebarEmpty">
+                                    No outgoing requests.
+                                </div>
+                            ) : (
+                                <div className="friendSidebarList">
+                                    {outgoing.map((user) => (
+                                        <div key={user._id} className="friendSidebarItem">
+                                            <UserProfileLink user={user} style={{flex: 1}} />
+                                            <span className="friendSidebarBadge">Pending</span>
+                                        </div>
+                                    ))}
+                                </div>
                             )}
                         </div>
-                    )}
-                </section>
+
+                        {/* Friend List */}
+                        <div className="friendSidebarSection">
+                            <div className="friendSidebarSectionTitle">Your Friends</div>
+                            {friends.length === 0 ? (
+                                <div className="friendSidebarEmpty">
+                                    You don't have any friends added yet.
+                                </div>
+                            ) : (
+                                <div className="friendSidebarList">
+                                    {friends.map((user) => (
+                                        <div key={user._id} className="friendSidebarItem">
+                                            <UserProfileLink user={user} style={{flex: 1}} />
+                                            <button
+                                                type="button"
+                                                disabled={busyId === user._id}
+                                                onClick={() => handleRemoveFriend(user._id)}
+                                            >
+                                                {busyId === user._id ? "Removing…" : "Remove"}
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </>
+                )}
             </div>
-        </aside>
+        </div>
     );
-};
-
-export default FriendSidebar;
+}

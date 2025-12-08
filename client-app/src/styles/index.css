@@ -160,7 +160,6 @@ button {
     min-height: 240px;
     margin: 0;
     padding: 12px;
-    color: var(--event-list-color);
   }
 
   .eventList {
@@ -219,7 +218,7 @@ button {
   border-radius: 12px;
   box-shadow: 2px 2px 3px #00000057;
   box-sizing: border-box;
-  color: var(--event-list-color);
+  background-color: var(--event-list-color);
 }
 
 .eventList {
@@ -562,6 +561,7 @@ svg {
 
 .input, textarea, select {
   width: 100%;
+  color: var(--text-color);
   padding: 8px 0px;
   text-indent: 8px;
   text-align: left;
@@ -826,4 +826,200 @@ textarea {
 
 div {
   color: var(--text-color);
+}
+
+.calendarContainer td, .calendarContainer th, .calendarContainer .fc-theme-standard table  {
+  color: var(--text-color);
+  border: 1px solid var(--login-color);
+}
+
+.calendarContainer .fc-daygrid-day.fc-day-today {
+  background-color: var(--login-color);
+}
+
+/* Friend sidebar toggle button in homepage header */
+.homepageHeaderRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+
+.friendSidebarToggleBtn {
+    padding: 6px 12px;
+    border-radius: 18px;
+    background: #155dfc;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.friendSidebarToggleBtn:hover {
+    filter: brightness(1.05);
+}
+
+/* Friend sidebar overlay & drawer */
+.friendSidebarOverlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9998;
+    display: flex;
+    justify-content: flex-end;
+    transition: background 0.2s ease;
+}
+.friendSidebarOverlay.open {
+    pointer-events: auto;
+    background: rgba(0,0,0,0.18);
+}
+
+.friendSidebar {
+    width: 320px;
+    max-width: 90vw;
+    background: var(--background-color);
+    height: 100vh;
+    box-shadow: -2px 0 16px rgba(0,0,0,0.15);
+    padding: 12px 14px;
+    box-sizing: border-box;
+    transform: translateX(100%);
+    transition: transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.friendSidebarOverlay.open .friendSidebar {
+    transform: translateX(0);
+}
+
+.friendSidebarHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+.friendSidebarHeader h3 {
+    margin: 0;
+    font-size: 18px;
+}
+.friendSidebarCloseBtn {
+    background: transparent;
+    border: none;
+    color: var(--text-color-2);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 4px;
+}
+
+/* Search row */
+.friendSidebarSearchRow {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+.friendSidebarSearchInput {
+    flex: 1;
+}
+
+/* Sections */
+.friendSidebarSection {
+    margin-top: 6px;
+}
+.friendSidebarSectionTitle {
+    color: var(--text-color-2);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+.friendSidebarList {
+    max-height: 160px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+.friendSidebarItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 4px;
+    border-radius: 8px;
+    transition: background 0.12s ease;
+}
+.friendSidebarItem:hover {
+    background: var(--login-color);
+}
+
+.friendSidebarItemInfo {
+    flex: 1;
+    min-width: 0;
+}
+.friendSidebarName {
+    font-size: 14px;
+    font-weight: 500;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.friendSidebarUsername {
+    font-size: 12px;
+    color: #666;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.friendSidebarActions {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.friendSidebarActions button {
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 999px;
+}
+
+.friendSidebarEmpty {
+    font-size: 12px;
+    color: #777;
+    padding: 4px 2px 0;
+}
+
+.friendSidebarBadge {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: #fff5d9;
+    color: #8a5b00;
+}
+
+/* Status / error text */
+.friendSidebarStatus {
+    font-size: 12px;
+    padding: 4px 6px;
+    border-radius: 6px;
+    background: #e7f7ee;
+    color: #126437;
+}
+.friendSidebarError {
+    font-size: 12px;
+    padding: 4px 6px;
+    border-radius: 6px;
+    background: #ffe5e5;
+    color: #a82b2b;
+}
+
+/* Loading text */
+.friendSidebarLoading {
+    font-size: 13px;
+    padding: 6px 2px;
+}
+
+/* Reuse your existing avatar styles (nullPicture / profilePicture) */
+.friendSidebarItem .nullPicture,
+.friendSidebarItem .profilePicture {
+    flex-shrink: 0;
 }

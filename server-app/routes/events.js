@@ -105,10 +105,14 @@ router.put('/:id', requireAuth, async (req, res) => {
 router.delete('/:id', requireAuth, async (req, res) => {
   try {
     await dbConnect();
-    const event = await Event.findOneAndDelete({ 
-      _id: req.params.id, 
-      organizer: req.user.userId 
-    });
+    
+    // Allow admins to delete any event, or users to delete only their own events
+    let query = { _id: req.params.id };
+    if (req.user.role !== 'admin') {
+      query.organizer = req.user.userId;
+    }
+    
+    const event = await Event.findOneAndDelete(query);
     
     if (!event) {
       return res.status(404).json({ message: 'Event not found or unauthorized. DELETE' });

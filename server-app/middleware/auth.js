@@ -25,13 +25,13 @@ function parseToken(req, res, next) {
       // still attempt decode without verification
       const payload = jwt.decode(token);
       const userId = payload?.userId || payload?.id || payload?.sub;
-      req.user = userId ? { userId, payload } : null;
+      req.user = userId ? { userId, role: payload?.role || 'user', payload } : null;
       return next();
     }
 
     const payload = jwt.verify(token, secret);
     const userId = payload?.userId || payload?.id || payload?.sub;
-    req.user = userId ? { userId, payload } : null;
+    req.user = userId ? { userId, role: payload?.role || 'user', payload } : null;
   } catch (err) {
     // silent fail: don't block, leave req.user null
     console.warn('Failed to verify JWT token:', err.message);

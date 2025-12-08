@@ -7,6 +7,7 @@ import CalendarPanel from "./ui/CalendarPanel";
 import { useMap } from "@vis.gl/react-google-maps";
 import { Loading } from "./ui/loading";
 import FriendSidebar from "./ui/FriendSidebar";
+import {ReactComponent as FriendsIcon} from '../assets/friends.svg';
 
 export const HomePage = ({}) => {
     const [events, setEvents] = useState(null);
@@ -16,13 +17,14 @@ export const HomePage = ({}) => {
     const [mapViewport, setMapViewport] = useState(null);
     const [searchText, setSearchText] = useState("");
     const [activeFilters, setActiveFilters] = useState(new Set());
-    
+
     const [dateFilter, setDateFilter] = useState(""); // YYYY-MM-DD
     const [timeStartFilter, setTimeStartFilter] = useState(""); // HH:MM
     const [timeEndFilter, setTimeEndFilter] = useState(""); // HH:MM
-    
+
     const [displayCount, setDisplayCount] = useState(20);
     const [showPastEvents, setShowPastEvents] = useState(false);
+    const [showFriends, setShowFriends] = useState(false);
     const listRef = useRef(null);
     const PAGE_SIZE = 5;
 
@@ -34,6 +36,7 @@ export const HomePage = ({}) => {
                 setEvents(await get_events());
             } catch (e) {
                 if (!mounted) return;
+                console.log(e);
                 setError(e.message || String(e));
                 setEvents([]);
             } finally {
@@ -69,30 +72,33 @@ export const HomePage = ({}) => {
 
         const parseTimeToMin = (t) => {
             if (!t) return null;
-            const parts = String(t).split(":");
-            if (parts.length < 2) return null;
-            const hh = Number(parts[0]);
-            const mm = Number(parts[1]);
-            if (Number.isNaN(hh) || Number.isNaN(mm)) return null;
+            const [hh, mm] = t.split(":").map(Number);
+            if (isNaN(hh) || isNaN(mm)) return null;
             return hh * 60 + mm;
         };
 
         const fStartMin = parseTimeToMin(timeStartFilter);
         const fEndMin = parseTimeToMin(timeEndFilter);
 
-        const toLocalYMD = (d) => {
-            if (!d) return null;
-            const dt = new Date(d);
-            if (isNaN(dt.getTime())) return null;
-            const y = dt.getFullYear();
-            const m = String(dt.getMonth() + 1).padStart(2, '0');
-            const day = String(dt.getDate()).padStart(2, '0');
-            return `${y}-${m}-${day}`;
+        const toLocalYMD = (dateLike) => {
+            const d = new Date(dateLike);
+            if (isNaN(d.getTime())) return "";
+            const yyyy = d.getFullYear();
+            const mm = String(d.getMonth() + 1).padStart(2, "0");
+            const dd = String(d.getDate()).padStart(2, "0");
+            return `${yyyy}-${mm}-${dd}`;
         };
 
         const now = new Date();
-        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
         return events.filter((e) => {
+            // Past / upcoming filter
+            const start = new Date(e.startAt || e.startTime || e.time);
+            if (isNaN(start.getTime())) return false;
+
+            if (!showPastEvents && start < now) return false;
+            if (showPastEvents && start >= now) return false;
+
             // text filter
             if (text) {
                 const keyWords = `${e.title} ${e.description} ${e.category} ${e.location?.address || ''}`.toLowerCase();
@@ -119,61 +125,27 @@ export const HomePage = ({}) => {
                 const evEndMin = evEnd.getHours() * 60 + evEnd.getMinutes();
                 const rangeStart = fStartMin !== null ? fStartMin : 0;
                 const rangeEnd = fEndMin !== null ? fEndMin : 24 * 60;
-                // overlap check
-                if (evEndMin <= rangeStart || evStartMin >= rangeEnd) return false;
-            }
 
-            // Upcoming/past event filter
-            const evEnd = new Date(e.endAt);
-            if (isNaN(evEnd.getTime())) return false;
-            if (!showPastEvents && evEnd < today) {
-                return false;
-            }
-
-            // Distance filter
-            if (mapViewport && mapViewport.center) {
-                const lat1 = Number(mapViewport.center.lat);
-                const lng1 = Number(mapViewport.center.lng);
-                const lat2 = Number(e.location?.coordinates?.lat);
-                const lng2 = Number(e.location?.coordinates?.lng);
-                if ([lat2, lng2].some((v) => Number.isNaN(v))) return false;
-
-                const toRad = (deg) => (deg * Math.PI) / 180;
-                const R = 6371000;
-                const dLat = toRad(lat2 - lat1);
-                const dLon = toRad(lng2 - lng1);
-                const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2);
-                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-                const dist = R * c;
-
-                const zoom = mapViewport.zoom || 11;
-                const approxRadiusMeters = (20000 / Math.pow(2, zoom)) * 1000;
-                if (dist > approxRadiusMeters) return false;
+                const overlaps =
+                    evStartMin <= rangeEnd && evEndMin >= rangeStart;
+                if (!overlaps) return false;
             }
 
             return true;
         });
     }, [events, searchText, activeFilters, dateFilter, timeStartFilter, timeEndFilter, showPastEvents]);
 
-    // Reset display count when filters or search change
-    useEffect(() => {
-        setDisplayCount(PAGE_SIZE);
-        if (listRef.current) listRef.current.scrollTop = 0;
-    }, [searchText, activeFilters, dateFilter, timeStartFilter, timeEndFilter, showPastEvents]);
-
-    const displayedEvents = useMemo(
-        () => filteredEvents.slice(0, displayCount),
-        [filteredEvents, displayCount]
-    );
-
     const handleScroll = (e) => {
-        const node = e.target;
-        if (!node) return;
-        if (node.scrollTop + node.clientHeight >= node.scrollHeight - 200) {
-            // load more
+        const el = e.currentTarget;
+        if (!el) return;
+
+        const { scrollTop, scrollHeight, clientHeight } = el;
+        const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
+
+        if (distanceFromBottom < 100) {
             setDisplayCount((prev) => {
                 if (prev >= filteredEvents.length) return prev;
-                return Math.min(prev + PAGE_SIZE, filteredEvents.length);
+                return Math.min(filteredEvents.length, prev + PAGE_SIZE);
             });
         }
     };
@@ -191,10 +163,22 @@ export const HomePage = ({}) => {
         >
             {/* LEFT: all existing home content (map, calendar, event list) */}
             <div className="homepage-main" style={{ flex: 3 }}>
-                <h2 className="indent blueColor">Discover Events Near You</h2>
-                <label className="indent labelStyle">
-                    Find and join community events happening in your neighborhood
-                </label>
+                <div className="homepageHeaderRow">
+                    <div>
+                        <h2 className="indent blueColor">Discover Events Near You</h2>
+                        <label className="indent labelStyle">
+                            Find and join community events happening in your neighborhood
+                        </label>
+                    </div>
+                    <button
+                        type="button"
+                        className="friendSidebarToggleBtn"
+                        onClick={() => setShowFriends(true)}
+                    >
+                        <FriendsIcon/>
+                        Friends
+                    </button>
+                </div>
 
                 <div className="mainContent">
                     <div
@@ -259,7 +243,7 @@ export const HomePage = ({}) => {
                                         setTimeEndFilter("");
                                     }}
                                 >
-                                    Clear Filters
+                                    Clear
                                 </button>
                             </div>
 
@@ -296,7 +280,15 @@ export const HomePage = ({}) => {
                                         />
                                     </label>
                                 </label>
+                            </div>
+
+                            <div className="eventListHeader">
+                                <h3>
+                                    {showPastEvents ? "Past Events" : "Upcoming Events"} (
+                                    {filteredEvents.length})
+                                </h3>
                                 <button
+                                    className="togglePastEventsBtn"
                                     onClick={() => setShowPastEvents((prev) => !prev)}
                                     style={{
                                         marginLeft: "auto",
@@ -323,20 +315,26 @@ export const HomePage = ({}) => {
                                 )}
 
                                 {!loading ? (
-                                    displayedEvents.length > 0 ? (
-                                        displayedEvents.map((e, i) => (
+                                    filteredEvents
+                                        .slice(0, displayCount)
+                                        .map((event, index) => (
                                             <EventWidget
-                                                key={e._id || i}
-                                                event={e}
+                                                key={event._id}
+                                                event={event}
                                                 onClick={handlePoiClick}
-                                                isSelected={selectedEventId === e._id}
+                                                isSelected={selectedEventId === event._id}
                                             />
                                         ))
-                                    ) : (
-                                        <p style={{ textAlign: "center" }}>No Results Found.</p>
-                                    )
                                 ) : (
-                                    <Loading />
+                                    <div className="loadingEvents">
+                                        <Loading info="Loading events..." />
+                                    </div>
+                                )}
+
+                                {!loading && filteredEvents.length === 0 && (
+                                    <div className="emptyEvents">
+                                        No events found matching your search and filters.
+                                    </div>
                                 )}
 
                                 {displayCount < filteredEvents.length && (
@@ -350,6 +348,10 @@ export const HomePage = ({}) => {
 
                 </div>
             </div>
+            <FriendSidebar
+                isOpen={showFriends}
+                onClose={() => setShowFriends(false)}
+            />
         </div>
     );
 };

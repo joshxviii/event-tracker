@@ -24,7 +24,7 @@ export function NavigationBar( { onLogout } ) {
         (async () => {
             setUser(await getCurrentUser());
         })();
-    }, []);
+    }, [isLoggedIn]);
 
     return (
         <nav id='nav-bar'>
@@ -41,33 +41,33 @@ export function NavigationBar( { onLogout } ) {
                 </button>
 
                 <div className={`navMenu ${menuOpen ? 'open' : ''}`}>
-                    {isLoggedIn && 
-                    (<div className="buttonGroup">
-                        <button onClick={() => { setMenuOpen(false); navigate('/home'); }}>
-                            <HomeIcon />
-                            Home</button>
-                        <button onClick={() => { setMenuOpen(false); navigate('/account'); }}>
-                            <AccountIcon />
-                            Account</button>
-                        <button onClick={() => { setMenuOpen(false); navigate('/event-creation'); }}>
-                            <CreateIcon />
-                            Create New Event</button>
-                        <button onClick={() => { setMenuOpen(false); navigate('/event-management'); }}>
-                            <EditIcon />
-                            Manage My Events</button>
-                        <button onClick={() => { setMenuOpen(false); navigate('/event-favorites'); }}>
-                            <HeartIcon />
-                            View Saved Events</button>
-                    </div>)}
+                    {isLoggedIn &&
+                        (<div className="buttonGroup">
+                            <button onClick={() => { setMenuOpen(false); navigate('/home'); }}>
+                                <HomeIcon />
+                                Home</button>
+                            <button onClick={() => { setMenuOpen(false); navigate('/account'); }}>
+                                <AccountIcon />
+                                Account</button>
+                            <button onClick={() => { setMenuOpen(false); navigate('/event-creation'); }}>
+                                <CreateIcon />
+                                Create New Event</button>
+                            <button onClick={() => { setMenuOpen(false); navigate('/event-management'); }}>
+                                <EditIcon />
+                                Manage My Events</button>
+                            <button onClick={() => { setMenuOpen(false); navigate('/event-favorites'); }}>
+                                <HeartIcon />
+                                View Saved Events</button>
+                        </div>)}
 
-                    {!isLoggedIn && 
-                    (<div className="buttonGroup">
-                        <button onClick={() => { setMenuOpen(false); navigate('/home'); }}>
-                            <HomeIcon />
-                            Home
-                        </button>
-                    </div>)}
-                    
+                    {!isLoggedIn &&
+                        (<div className="buttonGroup">
+                            <button onClick={() => { setMenuOpen(false); navigate('/home'); }}>
+                                <HomeIcon />
+                                Home
+                            </button>
+                        </div>)}
+
                 </div>
 
 

@@ -37,7 +37,20 @@ export function LoginPage({ onLogin }) {
 			setError(error.message);
             notify.push({ type: 'error', message: error.message || 'Login failed' });
 		}
+
+		clearFields();
 	};
+
+const clearFields = () => {
+		setFirstName("");
+		setLastName("");
+		setUsername("");
+		setEmail("");
+		setPassword("");
+		setEmailOrUsername("");
+		setError(null);
+	};
+
 
 	const handleSignup = async (e) => {
 		e.preventDefault();
@@ -159,7 +172,7 @@ export function LoginPage({ onLogin }) {
 					</form>
 
 					<p style={{color: 'var(--text-color)'}}>Already have an account? 
-						<a style={{cursor: "pointer", color: "var(--login-text)"}} onClick={ () => setIsSignUp(false)}> Log In</a></p>
+						<a style={{cursor: "pointer", color: "var(--login-text)"}} onClick={ () => {setIsSignUp(false); clearFields();}}> Log In</a></p>
 
 				</div>
 			) : (
@@ -210,7 +223,7 @@ export function LoginPage({ onLogin }) {
 					</form>
 
 					<p style={{color: 'var(--text-color)'}}>Don't have an account? 
-						<a style={{cursor: "pointer", color: "var(--login-text)"}} onClick={ () => setIsSignUp(true)}> Create an account</a></p>
+						<a style={{cursor: "pointer", color: "var(--login-text)"}} onClick={ () => {setIsSignUp(true); clearFields();}}> Create an account</a></p>
 
 				</div>
 			)}

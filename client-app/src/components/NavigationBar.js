@@ -8,6 +8,7 @@ import {ReactComponent as EditIcon} from '../assets/edit.svg';
 import {ReactComponent as CreateIcon} from '../assets/add.svg';
 import {ReactComponent as DarkModeIcon} from '../assets/dark-mode.svg';
 import {ReactComponent as LightModeIcon} from '../assets/light-mode.svg';
+import {ReactComponent as GoLocalIcon} from '../assets/go-local.svg';
 import { getCurrentUser } from "../utils/requests/user";
 import useDarkMode from "./ui/useDarkMode";
 
@@ -29,7 +30,11 @@ export function NavigationBar( { onLogout } ) {
     return (
         <nav id='nav-bar'>
             <div style={{ display: 'flex', padding: '4px 8px', alignItems: 'center', width: '100%', gap: 8 }}>
-                <h3 id="navTitle" style={{cursor: 'pointer'}} onClick={() => {setMenuOpen(false); navigate('/home');}} > Event Tracker </h3>
+                
+                <h3 id="navTitle" onClick={() => {setMenuOpen(false); navigate('/home');}} style={{cursor: 'pointer', display: 'flex', gap: 8, fontSize: 28, marginBlock: 8, marginLeft: 0, marginRight: 8}} >
+                    <GoLocalIcon />
+                    GoLocal
+                </h3>
 
                 <button
                     className="hamburger"
@@ -85,16 +90,19 @@ export function NavigationBar( { onLogout } ) {
 
                         {isLoggedIn ? (
                             <button
-                                style={{ backgroundColor: 'transparent', color: '#155dfc', fontWeight: 600 }}
-                                onClick={ onLogout }
+                                style={{ backgroundColor: 'transparent', color: '#155dfc' }}
+                                
                             >
-                                {user && (user.profilePicture ? (
-                                    <img className="profilePicture" src={user.profilePicture}/>
-                                ) : (
-                                    <div aria-hidden className="nullPicture"> {user.username.charAt(0).toUpperCase()} </div>
-                                ))}
-                                <LogOutIcon />
-                                Sign Out
+                                <div onClick= {() => navigate('/account')}>
+                                    {user && (user.profilePicture ? (
+                                        <img className="profilePicture" src={user.profilePicture}/>
+                                    ) : (
+                                        <div aria-hidden className="nullPicture"> {user.username.charAt(0).toUpperCase()} </div>
+                                    ))}
+                                </div>
+
+                                <LogOutIcon onClick={ onLogout }/>
+                                <div style={{color: '#155dfc', fontWeight: 600}} onClick={ onLogout }>Sign Out</div>    
                             </button>
                         ) : (
                             <button

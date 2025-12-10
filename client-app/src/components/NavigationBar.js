@@ -19,13 +19,72 @@ export function NavigationBar( { onLogout } ) {
     const [user, setUser ] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
 
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem('isLoggedIn') === '1');
 
     useEffect(() => {
+        let mounted = true;
         (async () => {
-            setUser(await getCurrentUser());
+            if (!mounted) return;
+            if (isLoggedIn) {
+                try {
+                    const u = await getCurrentUser();
+                    if (mounted) setUser(u);
+                } catch (e) {
+                    if (mounted) setUser(null);
+                }
+            } else {
+                setUser(null);
+            }
         })();
+
+        return () => { mounted = false; };
     }, [isLoggedIn]);
+
+    useEffect(() => {
+        const handler = (e) => {
+            if (!e) return;
+            if (e.key === 'isLoggedIn') {
+                setIsLoggedIn(e.newValue === '1');
+            }
+            if (e.key === 'token' && !e.newValue) {
+                setIsLoggedIn(false);
+            }
+            if (e.key === 'token' && e.newValue) {
+                setIsLoggedIn(true);
+            }
+        };
+
+        window.addEventListener('storage', handler);
+        return () => window.removeEventListener('storage', handler);
+    }, []);
+
+    useEffect(() => {
+        const onSessionChanged = () => {
+            setIsLoggedIn(localStorage.getItem('isLoggedIn') === '1');
+        };
+        window.addEventListener('session-changed', onSessionChanged);
+        return () => window.removeEventListener('session-changed', onSessionChanged);
+    }, []);
+
+    useEffect(() => {
+        const onFocus = async () => {
+            const logged = localStorage.getItem('isLoggedIn') === '1';
+            setIsLoggedIn(logged);
+            if (logged) {
+                try {
+                    const u = await getCurrentUser();
+                    setUser(u);
+                } catch (e) {
+                    setUser(null);
+                }
+            } else {
+                setUser(null);
+            }
+        };
+
+        window.addEventListener('focus', onFocus);
+        return () => window.removeEventListener('focus', onFocus);
+    }, []);
 
     return (
         <nav id='nav-bar'>
@@ -78,7 +137,7 @@ export function NavigationBar( { onLogout } ) {
 
 
                 <div style={{ marginLeft: 'auto', marginRight: 16 }}>
-                    <div class="buttonGroup">
+                    <div className="buttonGroup">
                         <button 
                             id="theme-switch"
                             onClick={toggleDarkMode}

@@ -21,16 +21,19 @@ export function App() {
 
     const handleLogin = (user) => {
         setLoggedIn(true);
-        // persist a lightweight flag to allow quick client-side checks (optional)
         try { localStorage.setItem('isLoggedIn', '1'); } catch (e) {}
         navigate('/home');
     };
     const handleLogout = () => {
         setLoggedIn(false);
-        try { localStorage.removeItem('isLoggedIn'); } catch (e) {}
+        try {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('token');
+        } catch (e) {}
+        try { window.dispatchEvent(new Event('session-changed')); } catch (e) {}
         navigate('/');
     };
-    // On mount, verify session with server. This keeps the user logged in across refresh/navigation
+
     useEffect(() => {
         let mounted = true;
         (async () => {
@@ -49,7 +52,6 @@ export function App() {
         return () => { mounted = false; };
     }, []);
 
-    // wrapper components to map route params into existing page props
     function EventPageRoute() {
         const { eventId } = useParams();
         return <EventPage eventId={eventId} onBack={() => navigate('/home')} />;
@@ -71,7 +73,6 @@ export function App() {
         );
     }
 
-    // if the user is not logged in display login page.
     if (!authChecked) return <Loading />;
 
     return (

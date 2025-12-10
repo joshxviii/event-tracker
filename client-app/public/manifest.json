@@ -1,6 +1,6 @@
 {
-  "short_name": "EventTracker",
-  "name": "Event Tracker App",
+  "short_name": "GoLocal",
+  "name": "GoLocal App",
   "icons": [
     {
       "src": "icon.ico",

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef, useMemo } from "react";
 import { EventWidget } from "./ui/event-widget";
 import MapWidget from "./ui/map-widget";
 import { get_events } from "../utils/requests/event";
+import { getFriendRequests } from "../utils/requests/friends";
 import { PoiInfoWidget } from "./ui/poi-info-widget";
 import CalendarPanel from "./ui/CalendarPanel";
 import { useMap } from "@vis.gl/react-google-maps";
@@ -25,6 +26,7 @@ export const HomePage = ({}) => {
     const [displayCount, setDisplayCount] = useState(20);
     const [showPastEvents, setShowPastEvents] = useState(false);
     const [showFriends, setShowFriends] = useState(false);
+    const [incomingRequestsCount, setIncomingRequestsCount] = useState(0);
     const listRef = useRef(null);
     const PAGE_SIZE = 5;
 
@@ -46,6 +48,36 @@ export const HomePage = ({}) => {
 
         return () => (mounted = false);
     }, []);
+
+    // Fetch incoming friend requests count to show badge on Friends button
+    useEffect(() => {
+        let mounted = true;
+        (async () => {
+            try {
+                const data = await getFriendRequests();
+                if (!mounted) return;
+                const incoming = Array.isArray(data?.incoming) ? data.incoming.length : 0;
+                setIncomingRequestsCount(incoming);
+            } catch (err) {}
+        })();
+
+        return () => (mounted = false);
+    }, []);
+
+    // Refresh badge whenever the sidebar open state changes (so closing it updates the badge)
+    useEffect(() => {
+        let mounted = true;
+        (async () => {
+            try {
+                const data = await getFriendRequests();
+                if (!mounted) return;
+                const incoming = Array.isArray(data?.incoming) ? data.incoming.length : 0;
+                setIncomingRequestsCount(incoming);
+            } catch (err) {}
+        })();
+
+        return () => (mounted = false);
+    }, [showFriends]);
 
     const handlePoiClick = (id) => {
         setSelectedEventId((prev) => (prev === id ? null : id));
@@ -174,9 +206,33 @@ export const HomePage = ({}) => {
                         type="button"
                         className="friendSidebarToggleBtn"
                         onClick={() => setShowFriends(true)}
+                        style={{ position: 'relative' }}
                     >
                         <FriendsIcon/>
                         Friends
+                        {incomingRequestsCount > 0 && (
+                            <span
+                                style={{
+                                    position: 'absolute',
+                                    top: -6,
+                                    right: -6,
+                                    backgroundColor: '#e84343',
+                                    color: '#fff',
+                                    borderRadius: 12,
+                                    minWidth: 20,
+                                    height: 20,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: 12,
+                                    padding: '0 6px',
+                                    boxShadow: '0 2px 4px rgba(0,0,0,0.15)'
+                                }}
+                                aria-label={`${incomingRequestsCount} incoming friend requests`}
+                            >
+                                {incomingRequestsCount > 9 ? '9+' : incomingRequestsCount}
+                            </span>
+                        )}
                     </button>
                 </div>
 

@@ -82,6 +82,7 @@ button {
 
 #nav-bar {
   gap: 16px;
+  position: sticky; top: 0;
   border-bottom: 1px #4a86ff solid;
   background-color: var(--nav-bar-color);
   display: flex;

@@ -90,7 +90,7 @@ export function NavigationBar( { onLogout } ) {
         <nav id='nav-bar'>
             <div style={{ display: 'flex', padding: '4px 8px', alignItems: 'center', width: '100%', gap: 8 }}>
                 
-                <h3 id="navTitle" onClick={() => {setMenuOpen(false); navigate('/home');}} style={{cursor: 'pointer', display: 'flex', gap: 8, fontSize: 28, marginBlock: 8, marginLeft: 0, marginRight: 8}} >
+                <h3 id="navTitle" onClick={() => {setMenuOpen(false); navigate('/home');}} style={{cursor: 'pointer', display: `${menuOpen ? 'none' : 'flex'}`, gap: 8, fontSize: 28, marginBlock: 8, marginLeft: 0, marginRight: 8}} >
                     <GoLocalIcon />
                     GoLocal
                 </h3>

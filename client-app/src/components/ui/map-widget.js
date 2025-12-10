@@ -5,7 +5,7 @@ import { PoiMarkers } from './poi-marker';
 export function MapController( { focusedLocation } ) {
     const map = useMap();
     const hasCentered = useRef(false);
-    const [defaultCenter, setDefaultCenter] = useState(focusedLocation ?? { lat: 0, lng: 0 });
+    const [defaultCenter, setDefaultCenter] = useState(focusedLocation ?? { lat: 40.71427, lng: -74.00597 });
 
     map.panTo(focusedLocation ?? defaultCenter);
 

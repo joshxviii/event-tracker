@@ -9,6 +9,7 @@ import {ReactComponent as CreateIcon} from '../assets/add.svg';
 import {ReactComponent as DarkModeIcon} from '../assets/dark-mode.svg';
 import {ReactComponent as LightModeIcon} from '../assets/light-mode.svg';
 import {ReactComponent as GoLocalIcon} from '../assets/go-local.svg';
+import {ReactComponent as GoLocalTitle} from '../assets/GoLocalTitle.svg';
 import { getCurrentUser } from "../utils/requests/user";
 import useDarkMode from "./ui/useDarkMode";
 
@@ -90,9 +91,8 @@ export function NavigationBar( { onLogout } ) {
         <nav id='nav-bar'>
             <div style={{ display: 'flex', padding: '4px 8px', alignItems: 'center', width: '100%', gap: 8 }}>
                 
-                <h3 id="navTitle" onClick={() => {setMenuOpen(false); navigate('/home');}} style={{cursor: 'pointer', display: `${menuOpen ? 'none' : 'flex'}`, gap: 8, fontSize: 28, marginBlock: 8, marginLeft: 0, marginRight: 8}} >
-                    <GoLocalIcon />
-                    GoLocal
+                <h3 id="navTitle" onClick={() => {setMenuOpen(false); navigate('/home');}} style={{cursor: 'pointer', display: `${menuOpen ? 'none' : 'flex'}`, gap: 8, fontSize: 28, marginLeft: 16, margin: 8}} >
+                    <GoLocalTitle width={120} height={40}/>
                 </h3>
 
                 <button
